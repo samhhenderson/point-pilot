@@ -1,10 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import playerReducer from './reducers'
+import playerReducer from './playerSlice'
 
-const store = configureStore({ 
+export default configureStore({ 
   reducer: {
     player: playerReducer
   }
 })
-
-console.log(store.getState())

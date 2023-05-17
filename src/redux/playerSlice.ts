@@ -1,4 +1,3 @@
-import * as actions from './actions'
 import { createSlice } from '@reduxjs/toolkit'
 
 interface player {
@@ -13,7 +12,7 @@ interface state {
 export const playerSlice = createSlice({
   name: 'player',
   initialState: {
-    players: []
+    players: [{name: 'Same', score: 0}]
   },
   reducers: {
     add: (state: state, action) => {

@@ -1,5 +1,6 @@
-import React from "react";
+import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
+import { useSelector, useDispatch } from 'react-redux';
 import * as Colors from './../styles/Colors'
 import Control from "./Controls";
 
@@ -23,10 +24,15 @@ const Styles = StyleSheet.create({
   }
 });
 
-const Player: React.FC = () => {
+type PlayerProps = {
+  name: string;
+}
+
+const Player: FC<PlayerProps> = ({ name }) => {
+
   return (
     <View style={Styles.container}>
-      <Text style={Styles.text}>Sam</Text>
+      <Text style={Styles.text}>{name}</Text>
       <Control />
     </View>
   );
