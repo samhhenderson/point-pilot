@@ -1,0 +1,35 @@
+import React from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
+import * as Colors from './../styles/Colors'
+import Control from "./Controls";
+
+
+const Styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderColor: Colors.COLOR2,
+    borderWidth: 5,
+    backgroundColor: Colors.COLOR1,
+    justifyContent: 'space-between',
+    padding: 10,
+    gap: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  text: {
+    color: 'white',
+    fontSize: 30,
+  }
+});
+
+const Player: React.FC = () => {
+  return (
+    <View style={Styles.container}>
+      <Text style={Styles.text}>Sam</Text>
+      <Control />
+    </View>
+  );
+};
+
+export default Player;

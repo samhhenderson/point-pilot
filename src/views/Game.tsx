@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
-import * as Colors from './../styles/Colors'
+import * as Colors from './../styles/Colors';
+import Player from "../common/Players";
 
 
 const Styles = StyleSheet.create({
@@ -28,6 +29,9 @@ const Game: React.FC = () => {
   return (
     <View style={Styles.background}>
       <Text style={Styles.text}>Nerts</Text>
+      <View>
+      <Player />
+      </View>
       <Pressable style={Styles.buttons} onPress={() => console.log('hi')}>
         <Text style={Styles.text}>ADD PLAYER</Text>
       </Pressable>
