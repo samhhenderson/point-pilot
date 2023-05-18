@@ -1,11 +1,37 @@
-import React from "react";
+import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { add } from "../redux/playerSlice";
-
+import { player, state } from "../types";
 import * as Colors from './../styles/Colors';
-import Player from "../common/Players";
+import PlayerDisplay from "../common/PlayerDisplay";
 
+const Game: FC = () => {
+  const players = useSelector((state:state) => state.player.players);
+  let playerList:  JSX.Element[] = [];
+  
+  players.forEach((player:player, i) => {
+    playerList.push(<PlayerDisplay key={i} name={player.name} score={player.score}/>)
+  })
+  
+  const dispatch = useDispatch();
+  
+  return (
+    <View style={Styles.background}>
+      <Text style={Styles.text}>Nerts</Text>
+      <View>
+      {playerList}
+      </View>
+      <Pressable 
+        style={Styles.buttons} 
+        onPress={() => dispatch(add({name: 'Sally', score: 1}))}>
+        <Text style={Styles.text}>ADD PLAYER</Text>
+      </Pressable>
+    </View>
+  );
+};
+
+export default Game;
 
 const Styles = StyleSheet.create({
   background: {
@@ -27,22 +53,3 @@ const Styles = StyleSheet.create({
     color: 'white'
   }
 });
-
-const Game: React.FC = () => {
-  const players = useSelector((state:any) => state.player.players);
-  console.log(players)
-
-  return (
-    <View style={Styles.background}>
-      <Text style={Styles.text}>Nerts</Text>
-      <View>
-      <Player name={players[0].name}/>
-      </View>
-      <Pressable style={Styles.buttons} onPress={() => useDispatch()}>
-        <Text style={Styles.text}>ADD PLAYER</Text>
-      </Pressable>
-    </View>
-  );
-};
-
-export default Game;

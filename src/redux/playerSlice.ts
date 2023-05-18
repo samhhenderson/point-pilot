@@ -1,25 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { player } from '../types';
 
-interface player {
-  name: string,
-  score: number,
+interface PlayerState{
+  players: player[]
 }
 
-interface state {
-  players: player[],
-}
-
-export const playerSlice = createSlice({
-  name: 'player',
+export const activePlayerSlice = createSlice({
+  name: 'activePlayer',
   initialState: {
-    players: [{name: 'Same', score: 0}]
-  },
+    players: [{name: 'Sam', score: 20}, {name: 'Emily', score: 30}]
+  } as PlayerState,
   reducers: {
-    add: (state: state, action) => {
+    add: (state, action) => {
       state.players.push(action.payload);
     }
   }
 })
 
-export const { add } = playerSlice.actions;
-export default playerSlice.reducer;
+export const { add } = activePlayerSlice.actions;
+export default activePlayerSlice.reducer;
