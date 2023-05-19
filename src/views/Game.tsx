@@ -4,16 +4,20 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { addPlayer } from "../redux/activePlayerSlice";
 
-import { player, state } from "../types";
+import { Player, State } from "../types";
 import * as Colors from './../styles/Colors';
 import PlayerDisplay from "../common/PlayerDisplay";
+import NumberModal from "../modals/NumberModal";
 
 const Game: FC = () => {
-  const players = useSelector((state: state) => state.activePlayer.players);
+  const players = useSelector((state: State) => state.activePlayer.players);
+  const numberModalVis = useSelector((state: State) => state.view.numberModalVis)
+  console.log(numberModalVis)
+
+
   let playerList:  JSX.Element[] = [];
-  console.log(players)
   
-  players.forEach((player:player, i) => {
+  players.forEach((player:Player, i) => {
     playerList.push(
       <PlayerDisplay 
         key={i}
@@ -36,6 +40,7 @@ const Game: FC = () => {
         onPress={() => dispatch(addPlayer({name: 'Sally', score: 1, bid: 0}))}>
         <Text style={Styles.text}>END GAME</Text>
       </Pressable>
+      <NumberModal/>
     </View>
   );
 };

@@ -2,7 +2,7 @@ import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addPlayer } from "../redux/activePlayerSlice";
+import { showNumberModal, hideNumberModal } from "../redux/viewSlice";
 
 import * as Colors from '../styles/Colors'
 import Control from "./Controls";
@@ -18,8 +18,12 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
   return (
     <View style={Styles.container}>
       <Text style={Styles.text}>{name}</Text>
-      <Control text={bid.toString()} action={addPlayer}/>
-      <Control text={score.toString()} action={addPlayer}/>
+      <Control 
+        text={bid.toString()} 
+        action={showNumberModal} 
+        payload={{player: name, bid: false}}
+      />
+      <Control text={score.toString()} action={hideNumberModal}/>
     </View>
   );
 };

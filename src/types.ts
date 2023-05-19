@@ -1,13 +1,20 @@
-export interface player {
+export interface Player {
   name: string,
   score: number,
   bid: number,
 }
 
-export interface state {
-  activePlayer: {
-    players: player[],
-  }
+export interface ViewState{
+  numberModalVis: boolean
+}
+
+export interface PlayerState{
+  players: Player[]
+}
+
+export interface State {
+  activePlayer: PlayerState,
+  view: ViewState
 }
 
  

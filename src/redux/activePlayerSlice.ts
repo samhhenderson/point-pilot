@@ -1,9 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { player } from '../types';
-
-interface PlayerState{
-  players: player[]
-}
+import { PlayerState } from '../types';
 
 export const activePlayerSlice = createSlice({
   name: 'activePlayer',
