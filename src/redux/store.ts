@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import playerReducer from './playerSlice'
+import activePlayerReducer from './activePlayerSlice'
 
 export default configureStore({ 
   reducer: {
-    player: playerReducer
+    activePlayer: activePlayerReducer
   }
 })

@@ -1,17 +1,26 @@
 import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
+
 import { useSelector, useDispatch } from 'react-redux';
-import { add } from "../redux/playerSlice";
+import { addPlayer } from "../redux/activePlayerSlice";
+
 import { player, state } from "../types";
 import * as Colors from './../styles/Colors';
 import PlayerDisplay from "../common/PlayerDisplay";
 
 const Game: FC = () => {
-  const players = useSelector((state:state) => state.player.players);
+  const players = useSelector((state: state) => state.activePlayer.players);
   let playerList:  JSX.Element[] = [];
+  console.log(players)
   
   players.forEach((player:player, i) => {
-    playerList.push(<PlayerDisplay key={i} name={player.name} score={player.score}/>)
+    playerList.push(
+      <PlayerDisplay 
+        key={i}
+        bid={player.bid}
+        name={player.name} 
+        score={player.score}
+      />)
   })
   
   const dispatch = useDispatch();
@@ -24,8 +33,8 @@ const Game: FC = () => {
       </View>
       <Pressable 
         style={Styles.buttons} 
-        onPress={() => dispatch(add({name: 'Sally', score: 1}))}>
-        <Text style={Styles.text}>ADD PLAYER</Text>
+        onPress={() => dispatch(addPlayer({name: 'Sally', score: 1, bid: 0}))}>
+        <Text style={Styles.text}>END GAME</Text>
       </Pressable>
     </View>
   );

@@ -8,14 +8,14 @@ interface PlayerState{
 export const activePlayerSlice = createSlice({
   name: 'activePlayer',
   initialState: {
-    players: [{name: 'Sam', score: 20}, {name: 'Emily', score: 30}]
+    players: [{name: 'Sam', score: 20, bid: 5}, {name: 'Emily', score: 30, bid: 6}]
   } as PlayerState,
   reducers: {
-    add: (state, action) => {
+    addPlayer: (state, action) => {
       state.players.push(action.payload);
     }
   }
 })
 
-export const { add } = activePlayerSlice.actions;
+export const { addPlayer } = activePlayerSlice.actions;
 export default activePlayerSlice.reducer;

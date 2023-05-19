@@ -1,10 +1,30 @@
 import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
+
 import { useSelector, useDispatch } from 'react-redux';
+import { addPlayer } from "../redux/activePlayerSlice";
+
 import * as Colors from '../styles/Colors'
 import Control from "./Controls";
 
+type PlayerProps = {
+  name: string;
+  score: number;
+  bid: number;
+}
 
+const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
+
+  return (
+    <View style={Styles.container}>
+      <Text style={Styles.text}>{name}</Text>
+      <Control text={bid.toString()} action={addPlayer}/>
+      <Control text={score.toString()} action={addPlayer}/>
+    </View>
+  );
+};
+
+export default PlayerDisplay;
 const Styles = StyleSheet.create({
   container: {
     display: 'flex',
@@ -23,20 +43,3 @@ const Styles = StyleSheet.create({
     fontSize: 30,
   }
 });
-
-type PlayerProps = {
-  name: string;
-  score: number;
-}
-
-const PlayerDisplay: FC<PlayerProps> = ({ name, score }) => {
-
-  return (
-    <View style={Styles.container}>
-      <Text style={Styles.text}>{name}</Text>
-      <Control />
-    </View>
-  );
-};
-
-export default PlayerDisplay;

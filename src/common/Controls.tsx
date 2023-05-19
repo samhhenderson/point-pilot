@@ -1,7 +1,24 @@
-import React from "react";
+import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
+
+import { useSelector, useDispatch } from 'react-redux';
+
 import * as Colors from './../styles/Colors'
 
+type ControlProps = {
+  text: string;
+  action: any;
+}
+
+const Control: FC<ControlProps> = ({ text, action }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <Pressable style={Styles.buttons} onPress={() => dispatch(action({name: 'Sally', score: 1, bid: 0}))}>
+      <Text style={Styles.text}>{text}</Text>
+    </Pressable>
+  );
+};
 
 const Styles = StyleSheet.create({
   background: {
@@ -23,13 +40,5 @@ const Styles = StyleSheet.create({
     color: 'white'
   }
 });
-
-const Control: React.FC = () => {
-  return (
-    <Pressable style={Styles.buttons} onPress={() => console.log('hi')}>
-      <Text style={Styles.text}>+</Text>
-    </Pressable>
-  );
-};
 
 export default Control;

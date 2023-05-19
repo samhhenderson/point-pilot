@@ -1,10 +1,11 @@
 export interface player {
   name: string,
   score: number,
+  bid: number,
 }
 
 export interface state {
-  player: {
+  activePlayer: {
     players: player[],
   }
 }
