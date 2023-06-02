@@ -8,36 +8,50 @@ import { hideNumberModal } from "../redux/viewSlice";
 
 type NumberProps = {
   text: string;
+  setNumDisplay: any;
+  numDisplay: string;
 }
 
-const NumberButton: FC<NumberProps> = ({ text }) => {
+const NumberButton: FC<NumberProps> = ({ text, setNumDisplay, numDisplay }) => {
   const dispatch = useDispatch();
 
+  function modifyNumDisplay(num:string):void {
+    switch(num) {
+      case '-':
+        break;
+      case 'X':
+        break;
+      default:
+        setNumDisplay(numDisplay.concat(num))
+    }
+
+  }
+
   return (
-    <Pressable style={Styles.buttons} onPress={() => dispatch(hideNumberModal())}>
+    <Pressable style={Styles.buttons} onPress={() => modifyNumDisplay(text)}>
       <Text style={Styles.text}>{text}</Text>
     </Pressable>
   );
 };
 
 const Styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: Colors.COLOR1,
+
+  buttons: {
+    backgroundColor: Colors.COLOR4,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttons: {
-    backgroundColor: Colors.COLOR5,
     borderRadius: 10,
-    padding: 10,
+    width: 70,
+    height: 70,
     shadowColor: 'rgba(0,0,0,0.1)',
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },
   text: {
-    color: 'white'
+    color: 'white',
+    fontSize: 30
   }
 });
 
