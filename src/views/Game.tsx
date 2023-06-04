@@ -12,8 +12,6 @@ import NumberModal from "../modals/NumberModal";
 const Game: FC = () => {
   const players = useSelector((state: State) => state.activePlayer.players);
   const numberModalVis = useSelector((state: State) => state.view.numberModalVis)
-  console.log(numberModalVis)
-
 
   let playerList:  JSX.Element[] = [];
   
@@ -35,11 +33,6 @@ const Game: FC = () => {
       <View>
       {playerList}
       </View>
-      <Pressable 
-        style={Styles.buttons} 
-        onPress={() => dispatch(addPlayer({name: 'Sally', score: 1, bid: 0}))}>
-        <Text style={Styles.text}>END GAME</Text>
-      </Pressable>
       <NumberModal/>
     </View>
   );
@@ -53,15 +46,6 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  buttons: {
-    backgroundColor: Colors.COLOR5,
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
   },
   text: {
     color: 'white'

@@ -8,7 +8,7 @@ export const viewSlice = createSlice({
   } as ViewState,
   reducers: {
     showNumberModal: state => {
-      state.numberModalVis = true;
+      state.numberModalVis = true
     },
     hideNumberModal: state => {
       state.numberModalVis = false;

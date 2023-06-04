@@ -1,7 +1,8 @@
 import * as Colors from './Colors';
+import * as Sizes from './Sizes';
 import { StyleSheet } from "react-native";
 
-export const ButtonStyles = StyleSheet.create({
+export const CommonStyles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: Colors.COLOR1,
@@ -10,8 +11,12 @@ export const ButtonStyles = StyleSheet.create({
   },
   buttons: {
     backgroundColor: Colors.COLOR5,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Sizes.smallButtons,
+    height: Sizes.smallButtons,
     borderRadius: 10,
-    padding: 10,
     shadowColor: 'rgba(0,0,0,0.1)',
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 0.8,

@@ -16,7 +16,7 @@ type PlayerProps = {
 const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
 
   return (
-    <View style={Styles.container}>
+    <View style={Styles.container} key={name}>
       <Text style={Styles.text}>{name}</Text>
       <Control 
         text={bid.toString()} 

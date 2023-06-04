@@ -1,29 +1,15 @@
-import React from "react";
+import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-native";
+import { useState } from "react";
 
-const helpers = {
-  getRules: new Promise((res, reject) => {
-  fetch('/api/getRules', {
-    method: 'GET',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'Application/JSON'
-    },
-  })
-  .then(response => response.json())
-  .then(data => {
-    return res(data);
-  })
-  .catch(err => reject(console.log('Failed to get rules from database:', err)))
-  }),
+export function pressStyle(...inputStyles: ViewStyle[]) {
+  const [isPressed, setIsPressed] = useState(false);
 
-  getGameName: (state: any) => {
-    state.rules.forEach((rule:any) => {
-      if (rule._id == state.game) {
-        console.log(rule.game_name)
-        return rule.game_name;
-      }
-    })
-  }
+  return {
+    style: [
+      ...inputStyles,
+      { opacity: isPressed ? 0.8 : 1.0 },
+    ],
+    onPressIn: () => setIsPressed(true),
+    onPressOut: () => setIsPressed(false),
+  };
 }
-
-export default helpers;

@@ -1,10 +1,13 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-
-import * as Colors from '../styles/Colors'
 import { hideNumberModal } from "../redux/viewSlice";
+
+import * as Colors from '../styles/Colors';
+import * as Sizes from '../styles/Sizes';
+import { pressStyle } from "../util/helperFunctions";
+import { CommonStyles } from "../styles/CommonStyles";
 
 type NumberProps = {
   text: string;
@@ -13,11 +16,17 @@ type NumberProps = {
 }
 
 const NumberButton: FC<NumberProps> = ({ text, setNumDisplay, numDisplay }) => {
+  const [buttonText, setButtonText] = useState(text)
+  
   const dispatch = useDispatch();
 
   function modifyNumDisplay(num:string):void {
     switch(num) {
       case '-':
+        setButtonText('+')
+        break;
+      case '+':
+        setButtonText('-')
         break;
       case 'X':
         break;
@@ -28,7 +37,10 @@ const NumberButton: FC<NumberProps> = ({ text, setNumDisplay, numDisplay }) => {
   }
 
   return (
-    <Pressable style={Styles.buttons} onPress={() => modifyNumDisplay(text)}>
+    <Pressable 
+      {...pressStyle(CommonStyles.buttons, Styles.buttons)}
+      onPress={() => modifyNumDisplay(buttonText)}
+    >
       <Text style={Styles.text}>{text}</Text>
     </Pressable>
   );
@@ -38,16 +50,9 @@ const Styles = StyleSheet.create({
 
   buttons: {
     backgroundColor: Colors.COLOR4,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    width: 70,
-    height: 70,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
+    width: Sizes.medButtons,
+    height: Sizes.medButtons,
+
   },
   text: {
     color: 'white',
