@@ -2,7 +2,7 @@ import { FC } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNumberModal, hideNumberModal } from "../redux/viewSlice";
+import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
 
 import * as Colors from '../styles/Colors'
 import Control from "./Controls";

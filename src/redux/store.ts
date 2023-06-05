@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import activePlayerReducer from './activePlayerSlice'
-import viewReducer from './viewSlice'
+import playerDisplayReducer from '../components/playerDisplaySlice'
+import modalsReducer from '../modals/modalsSlice'
 
 export default configureStore({ 
   reducer: {
-    activePlayer: activePlayerReducer,
-    view: viewReducer
+    playerDisplay: playerDisplayReducer,
+    modals: modalsReducer
   }
 })

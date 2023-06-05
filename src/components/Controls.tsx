@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, Pressable, ViewStyle } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import * as Colors from './../styles/Colors'
+import * as Colors from '../styles/Colors';
+import { pressStyle } from "../util/helperFunctions";
 import { CommonStyles } from "../styles/CommonStyles";
 
 type OptionalStyles = {
@@ -23,13 +24,7 @@ const Control: FC<ControlProps> = ({ text, action, payload, optionalStyle={} }) 
 
   return (
     <Pressable 
-      style={({pressed}) => [
-        {
-          opacity: pressed ? 0.8 : 1.0
-        },
-        CommonStyles.buttons, 
-        optionalStyle.button
-      ]} 
+      {...pressStyle(CommonStyles.buttons, optionalStyle.button)}
       onPress={() => dispatch(action())}
     >
       <Text style={[CommonStyles.text, optionalStyle.text]}>{text}</Text>

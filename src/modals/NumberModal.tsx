@@ -1,33 +1,35 @@
 import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-native";
-import NumberButton from '../common/NumberButton';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNumberModal, hideNumberModal } from "../redux/viewSlice";
+import { hideNumberModal } from "./modalsSlice";
 
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
 import { pressStyle } from "../util/helperFunctions";
 import { CommonStyles } from "../styles/CommonStyles";
-import Control from "../common/Controls";
+import Control from "../components/Controls";
 
 const NumberModal: FC = () => {
-  const numberModalVis = useSelector((state: State) => state.view.numberModalVis)
+  const numberModalVis = useSelector((state: State) => state.modals.number.vis)
   const dispatch = useDispatch();
+
   const [numDisplay, setNumDisplay] = useState('');
   const [isPositive, setIsPositive] = useState(true);
 
-  // Create Numpad. Doing it this way allows us to be DRY for the '0'
-  let numberButtons:  JSX.Element[] = [];
-  const numberButtonsArray = ['7', '8', '9', '4', '5', '6', '3', '2', '1', '-', '0', 'X']
+  const posOrNegSign: string = isPositive ? '+' : '-';
+  const numberButtons:  JSX.Element[] = [];
+
+  // Create Numpad. Doing it this way let's us be DRY with the 'O'
+  const numberButtonsArray = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '-', '0', 'X']
   numberButtonsArray.forEach(num => {
     switch(num) {
       case '-':
         const symbol: string = isPositive ? '-' : '+';
         numberButtons.push(
           <Pressable 
-            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons)}
+            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
             onPress={() => setIsPositive(!isPositive)}
           >
             <Text style={Styles.text}>{symbol}</Text>
@@ -35,17 +37,34 @@ const NumberModal: FC = () => {
         )
         break;
       case 'X':
+        numberButtons.push(
+          <Pressable 
+            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
+            onPress={() => setNumDisplay((oldNumDisplay) => {
+              return oldNumDisplay.slice(0,-1);
+            })}
+          >
+            <Text style={Styles.text}>⌫</Text>
+          </Pressable>
+        )
         break;
       default:
         numberButtons.push(
-          <NumberButton 
-          text={num}
-          setNumDisplay={setNumDisplay}
-          numDisplay={numDisplay}
-        />
+          <Pressable 
+            {...pressStyle(CommonStyles.buttons)}
+            onPress={() => setNumDisplay(numDisplay.concat(num))}
+          >
+            <Text style={Styles.text}>{num}</Text>
+          </Pressable>
         )
     }
   })
+
+  function acceptScore() {
+    let score: number = parseInt(numDisplay);
+    if (posOrNegSign === '-') score *= -1;
+
+  }
 
   useEffect(() => {
     setNumDisplay('')
@@ -60,18 +79,22 @@ const NumberModal: FC = () => {
       <View style={Styles.modal}>
         <View style={Styles.container}>
           <View style={Styles.display}>
-            <Text style={Styles.text}>{numDisplay}</Text>
+            <Text style={Styles.text}>{posOrNegSign}</Text>
+            <Text style={Styles.text} numberOfLines={1}>{numDisplay}</Text>
           </View>
           {numberButtons}
-        <Control
-          text={'OK'}
-          optionalStyle={okButtonStyles}
-        />
-        <Control
-          text={'CANCEL'}
-          action={hideNumberModal}
-          optionalStyle={cancelButtonStyles}
-        />
+        <Pressable
+          {...pressStyle(CommonStyles.buttons, Styles.okButton)}
+          onPress={acceptScore}
+        >
+          <Text style={[CommonStyles.text, {fontSize: 40}]}>OK</Text>
+        </Pressable>
+        <Pressable
+          {...pressStyle(CommonStyles.buttons, Styles.cancelButton)}
+          onPress={() => dispatch(hideNumberModal())}
+        >
+          <Text style={[CommonStyles.text, {fontSize: 40}]}>X</Text>
+        </Pressable>
         </View>
       </View>
     </Modal>
@@ -106,10 +129,11 @@ const Styles = StyleSheet.create({
     height: 70,
     borderRadius: 20,
     flex: 1,
+    flexDirection: 'row',
     backgroundColor: Colors.DARK,
     color: 'white',
     fontSize: 40,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     padding: 10,
     marginBottom: 10,
   }, 
@@ -119,16 +143,21 @@ const Styles = StyleSheet.create({
   },
   minusBackButtons: {
     backgroundColor: Colors.COLOR1,
-    height: Sizes.medButtons,
-    width: Sizes.medButtons,
+  },
+  okButton: {
+    width: 150,
+    backgroundColor: Colors.COLOR1,
+    marginTop: 10
+  },
+  cancelButton: {
+    marginTop: 10,
+    backgroundColor: Colors.COLOR5,
   }
-
 });
 
 const okButtonStyles = StyleSheet.create({
-  button: {
+  okButton: {
     width: 150,
-    height: Sizes.medButtons,
     backgroundColor: Colors.COLOR1,
     marginTop: 10
   },

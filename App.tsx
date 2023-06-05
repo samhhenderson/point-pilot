@@ -1,8 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Game from './src/views/Game';
+
 import { Provider } from 'react-redux';
 import store from './src/redux/store'
+
+import Game from './src/views/Game';
+import * as Colors from './src/styles/Colors'
 
 export default function App() {
   return (
@@ -19,6 +22,6 @@ const Styles = StyleSheet.create({
   statusBarContainer: {
     width: "100%",
     height: 20,
-    backgroundColor: "white",
+    backgroundColor: Colors.COLOR3,
   },
 });

@@ -4,8 +4,12 @@ export interface Player {
   bid: number,
 }
 
-export interface ViewState{
-  numberModalVis: boolean
+export interface ModalsState{
+  number: {
+    vis: boolean,
+    player: string,
+    bid: boolean
+  }
 }
 
 export interface PlayerState{
@@ -13,8 +17,8 @@ export interface PlayerState{
 }
 
 export interface State {
-  activePlayer: PlayerState,
-  view: ViewState
+  playerDisplay: PlayerState,
+  modals: ModalsState
 }
 
  

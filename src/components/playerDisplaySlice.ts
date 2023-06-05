@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { PlayerState } from '../types';
 
-export const activePlayerSlice = createSlice({
+export const playerDisplaySlice = createSlice({
   name: 'activePlayer',
   initialState: {
     players: [{name: 'Sam', score: 20, bid: 5}, {name: 'Emily', score: 30, bid: 6}]
@@ -13,5 +13,5 @@ export const activePlayerSlice = createSlice({
   }
 })
 
-export const { addPlayer } = activePlayerSlice.actions;
-export default activePlayerSlice.reducer;
+export const { addPlayer } = playerDisplaySlice.actions;
+export default playerDisplaySlice.reducer;
