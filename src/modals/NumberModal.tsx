@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-nativ
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "./modalsSlice";
+import { changeScore } from "../components/playerDisplaySlice";
 
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
@@ -12,7 +13,8 @@ import { CommonStyles } from "../styles/CommonStyles";
 import Control from "../components/Controls";
 
 const NumberModal: FC = () => {
-  const numberModalVis = useSelector((state: State) => state.modals.number.vis)
+  const { vis, playerName, isBid} = useSelector((state: State) => state.modals.number);
+
   const dispatch = useDispatch();
 
   const [numDisplay, setNumDisplay] = useState('');
@@ -63,18 +65,23 @@ const NumberModal: FC = () => {
   function acceptScore() {
     let score: number = parseInt(numDisplay);
     if (posOrNegSign === '-') score *= -1;
-
+    dispatch(changeScore({
+      playerName: playerName, 
+      scoreToAdd: score,
+      isBid: isBid
+    }));  dispatch(hideNumberModal());
   }
 
   useEffect(() => {
     setNumDisplay('')
-  },[numberModalVis])
+    setIsPositive(true)
+  },[vis])
   
   return (
     <Modal
       animationType='slide'
       transparent={true}
-      visible={numberModalVis}
+      visible={vis}
     >
       <View style={Styles.modal}>
         <View style={Styles.container}>

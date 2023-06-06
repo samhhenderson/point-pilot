@@ -4,21 +4,34 @@ export interface Player {
   bid: number,
 }
 
-export interface ModalsState{
+export interface PlayerState {
+  players: Player[]
+}
+
+export interface ModalsState {
   number: {
     vis: boolean,
-    player: string,
-    bid: boolean
+    playerName: string,
+    isBid: boolean
   }
 }
 
-export interface PlayerState{
-  players: Player[]
+export interface Game {
+  gameName: string,
+  lowScoreWins: boolean,
+  useBid: boolean,
+  teams: number
+}
+
+export interface GameState {
+  gameDisplay: Game,
+  games: Game[]
 }
 
 export interface State {
   playerDisplay: PlayerState,
-  modals: ModalsState
+  modals: ModalsState,
+  game: GameState,
 }
 
  

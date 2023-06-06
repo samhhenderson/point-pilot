@@ -3,8 +3,11 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
+import { setNumberModalPlayer } from "../modals/modalsSlice";
 
 import * as Colors from '../styles/Colors'
+import { CommonStyles } from "../styles/CommonStyles";
+import { pressStyle } from "../util/helperFunctions";
 import Control from "./Controls";
 
 type PlayerProps = {
@@ -14,16 +17,30 @@ type PlayerProps = {
 }
 
 const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
+  const dispatch = useDispatch();
+
+  function openNumberModal(isBid: boolean) {
+    dispatch(setNumberModalPlayer({playerName: name, isBid}));
+    dispatch(showNumberModal());
+  }
 
   return (
     <View style={Styles.container} key={name}>
-      <Text style={Styles.text}>{name}</Text>
-      <Control 
-        text={bid.toString()} 
-        action={showNumberModal} 
-        payload={{player: name, bid: false}}
-      />
-      <Control text={score.toString()} action={hideNumberModal}/>
+      <Text style={[CommonStyles.text, {fontSize: 40}]}>{name}</Text>
+      <View style={Styles.pointsContainer}>
+        <Pressable
+            {...pressStyle(CommonStyles.buttons)}
+            onPress={() => openNumberModal(true)}
+        >
+          <Text style={[CommonStyles.text, {fontSize: 40}]}>{bid}</Text>
+        </Pressable>
+        <Pressable
+            {...pressStyle(CommonStyles.buttons)}
+            onPress={() => openNumberModal(false)}
+        >
+          <Text style={[CommonStyles.text, {fontSize: 40}]}>{score}</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -38,12 +55,13 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR1,
     justifyContent: 'space-between',
     padding: 10,
+    margin: 10,
     gap: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
-  text: {
-    color: 'white',
-    fontSize: 30,
+  pointsContainer: {
+    flexDirection: 'row',
+    gap: 15,
   }
-});
+})
