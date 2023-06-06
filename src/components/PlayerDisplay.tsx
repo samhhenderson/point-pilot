@@ -32,10 +32,10 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
       <Text style={[CommonStyles.text, {fontSize: 50}]}>{name}</Text>
       <View style={Styles.pointsContainer}>
         <Pressable
-            {...pressStyle(CommonStyles.buttons)}
+            {...pressStyle(CommonStyles.buttons, Styles.bidButton)}
             onPress={() => openNumberModal(true)}
         >
-          <Text style={[CommonStyles.text, {fontSize: 40}]}>{bid}</Text>
+          <Text style={[CommonStyles.text, Styles.bidText]}>{bid}</Text>
         </Pressable>
         <Pressable
             {...pressStyle(CommonStyles.buttons)}
@@ -57,7 +57,6 @@ export const Styles = StyleSheet.create({
     borderWidth: 5,
     justifyContent: 'space-between',
     padding: 10,
-    margin: 10,
     gap: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -65,5 +64,12 @@ export const Styles = StyleSheet.create({
   pointsContainer: {
     flexDirection: 'row',
     gap: 15,
+  },
+  bidButton: {
+    backgroundColor: Colors.COLOR3,
+  },
+  bidText: {
+    fontSize: 40,
+    color: 'black'
   }
 })

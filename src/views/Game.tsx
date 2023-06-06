@@ -57,7 +57,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
               {...pressStyle(CommonStyles.buttons, Styles.endGameButton)}
               onPress={endGame}
             >
-              <Text style={[CommonStyles.text, {fontSize: 40}]}>END GAME</Text>
+              <Text style={[CommonStyles.text, {fontSize: 30}]}>END GAME</Text>
             </Pressable>
           </View>
         </ScrollView>
@@ -84,6 +84,8 @@ const Styles = StyleSheet.create({
   },
   playerContainer: {
     width: '100%',
+    padding: 10,
+    gap: 10,
   },
   headings: {
     borderColor: 'transparent',
@@ -100,7 +102,10 @@ const Styles = StyleSheet.create({
     height: 120,
   },
   endGameButton: {
-    width: 230,
+    width: 200,
     backgroundColor: Colors.COLOR5,
+    borderRadius: 2,
+    borderColor: 'white',
+    borderWidth: 1, 
   }
 });

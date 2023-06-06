@@ -63,10 +63,14 @@ const Styles = StyleSheet.create({
   },
   gameListContainer: {
     width: '100%',
-    margin: 30,
+    padding: 10,
+    gap: 15,
+    maxWidth: 500,
   },
   addButton: {
     borderRadius: 35,
     backgroundColor: 'green',
+    borderColor: 'white',
+    borderWidth: 1,
   }
 });

@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
 import { setNumberModalPlayer } from "../modals/modalsSlice";
 
-import * as Colors from '../styles/Colors'
+import * as Colors from '../styles/Colors';
+import * as Sizes from '../styles/Sizes';
 import { CommonStyles } from "../styles/CommonStyles";
 import { pressStyle } from "../util/helperFunctions";
 
@@ -18,29 +19,44 @@ const GameListItem: FC<GameListItemProps> = ({ name }) => {
 
   return (
     <View style={Styles.container} key={name}>
-      <Text style={[CommonStyles.text, {fontSize: 30}]}>{name}</Text>
       <Pressable
-          {...pressStyle(CommonStyles.buttons)}
+          {...pressStyle(CommonStyles.buttons, Styles.gameNameButton)}
+          onPress={() => console.log('play this fucker!')}
+      >
+        <Text style={[CommonStyles.text, {fontSize: 30}]}>{name}</Text>
+      </Pressable>
+      <Pressable
+          {...pressStyle(CommonStyles.buttons, Styles.deleteButton)}
           onPress={() => console.log('delete this fucker!')}
       >
         <Text style={[CommonStyles.text, {fontSize: 40}]}>X</Text>
       </Pressable>
     </View>
   );
-};
+}
 
-export default GameListItem;
 export const Styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    borderColor: Colors.COLOR2,
-    borderWidth: 5,
-    justifyContent: 'space-between',
-    padding: 10,
-    margin: 10,
-    gap: 15,
+    gap: 20,
     borderRadius: 10,
-    alignItems: 'center',
   },
+  gameNameButton: {
+    flexGrow: 1,
+    backgroundColor: Colors.COLOR2,
+    borderRadius: 2,
+    borderColor: 'white',
+    borderWidth: 1,
+    height: Sizes.smallButtons,
+  },
+  deleteButton: {
+    backgroundColor: Colors.COLOR5,
+    height: Sizes.smallButtons,
+    borderRadius: 2,
+    borderColor: 'white',
+    borderWidth: 1,
+  }
 })
+
+export default GameListItem;

@@ -11,83 +11,18 @@ import * as Sizes from './../styles/Sizes'
 import { pressStyle } from "../util/helperFunctions";
 import { CommonStyles } from "../styles/CommonStyles";
 
-const NumberModal: FC = () => {
-  const { vis, playerName, isBid} = useSelector((state: State) => state.modals.number);
+const newGameModal: FC = () => {
+  const { 
+    gameName, 
+    useBid, 
+    lowScoreWins, 
+    teams 
+  } = useSelector((state: State) => state.game.gameDisplay);
+  const { vis } = useSelector((state: State) => state.modals.newGame);
 
   const dispatch = useDispatch();
 
-  const [numDisplay, setNumDisplay] = useState('0');
-  const [isPositive, setIsPositive] = useState(true);
-
-  const posOrNegSign: string = isPositive ? '+' : '-';
-  const numberButtons:  JSX.Element[] = [];
-
-  // Create Numpad. Doing it this way let's us be DRY with the 'numbers'
-  const numberButtonsArray = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '-', '0', 'X']
-  numberButtonsArray.forEach(num => {
-    switch(num) {
-      case '-':
-        const symbol: string = isPositive ? '-' : '+';
-        numberButtons.push(
-          <Pressable
-            key={num}
-            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
-            onPress={() => setIsPositive(!isPositive)}
-          >
-            <Text style={Styles.text}>{symbol}</Text>
-          </Pressable>
-        )
-        break;
-      case 'X':
-        numberButtons.push(
-          <Pressable
-            key={num}
-            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
-            onPress={handleNumDelete}
-          >
-            <Text style={Styles.text}>⌫</Text>
-          </Pressable>
-        )
-        break;
-      default:
-        numberButtons.push(
-          <Pressable
-            key={num}
-            {...pressStyle(CommonStyles.buttons)}
-            onPress={() => handleNumInput(num)}
-          >
-            <Text style={Styles.text}>{num}</Text>
-          </Pressable>
-        )
-    }
-  })
-
-  function handleNumInput(n: string) {
-    if (numDisplay === '0') setNumDisplay(n)
-    else setNumDisplay((oldNumDisplay) => oldNumDisplay.concat(n))
-  }
-
-  function handleNumDelete() {
-    if (numDisplay === '0') return;
-    else setNumDisplay(oldNumDisplay => {
-      return oldNumDisplay.slice(0,-1);
-    })
-  }
-
-  function acceptScore() {
-    let score: number = parseInt(numDisplay);
-    if (posOrNegSign === '-') score *= -1;
-    dispatch(changeScore({
-      playerName: playerName, 
-      scoreToAdd: score,
-      isBid: isBid
-    }));  dispatch(hideNumberModal());
-  }
-
-  useEffect(() => {
-    setNumDisplay('0')
-    setIsPositive(true)
-  },[vis])
+  const allPlayersRender:  JSX.Element[] = [];
 
   return (
     <Modal
@@ -120,7 +55,7 @@ const NumberModal: FC = () => {
   );
 };
 
-export default NumberModal;
+export default newGameModal;
 
 const Styles = StyleSheet.create({
   modal: {

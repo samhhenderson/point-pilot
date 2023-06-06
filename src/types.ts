@@ -16,6 +16,9 @@ export interface ModalsState {
     playerName: string,
     isBid: boolean
   }
+  newGame: {
+    vis: boolean,
+  }
 }
 
 export interface Game {

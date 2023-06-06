@@ -4,7 +4,7 @@ import { PlayerState } from '../types';
 export const playerDisplaySlice = createSlice({
   name: 'playerDisplay',
   initialState: {
-    players: [{name: 'Sam', score: 20, bid: 5}, {name: 'Emily', score: 30, bid: 6},]
+    players: [{name: 'Sam', score: 21, bid: 5}, {name: 'Emily', score: 20, bid: 6},]
   } as PlayerState,
   reducers: {
     addPlayer: (state, action) => {
