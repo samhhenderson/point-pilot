@@ -5,7 +5,10 @@ export const gameSlice = createSlice({
   name: 'view',
   initialState: {
     gameDisplay: {gameName: 'Whist', lowScoreWins: false, useBid: false, teams: 0},
-    games: [],
+    gameList: [
+      {gameName: 'Whist', lowScoreWins: false, useBid: true, teams: 0},
+      {gameName: 'Nerts', lowScoreWins: false, useBid: false, teams: 0}
+    ],
   } as GameState,
   reducers: {
     setGameDisplay: (state, action) => {

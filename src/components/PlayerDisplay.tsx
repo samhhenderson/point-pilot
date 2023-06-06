@@ -8,16 +8,14 @@ import { setNumberModalPlayer } from "../modals/modalsSlice";
 import * as Colors from '../styles/Colors'
 import { CommonStyles } from "../styles/CommonStyles";
 import { pressStyle } from "../util/helperFunctions";
-import Control from "./Controls";
 
 type PlayerProps = {
   name: string,
   score: number,
   bid: number,
-  setPlayerPositions: any,
 }
 
-const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid, setPlayerPositions }) => {
+const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
   const nameRef = useRef(null);
   const bidRef = useRef<typeof Pressable>();
   const scoreRef = useRef<typeof Pressable>();

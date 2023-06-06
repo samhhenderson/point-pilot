@@ -3,6 +3,7 @@ import * as Sizes from './Sizes';
 import { StyleSheet } from "react-native";
 
 export const CommonStyles = StyleSheet.create({
+  
   background: {
     flex: 1,
     backgroundColor: Colors.COLOR1,

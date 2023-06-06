@@ -10,7 +10,6 @@ import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
 import { pressStyle } from "../util/helperFunctions";
 import { CommonStyles } from "../styles/CommonStyles";
-import Control from "../components/Controls";
 
 const NumberModal: FC = () => {
   const { vis, playerName, isBid} = useSelector((state: State) => state.modals.number);

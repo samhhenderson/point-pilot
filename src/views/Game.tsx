@@ -4,42 +4,43 @@ import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { addPlayer } from "../components/playerDisplaySlice";
 
-import { Player, State } from "../types";
+import { Player, State, NavigationPropType } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import PlayerDisplay, { Styles as PDStyles } from "../components/PlayerDisplay";
 import NumberModal from "../modals/NumberModal";
 import { pressStyle } from "../util/helperFunctions";
 
-const Game: FC = () => {
+type GameProps = {
+  navigation: NavigationPropType,
+}
+
+const Game: FC<GameProps> = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const players = useSelector((state: State) => state.playerDisplay.players);
   const { gameName, useBid } = useSelector((state: State) => state.game.gameDisplay);
-  
-  const [playerPositions, setPlayerPositions] = useState();
 
-  let playerList:  JSX.Element[] = [];
+  let playerListRender:  JSX.Element[] = [];
   
   players.forEach((player:Player, i) => {
-    playerList.push(
+    playerListRender.push(
       <PlayerDisplay 
         key={i}
         bid={player.bid}
         name={player.name} 
         score={player.score}
-        setPlayerPositions={setPlayerPositions}
       />)
   })
   
   function endGame() {
-
+    navigation.navigate('Home')
   }
 
   return (
-      <ScrollView contentContainerStyle={Styles.game}>
-        <Text style={[CommonStyles.text, Styles.title]}>{gameName}</Text>
-        <View style={Styles.playSpace}>
+      <View style={Styles.app}>
+        <ScrollView contentContainerStyle={Styles.game}>
+          <Text style={[CommonStyles.text, Styles.title]}>{gameName}</Text>
           <View style={Styles.playerContainer}>
             <View style={[PDStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
@@ -48,25 +49,29 @@ const Game: FC = () => {
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {playerList}
+            {playerListRender}
           </View>
-        </View>
-        <NumberModal/>
-        <View style={Styles.endGameContainer}>
-          <Pressable
-            {...pressStyle(CommonStyles.buttons, Styles.endGameButton)}
-            onPress={endGame}
-          >
-            <Text style={[CommonStyles.text, {fontSize: 40}]}>END GAME</Text>
-          </Pressable>
-        </View>
-      </ScrollView>
+          <NumberModal/>
+          <View style={Styles.endGameContainer}>
+            <Pressable
+              {...pressStyle(CommonStyles.buttons, Styles.endGameButton)}
+              onPress={endGame}
+            >
+              <Text style={[CommonStyles.text, {fontSize: 40}]}>END GAME</Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </View>
   );
 };
 
 export default Game;
 
 const Styles = StyleSheet.create({
+  app: {
+    backgroundColor: Colors.COLOR1,
+    flex: 1,
+  },
   game: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR1,
@@ -76,11 +81,6 @@ const Styles = StyleSheet.create({
     fontSize: 50,
     textAlign: 'center',
     marginTop: 30,
-  },
-  playSpace: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   playerContainer: {
     width: '100%',

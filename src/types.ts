@@ -1,3 +1,5 @@
+import { NavigationProp } from "@react-navigation/native";
+
 export interface Player {
   name: string,
   score: number,
@@ -25,7 +27,7 @@ export interface Game {
 
 export interface GameState {
   gameDisplay: Game,
-  games: Game[]
+  gameList: Game[]
 }
 
 export interface State {
@@ -34,4 +36,8 @@ export interface State {
   game: GameState,
 }
 
+export type NavigationPropType = NavigationProp<
+  { Home: undefined, Game: undefined, History: undefined, Settings: undefined }, 
+  'Home' | 'Game' | 'History' | 'Settings'
+>
  
