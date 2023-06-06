@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { FC, useRef } from "react";
+import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
@@ -11,12 +11,17 @@ import { pressStyle } from "../util/helperFunctions";
 import Control from "./Controls";
 
 type PlayerProps = {
-  name: string;
-  score: number;
-  bid: number;
+  name: string,
+  score: number,
+  bid: number,
+  setPlayerPositions: any,
 }
 
-const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
+const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid, setPlayerPositions }) => {
+  const nameRef = useRef(null);
+  const bidRef = useRef<typeof Pressable>();
+  const scoreRef = useRef<typeof Pressable>();
+  
   const dispatch = useDispatch();
 
   function openNumberModal(isBid: boolean) {
@@ -26,7 +31,7 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
 
   return (
     <View style={Styles.container} key={name}>
-      <Text style={[CommonStyles.text, {fontSize: 40}]}>{name}</Text>
+      <Text style={[CommonStyles.text, {fontSize: 50}]}>{name}</Text>
       <View style={Styles.pointsContainer}>
         <Pressable
             {...pressStyle(CommonStyles.buttons)}
@@ -46,13 +51,12 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
 };
 
 export default PlayerDisplay;
-const Styles = StyleSheet.create({
+export const Styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
     borderColor: Colors.COLOR2,
     borderWidth: 5,
-    backgroundColor: Colors.COLOR1,
     justifyContent: 'space-between',
     padding: 10,
     margin: 10,

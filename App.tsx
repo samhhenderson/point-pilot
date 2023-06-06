@@ -10,9 +10,17 @@ import * as Colors from './src/styles/Colors'
 export default function App() {
   return (
     <Provider store={store}>
-      <StatusBar style='light'/>
-      <Game/>
+      <View style={Styles.app}>
+        <StatusBar style='light' backgroundColor='#C2185B' translucent={false}/>
+        <Game/>
+      </View>
     </Provider>
   );
 }
 
+const Styles = StyleSheet.create({
+  app: {
+    backgroundColor: Colors.COLOR1,
+    flex: 1,
+  },
+})
