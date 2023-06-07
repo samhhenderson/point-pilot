@@ -3,12 +3,11 @@ import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-nati
 
 import { useSelector, useDispatch } from 'react-redux';
 import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
-import { setNumberModalPlayer } from "../modals/modalsSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CommonStyles } from "../styles/CommonStyles";
-import { pressStyle } from "../util/helperFunctions";
+import Control from "./Control";
 
 type GameListItemProps = {
   name: string,
@@ -19,18 +18,18 @@ const GameListItem: FC<GameListItemProps> = ({ name }) => {
 
   return (
     <View style={Styles.container} key={name}>
-      <Pressable
-          {...pressStyle(CommonStyles.buttons, Styles.gameNameButton)}
+      <Control
           onPress={() => console.log('play this fucker!')}
-      >
-        <Text style={[CommonStyles.text, {fontSize: 30}]}>{name}</Text>
-      </Pressable>
-      <Pressable
-          {...pressStyle(CommonStyles.buttons, Styles.deleteButton)}
+          text={name}
+          pressableStyles={[Styles.gameNameButton]}
+          textStyles={[{fontSize:30}]}
+        />
+      <Control
           onPress={() => console.log('delete this fucker!')}
-      >
-        <Text style={[CommonStyles.text, {fontSize: 40}]}>X</Text>
-      </Pressable>
+          text={'X'}
+          pressableStyles={[Styles.deleteButton]}
+          textStyles={[{fontSize:40}]}
+        />
     </View>
   );
 }

@@ -8,8 +8,8 @@ import { changeScore } from "../components/playerDisplaySlice";
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
-import { pressStyle } from "../util/helperFunctions";
 import { CommonStyles } from "../styles/CommonStyles";
+import Control from "../components/Control";
 
 const NumberModal: FC = () => {
   const { vis, playerName, isBid} = useSelector((state: State) => state.modals.number);
@@ -23,41 +23,40 @@ const NumberModal: FC = () => {
   const numberButtons:  JSX.Element[] = [];
 
   // Create Numpad. Doing it this way let's us be DRY with the 'numbers'
-  const numberButtonsArray = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '-', '0', 'X']
+  const numberButtonsArray = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '-', '0', 'back']
   numberButtonsArray.forEach(num => {
     switch(num) {
       case '-':
         const symbol: string = isPositive ? '-' : '+';
         numberButtons.push(
-          <Pressable
+          <Control
             key={num}
-            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
+            text={symbol}
             onPress={() => setIsPositive(!isPositive)}
-          >
-            <Text style={Styles.text}>{symbol}</Text>
-          </Pressable>
+            pressableStyles={[Styles.minusBackButtons]}
+            textStyles={[{fontSize:40}]}
+          />
         )
         break;
-      case 'X':
+      case 'back':
         numberButtons.push(
-          <Pressable
+          <Control
             key={num}
-            {...pressStyle(CommonStyles.buttons, Styles.minusBackButtons,)}
+            text={'⌫'}
             onPress={handleNumDelete}
-          >
-            <Text style={Styles.text}>⌫</Text>
-          </Pressable>
+            pressableStyles={[Styles.minusBackButtons]}
+            textStyles={[{fontSize:40}]}
+          />
         )
         break;
       default:
         numberButtons.push(
-          <Pressable
+          <Control
             key={num}
-            {...pressStyle(CommonStyles.buttons)}
+            text={num}
             onPress={() => handleNumInput(num)}
-          >
-            <Text style={Styles.text}>{num}</Text>
-          </Pressable>
+            textStyles={[{fontSize:40}]}
+          />
         )
     }
   })
@@ -68,9 +67,10 @@ const NumberModal: FC = () => {
   }
 
   function handleNumDelete() {
-    if (numDisplay === '0') return;
-    else setNumDisplay(oldNumDisplay => {
-      return oldNumDisplay.slice(0,-1);
+    setNumDisplay(oldNumDisplay => {
+      let newNumDisplay = oldNumDisplay.slice(0,-1);
+      if (newNumDisplay === '') newNumDisplay = '0'
+      return newNumDisplay;
     })
   }
 
@@ -96,24 +96,24 @@ const NumberModal: FC = () => {
       visible={vis}
     >
       <View style={Styles.modal}>
-        <View style={Styles.container}>
+        <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
           <View style={Styles.display}>
             <Text style={Styles.text}>{posOrNegSign}</Text>
             <Text style={Styles.text} numberOfLines={1}>{numDisplay}</Text>
           </View>
           {numberButtons}
-        <Pressable
-          {...pressStyle(CommonStyles.buttons, Styles.okButton)}
+        <Control
           onPress={acceptScore}
-        >
-          <Text style={[CommonStyles.text, {fontSize: 40}]}>OK</Text>
-        </Pressable>
-        <Pressable
-          {...pressStyle(CommonStyles.buttons, Styles.cancelButton)}
+          text={'OK'}
+          pressableStyles={[Styles.okButton]}
+          textStyles={[{fontSize:40}]}
+        />
+        <Control
           onPress={() => dispatch(hideNumberModal())}
-        >
-          <Text style={[CommonStyles.text, {fontSize: 40}]}>X</Text>
-        </Pressable>
+          text={'X'}
+          pressableStyles={[Styles.cancelButton]}
+          textStyles={[{fontSize:40}]}
+        />
         </View>
       </View>
     </Modal>
@@ -128,20 +128,9 @@ const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
-    flex: 1,
+  largeModalChanges: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: Colors.COLOR2,
-    justifyContent: 'center',
-    alignContent: 'center',
-    maxWidth: 330,
-    maxHeight: 600,
-    marginTop: 50,
-    borderRadius: 20,
-    padding: 30,
-    gap: 10,
-
   },
   display: {
     minWidth: 200,
@@ -173,25 +162,3 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR5,
   }
 });
-
-const okButtonStyles = StyleSheet.create({
-  okButton: {
-    width: 150,
-    backgroundColor: Colors.COLOR1,
-    marginTop: 10
-  },
-  text: {
-    fontSize: 30
-  }
-})
-
-const cancelButtonStyles = StyleSheet.create({
-  button: {
-    width: Sizes.medButtons,
-    height: Sizes.medButtons,
-    marginTop: 10,
-  },
-  text: {
-    fontSize: 15
-  }
-})

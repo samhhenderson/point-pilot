@@ -2,13 +2,14 @@ import { FC, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
+import { showNewGameModal } from "../modals/modalsSlice";
 
 import { State, NavigationPropType, Game } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
-
-import { pressStyle } from "../util/helperFunctions";
 import GameListItem from "../components/GameListItem";
+import Control from "../components/Control";
+import NewGameModal from '../modals/NewGameModal';
 
 type HomeProps = {
   navigation: NavigationPropType,
@@ -33,14 +34,21 @@ const Home: FC<HomeProps> = ({navigation}) => {
           <Text style={[CommonStyles.text, Styles.title]}>Games</Text>
           <View style={Styles.gameListContainer}>
             {gameListRender}
-            <Pressable
-              {...pressStyle(CommonStyles.buttons, Styles.addButton)}
+            <Control
+              onPress={() => dispatch(showNewGameModal())}
+              text={'+'}
+              pressableStyles={[Styles.addButton]}
+              textStyles={[{fontSize:40}]}
+            />
+            <Control
               onPress={() => navigation.navigate('Game')}
-            >
-              <Text style={[CommonStyles.text, {fontSize: 40}]}>+</Text>
-            </Pressable>
+              text={'TEST'}
+              pressableStyles={[Styles.addButton]}
+              textStyles={[{fontSize:40}]}
+            />
           </View>
         </ScrollView>
+        <NewGameModal/>
       </View>
   );
 };

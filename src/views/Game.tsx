@@ -9,7 +9,7 @@ import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import PlayerDisplay, { Styles as PDStyles } from "../components/PlayerDisplay";
 import NumberModal from "../modals/NumberModal";
-import { pressStyle } from "../util/helperFunctions";
+import Control from "../components/Control";
 
 type GameProps = {
   navigation: NavigationPropType,
@@ -51,16 +51,16 @@ const Game: FC<GameProps> = ({ navigation }) => {
             </View>
             {playerListRender}
           </View>
-          <NumberModal/>
           <View style={Styles.endGameContainer}>
-            <Pressable
-              {...pressStyle(CommonStyles.buttons, Styles.endGameButton)}
+            <Control
               onPress={endGame}
-            >
-              <Text style={[CommonStyles.text, {fontSize: 30}]}>END GAME</Text>
-            </Pressable>
+              text={'END GAME'}
+              pressableStyles={[Styles.endGameButton]}
+              textStyles={[{fontSize:30}]}
+              />
           </View>
         </ScrollView>
+        <NumberModal/>
       </View>
   );
 };

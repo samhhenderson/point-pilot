@@ -14,11 +14,15 @@ export const gameSlice = createSlice({
     setGameDisplay: (state, action) => {
       state.gameDisplay = action.payload;
     },
+    changeGameDisplay: (state, action) => {
+      Object.assign(state.gameDisplay, action.payload)
+    }
   }
 })
 
 export const { 
-  setGameDisplay
+  setGameDisplay,
+  changeGameDisplay
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

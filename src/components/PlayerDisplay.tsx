@@ -7,7 +7,8 @@ import { setNumberModalPlayer } from "../modals/modalsSlice";
 
 import * as Colors from '../styles/Colors'
 import { CommonStyles } from "../styles/CommonStyles";
-import { pressStyle } from "../util/helperFunctions";
+
+import Control from "./Control";
 
 type PlayerProps = {
   name: string,
@@ -31,18 +32,17 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
     <View style={Styles.container} key={name}>
       <Text style={[CommonStyles.text, {fontSize: 50}]}>{name}</Text>
       <View style={Styles.pointsContainer}>
-        <Pressable
-            {...pressStyle(CommonStyles.buttons, Styles.bidButton)}
-            onPress={() => openNumberModal(true)}
-        >
-          <Text style={[CommonStyles.text, Styles.bidText]}>{bid}</Text>
-        </Pressable>
-        <Pressable
-            {...pressStyle(CommonStyles.buttons)}
-            onPress={() => openNumberModal(false)}
-        >
-          <Text style={[CommonStyles.text, {fontSize: 40}]}>{score}</Text>
-        </Pressable>
+        <Control
+          onPress={() => openNumberModal(true)}
+          text={bid.toString()}
+          pressableStyles={[Styles.bidButton]}
+          textStyles={[Styles.bidText]}
+        />
+        <Control
+          onPress={() => openNumberModal(false)}
+          text={score.toString()}
+          textStyles={[{fontSize: 40}]}
+        />
       </View>
     </View>
   );
