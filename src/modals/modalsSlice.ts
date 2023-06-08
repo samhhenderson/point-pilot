@@ -15,7 +15,6 @@ export const modalsSlice = createSlice({
     confirm: {
       vis: false,
       message: '',
-      onConfirm: () => console.log('Confirm')
     }
   } as ModalsState,
   reducers: {
@@ -34,7 +33,14 @@ export const modalsSlice = createSlice({
     },
     hideNewGameModa: state => {
       state.newGame.vis = false
-    }
+    },
+    setConfirmModal: (state, action) => {
+      state.confirm.vis = true;
+      state.confirm.message = action.payload.message;
+    },
+    hideConfirmModal: state => {
+      state.confirm.vis = false
+    },
   }
 })
 
@@ -44,6 +50,8 @@ export const {
   setNumberModalPlayer,
   showNewGameModal,
   hideNewGameModa,
+  setConfirmModal,
+  hideConfirmModal,
 } = modalsSlice.actions;
 
 export default modalsSlice.reducer;

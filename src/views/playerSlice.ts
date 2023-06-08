@@ -18,13 +18,13 @@ export const playerSlice = createSlice({
         state.playerList.push(action.payload);
       }
     },
+    deletePlayer: (state, action) => {
+      const index = state.playerList.findIndex((p) => p.name === action.payload);
+      state.playerList.splice(index, 1);
+    },
     changeActivePlayer: (state, action) => {
       const player = state.playerList.find((p) => p.name === action.payload);
       if (player) player.active = !player.active;
-
-    },
-    deletePlayer: (state, action) => {
-
     },
     changeScore: (state, action) => {
       const { playerName, scoreToAdd, isBid } = action.payload;
@@ -35,5 +35,10 @@ export const playerSlice = createSlice({
   }
 })
 
-export const { addPlayer, changeActivePlayer, changeScore } = playerSlice.actions;
+export const { 
+  addPlayer, 
+  deletePlayer,
+  changeActivePlayer, 
+  changeScore,
+} = playerSlice.actions;
 export default playerSlice.reducer;

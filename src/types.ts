@@ -23,7 +23,6 @@ export interface ModalsState {
   confirm: {
     vis: boolean,
     message: string,
-    onConfirm: Function,
   }
 }
 

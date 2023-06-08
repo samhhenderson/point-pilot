@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "
 import Checkbox from 'expo-checkbox';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa, hideNumberModal } from "./modalsSlice";
+import { hideNewGameModa, setConfirmModal } from "./modalsSlice";
 import { changeActiveGame } from "../views/gameSlice";
-import { changeActivePlayer } from "../views/playerSlice";
+import { changeActivePlayer, deletePlayer } from "../views/playerSlice";
 
 import { State, Player } from "../types";
 import * as Colors from '../styles/Colors';
@@ -13,6 +13,7 @@ import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
+import ConfirmModal from "./ConfirmModal";
 
 const NewGameModal: FC = () => {
   const { 
@@ -21,15 +22,18 @@ const NewGameModal: FC = () => {
     lowScoreWins, 
     teams 
   } = useSelector((state: State) => state.game.activeGame);
-  const { vis } = useSelector((state: State) => state.modals.newGame);
-  const playerList = useSelector((state: State) => state.player.playerList);
+  const { newGame } = useSelector((state: State) => state.modals);
+  const { playerList } = useSelector((state: State) => state.player);
+
+  const [ modalConfirmFunc, setModalConfirmFunc ] = useState<Function | null>(null);
 
   const dispatch = useDispatch();
 
   const playerListArray:  JSX.Element[] = [];
 
-  function handleDeletePlayer(player:Player) {
-
+  function handleDeletePlayer(player: Player) {
+    dispatch(setConfirmModal({message: 'ARE YOU SURE'}));
+    setModalConfirmFunc(() => dispatch(deletePlayer(player)));
   }
 
   playerList.forEach((player:Player) => {
@@ -43,7 +47,7 @@ const NewGameModal: FC = () => {
         <Control
             key={player.name}
             text={'X'}
-            onPress={handleDeletePlayer}
+            onPress={() => handleDeletePlayer(player)}
             textStyles={[{fontSize:40}]}
           />
       </View>
@@ -54,7 +58,7 @@ const NewGameModal: FC = () => {
     <Modal
       animationType='slide'
       transparent={true}
-      visible={vis}
+      visible={newGame.vis}
     >
       <View style={Styles.modal}>
         <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
@@ -97,6 +101,9 @@ const NewGameModal: FC = () => {
           />
         </View>
       </View>
+      <ConfirmModal
+        onConfirm={modalConfirmFunc}
+      />
     </Modal>
   );
 };
