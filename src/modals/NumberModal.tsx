@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-nativ
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "./modalsSlice";
-import { changeScore } from "../components/playerDisplaySlice";
+import { changeScore } from "../views/playerSlice";
 
 import { State } from "../types";
 import * as Colors from './../styles/Colors';

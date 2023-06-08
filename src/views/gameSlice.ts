@@ -4,25 +4,25 @@ import { GameState } from '../types';
 export const gameSlice = createSlice({
   name: 'view',
   initialState: {
-    gameDisplay: {gameName: 'Whist', lowScoreWins: false, useBid: false, teams: 0},
+    activeGame: {gameName: '', lowScoreWins: false, useBid: false, teams: false},
     gameList: [
-      {gameName: 'Whist', lowScoreWins: false, useBid: true, teams: 0},
-      {gameName: 'Nerts', lowScoreWins: false, useBid: false, teams: 0}
+      {gameName: 'Whist', lowScoreWins: false, useBid: true, teams: false},
+      {gameName: 'Nerts', lowScoreWins: false, useBid: false, teams: true}
     ],
   } as GameState,
   reducers: {
-    setGameDisplay: (state, action) => {
-      state.gameDisplay = action.payload;
+    setActiveGame: (state, action) => {
+      state.activeGame = action.payload;
     },
-    changeGameDisplay: (state, action) => {
-      Object.assign(state.gameDisplay, action.payload)
+    changeActiveGame: (state, action) => {
+      Object.assign(state.activeGame, action.payload)
     }
   }
 })
 
 export const { 
-  setGameDisplay,
-  changeGameDisplay
+  setActiveGame,
+  changeActiveGame
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

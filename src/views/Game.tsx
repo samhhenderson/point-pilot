@@ -1,13 +1,12 @@
 import { FC, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { StyleSheet, Text, View, ScrollView} from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { addPlayer } from "../components/playerDisplaySlice";
 
 import { Player, State, NavigationPropType } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
-import PlayerDisplay, { Styles as PDStyles } from "../components/PlayerDisplay";
+import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import Control from "../components/Control";
 
@@ -18,19 +17,21 @@ type GameProps = {
 const Game: FC<GameProps> = ({ navigation }) => {
   const dispatch = useDispatch();
 
-  const players = useSelector((state: State) => state.playerDisplay.players);
-  const { gameName, useBid } = useSelector((state: State) => state.game.gameDisplay);
+  const playerList = useSelector((state: State) => state.player.playerList);
+  const { gameName, useBid } = useSelector((state: State) => state.game.activeGame);
 
-  let playerListRender:  JSX.Element[] = [];
+  let activePlayerList:  JSX.Element[] = [];
   
-  players.forEach((player:Player, i) => {
-    playerListRender.push(
-      <PlayerDisplay 
+  playerList.forEach((player:Player, i) => {
+    if (player.active) {
+    activePlayerList.push(
+      <ActivePlayer 
         key={i}
         bid={player.bid}
         name={player.name} 
         score={player.score}
       />)
+    }
   })
   
   function endGame() {
@@ -42,14 +43,14 @@ const Game: FC<GameProps> = ({ navigation }) => {
         <ScrollView contentContainerStyle={Styles.game}>
           <Text style={[CommonStyles.text, Styles.title]}>{gameName}</Text>
           <View style={Styles.playerContainer}>
-            <View style={[PDStyles.container, Styles.headings]} >
+            <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
-              <View style={PDStyles.pointsContainer}>
+              <View style={APStyles.pointsContainer}>
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>BID</Text>
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {playerListRender}
+            {activePlayerList}
           </View>
           <View style={Styles.endGameContainer}>
             <Control

@@ -16,7 +16,7 @@ type PlayerProps = {
   bid: number,
 }
 
-const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
+const ActivePlayer: FC<PlayerProps> = ({ name, score, bid }) => {
   const nameRef = useRef(null);
   const bidRef = useRef<typeof Pressable>();
   const scoreRef = useRef<typeof Pressable>();
@@ -48,7 +48,7 @@ const PlayerDisplay: FC<PlayerProps> = ({ name, score, bid }) => {
   );
 };
 
-export default PlayerDisplay;
+export default ActivePlayer;
 export const Styles = StyleSheet.create({
   container: {
     display: 'flex',

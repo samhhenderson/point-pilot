@@ -11,6 +11,11 @@ export const modalsSlice = createSlice({
     },
     newGame: {
       vis: false,
+    },
+    confirm: {
+      vis: false,
+      message: '',
+      onConfirm: () => console.log('Confirm')
     }
   } as ModalsState,
   reducers: {

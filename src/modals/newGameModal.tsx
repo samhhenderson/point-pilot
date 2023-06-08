@@ -1,16 +1,18 @@
 import { FC, useState, useEffect } from "react";
-import { StyleSheet, Text, View, Modal, TextInput } from "react-native";
+import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
 import Checkbox from 'expo-checkbox';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModa, hideNumberModal } from "./modalsSlice";
-import { changeGameDisplay } from "../views/gameSlice";
+import { changeActiveGame } from "../views/gameSlice";
+import { changeActivePlayer } from "../views/playerSlice";
 
-import { State } from "../types";
+import { State, Player } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
+import CheckBox from "../components/CheckBox";
 
 const NewGameModal: FC = () => {
   const { 
@@ -18,14 +20,35 @@ const NewGameModal: FC = () => {
     useBid, 
     lowScoreWins, 
     teams 
-  } = useSelector((state: State) => state.game.gameDisplay);
-  
-
+  } = useSelector((state: State) => state.game.activeGame);
   const { vis } = useSelector((state: State) => state.modals.newGame);
+  const playerList = useSelector((state: State) => state.player.playerList);
 
   const dispatch = useDispatch();
 
-  const allPlayersRender:  JSX.Element[] = [];
+  const playerListArray:  JSX.Element[] = [];
+
+  function handleDeletePlayer(player:Player) {
+
+  }
+
+  playerList.forEach((player:Player) => {
+    playerListArray.push(
+      <View style={Styles.gameOption}>
+        <CheckBox
+          value={player.active}
+          onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
+        />
+        <Text>{player.name}</Text>
+        <Control
+            key={player.name}
+            text={'X'}
+            onPress={handleDeletePlayer}
+            textStyles={[{fontSize:40}]}
+          />
+      </View>
+    )
+  })
 
   return (
     <Modal
@@ -39,31 +62,34 @@ const NewGameModal: FC = () => {
             <Text style={[CommonStyles.text, {fontSize: 40}]}>GAME:</Text>
             <TextInput 
               style={Styles.textInput}
-              onChangeText={text => dispatch(changeGameDisplay({gameName: text}))}
+              onChangeText={text => dispatch(changeActiveGame({gameName: text}))}
               value={gameName}
             />
           </View>
           <View style={Styles.gameOption}>
-            <Checkbox 
-              style={Styles.checkbox} 
-              color={Colors.CHECKBOX}
+            <CheckBox
               value={lowScoreWins}
+              onValueChange={() => dispatch(changeActiveGame({lowScoreWins: !lowScoreWins}))}
             />
             <Text style={CommonStyles.text}>LOW SCORE WINS</Text>
           </View>
           <View style={Styles.gameOption}>
-            <Checkbox 
-              style={Styles.checkbox} 
-              color={Colors.CHECKBOX}
+            <CheckBox
               value={useBid}
+              onValueChange={() => {dispatch(changeActiveGame({useBid: !useBid}))}}
             />
             <Text style={CommonStyles.text}>BIDS</Text>
           </View>
-          <TextInput
-            placeholder="Enter Numeric Values Only"
-            placeholderTextColor="#60605e"
-            inputMode={'numeric'}
-          ></TextInput>
+          <View style={Styles.gameOption}>
+            <CheckBox
+              value={teams}
+              onValueChange={() => {dispatch(changeActiveGame({teams: !teams}))}}
+            />
+            <Text style={CommonStyles.text}>TEAMS</Text>
+          </View>
+          <ScrollView>
+            {playerListArray}
+          </ScrollView>
           <Control
             onPress={() => dispatch(hideNewGameModa())}
             text={'X'}
@@ -101,14 +127,8 @@ const Styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
   },
-  checkbox: {
-    width: Sizes.smallButtons, 
-    height: Sizes.smallButtons, 
-    borderRadius: 10
-  },
   gameOption: {
     flexDirection: 'row',
     gap: 15,
-    margin: 10,
   }
 });

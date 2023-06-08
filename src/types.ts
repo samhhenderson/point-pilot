@@ -2,12 +2,13 @@ import { NavigationProp } from "@react-navigation/native";
 
 export interface Player {
   name: string,
+  active: boolean,
   score: number,
   bid: number,
 }
 
 export interface PlayerState {
-  players: Player[]
+  playerList: Player[]
 }
 
 export interface ModalsState {
@@ -19,22 +20,27 @@ export interface ModalsState {
   newGame: {
     vis: boolean,
   }
+  confirm: {
+    vis: boolean,
+    message: string,
+    onConfirm: Function,
+  }
 }
 
 export interface Game {
   gameName: string,
   lowScoreWins: boolean,
   useBid: boolean,
-  teams: number
+  teams: boolean,
 }
 
 export interface GameState {
-  gameDisplay: Game,
+  activeGame: Game,
   gameList: Game[]
 }
 
 export interface State {
-  playerDisplay: PlayerState,
+  player: PlayerState,
   modals: ModalsState,
   game: GameState,
 }
