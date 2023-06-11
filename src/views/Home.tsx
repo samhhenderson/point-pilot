@@ -40,12 +40,7 @@ const Home: FC<HomeProps> = ({navigation}) => {
               pressableStyles={[Styles.addButton]}
               textStyles={[{fontSize:40}]}
             />
-            <Control
-              onPress={() => navigation.navigate('Game')}
-              text={'TEST'}
-              pressableStyles={[Styles.addButton]}
-              textStyles={[{fontSize:40}]}
-            />
+
           </View>
         </ScrollView>
         <NewGameModal
@@ -80,7 +75,5 @@ const Styles = StyleSheet.create({
   addButton: {
     borderRadius: 35,
     backgroundColor: 'green',
-    borderColor: 'white',
-    borderWidth: 1,
   }
 });

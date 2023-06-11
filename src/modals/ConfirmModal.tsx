@@ -73,7 +73,7 @@ export const Styles = StyleSheet.create({
   },
   message: {
     fontSize: 30,
-    alignContents: 'center',
+    alignContent: 'center',
   },
   bottomButtonsCont: {
     flexDirection: 'row',

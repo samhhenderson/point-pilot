@@ -5,7 +5,7 @@ import Checkbox from 'expo-checkbox';
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModa, setConfirmModal } from "./modalsSlice";
 import { changeActiveGame } from "../views/gameSlice";
-import { changeActivePlayer, deletePlayer } from "../views/playerSlice";
+import { addPlayer } from "../views/playerSlice";
 
 import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
@@ -14,6 +14,7 @@ import { CommonStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
+import PlayerListItem from "../components/PlayerListItem";
 
 type NewGameModalProps = {
   navigation: NavigationPropType,
@@ -30,39 +31,28 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { playerList } = useSelector((state: State) => state.player);
 
   const [ modalConfirmFunc, setModalConfirmFunc ] = useState<any>();
+  const [ newPlayerName, setNewPlayerName ] = useState<string>();
 
   const dispatch = useDispatch();
 
   const playerListArray:  JSX.Element[] = [];
-
-  function handleDeletePlayer(player: Player) {
-    setModalConfirmFunc(() => () => dispatch(deletePlayer(player)));
-    dispatch(setConfirmModal({message: `Remove player ${player.name} from list?`}));
-  }
 
   function handlePlay () {
     navigation.navigate('Game')
     dispatch(hideNewGameModa())
   }
 
+  function handleNewPlayerDone() {
+    setNewPlayerName('');
+    dispatch(addPlayer({name: newPlayerName}));
+  }
+
   playerList.forEach((player:Player) => {
     playerListArray.push(
-      <View style={Styles.playerListItem}>
-        <View style={Styles.nameCheckCont}>
-          <CheckBox
-            value={player.active}
-            onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
-          />
-          <Text style={[CommonStyles.text, Styles.listItemText]}>{player.name}</Text>
-        </View>
-        <Control
-            key={player.name}
-            text={'X'}
-            pressableStyles={[Styles.deleteButton]}
-            onPress={() => handleDeletePlayer(player)}
-            textStyles={[{fontSize:40}]}
-          />
-      </View>
+      <PlayerListItem
+        player={player}
+        setModalConfirmFunc={setModalConfirmFunc}
+      />
     )
   })
 
@@ -80,6 +70,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
               style={Styles.textInput}
               onChangeText={text => dispatch(changeActiveGame({gameName: text}))}
               value={gameName}
+              returnKeyType="done"
             />
           </View>
           <View style={Styles.listItem}>
@@ -106,11 +97,12 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
               {playerListArray}
-              <Control
-                onPress={() => console.log('make a new fucker')}
-                text={'+'}
-                pressableStyles={[Styles.addButton]}
-                textStyles={[{fontSize:40}]}
+              <TextInput
+                style={Styles.textInput}
+                onChangeText={text => setNewPlayerName(text)}
+                value={newPlayerName}
+                onSubmitEditing={handleNewPlayerDone}
+                returnKeyType="done"
               />
             </View>
           </ScrollView>
@@ -160,6 +152,7 @@ const Styles = StyleSheet.create({
     paddingLeft: 10,
     borderRadius: 5,
     width: 190,
+    height: 48,
   },
   listItem: {
     flexDirection: 'row',
@@ -183,21 +176,13 @@ const Styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  nameCheckCont: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  deleteButton: {
-    width: Sizes.smallButtons, 
-    height: Sizes.smallButtons,
-    backgroundColor: Colors.COLOR5,
-  },
   addButton: {
     borderRadius: 35,
     backgroundColor: 'green',
     borderColor: 'white',
     borderWidth: 1,
+    width: 20,
+    height: 20,
   },
   bottomButtonsCont: {
     flexDirection: 'row',

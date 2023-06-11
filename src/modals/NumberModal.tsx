@@ -18,6 +18,7 @@ const NumberModal: FC = () => {
 
   const [numDisplay, setNumDisplay] = useState('0');
   const [isPositive, setIsPositive] = useState(true);
+  const [viewWidth, setViewWidth] = useState(0);
 
   const posOrNegSign: string = isPositive ? '+' : '-';
   const numberButtons:  JSX.Element[] = [];
@@ -96,8 +97,13 @@ const NumberModal: FC = () => {
       visible={vis}
     >
       <View style={Styles.modal}>
-        <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
-          <View style={Styles.display}>
+        <View 
+          style={[CommonStyles.largeModal, Styles.largeModalChanges]}
+          onLayout={(event) => {
+            console.log(event.nativeEvent.layout.width)
+            setViewWidth(event.nativeEvent.layout.width)}}
+        >
+          <View style={[Styles.display, {width: viewWidth - 60}]}>
             <Text style={Styles.text}>{posOrNegSign}</Text>
             <Text style={Styles.text} numberOfLines={1}>{numDisplay}</Text>
           </View>
@@ -131,12 +137,12 @@ const Styles = StyleSheet.create({
   largeModalChanges: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    maxWidth: 330,
+    maxHeight: 600,
   },
   display: {
-    minWidth: 200,
     height: 70,
     borderRadius: 20,
-    flex: 1,
     flexDirection: 'row',
     backgroundColor: Colors.DARK,
     color: 'white',

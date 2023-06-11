@@ -1,10 +1,11 @@
-import { FC, useRef } from "react";
+import { FC, useState, useEffect} from "react";
 import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
 import { setNumberModalPlayer } from "../modals/modalsSlice";
 
+import { State } from "../types";
 import * as Colors from '../styles/Colors'
 import { CommonStyles } from "../styles/CommonStyles";
 
@@ -17,10 +18,9 @@ type PlayerProps = {
 }
 
 const ActivePlayer: FC<PlayerProps> = ({ name, score, bid }) => {
-  const nameRef = useRef(null);
-  const bidRef = useRef<typeof Pressable>();
-  const scoreRef = useRef<typeof Pressable>();
-  
+
+  const { useBid } = useSelector((state: State) => state.game.activeGame)
+
   const dispatch = useDispatch();
 
   function openNumberModal(isBid: boolean) {
@@ -32,12 +32,13 @@ const ActivePlayer: FC<PlayerProps> = ({ name, score, bid }) => {
     <View style={Styles.container} key={name}>
       <Text style={[CommonStyles.text, {fontSize: 50}]}>{name}</Text>
       <View style={Styles.pointsContainer}>
+        {useBid &&       
         <Control
           onPress={() => openNumberModal(true)}
           text={bid.toString()}
           pressableStyles={[Styles.bidButton]}
           textStyles={[Styles.bidText]}
-        />
+        />}
         <Control
           onPress={() => openNumberModal(false)}
           text={score.toString()}

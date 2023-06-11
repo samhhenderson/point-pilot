@@ -45,16 +45,12 @@ export const Styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: Colors.COLOR2,
     borderRadius: 2,
-    borderColor: 'white',
-    borderWidth: 1,
     height: Sizes.smallButtons,
   },
   deleteButton: {
     backgroundColor: Colors.COLOR5,
     height: Sizes.smallButtons,
     borderRadius: 2,
-    borderColor: 'white',
-    borderWidth: 1,
   }
 })
 

@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,6 +15,8 @@ type GameProps = {
 }
 
 const Game: FC<GameProps> = ({ navigation }) => {
+  const [bidTitle, setBidTitle] = useState('');
+  
   const dispatch = useDispatch();
 
   const playerList = useSelector((state: State) => state.player.playerList);
@@ -34,6 +36,11 @@ const Game: FC<GameProps> = ({ navigation }) => {
     }
   })
   
+  useEffect(() => {
+    if (useBid) setBidTitle('BID')
+  }, [])
+
+
   function endGame() {
     navigation.navigate('Home')
   }
@@ -46,7 +53,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
             <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
               <View style={APStyles.pointsContainer}>
-                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>BID</Text>
+                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>{bidTitle}</Text>
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
@@ -106,7 +113,5 @@ const Styles = StyleSheet.create({
     width: 200,
     backgroundColor: Colors.COLOR5,
     borderRadius: 2,
-    borderColor: 'white',
-    borderWidth: 1, 
   }
 });
