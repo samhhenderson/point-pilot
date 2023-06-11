@@ -32,19 +32,21 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ onConfirm }) => {
     >
       <View style={Styles.modal}>
         <View style={Styles.smallModal}>
-          <Text>{message}</Text>
-          <Control
-            text={'YES'}
-            onPress={handleConfirm}
-            pressableStyles={[Styles.confirmButton]}
-            textStyles={[{fontSize:40}]}
-          />
-          <Control
-            text={'CANCEL'}
-            onPress={() => dispatch(hideConfirmModal())}
-            pressableStyles={[Styles.cancelButton]}
-            textStyles={[{fontSize:40}]}
-          />
+          <Text style={Styles.message}>{message}</Text>
+          <View style={Styles.bottomButtonsCont}>
+            <Control
+              text={'YES'}
+              onPress={handleConfirm}
+              pressableStyles={[Styles.confirmButton]}
+              textStyles={[{fontSize:30}]}
+            />
+            <Control
+              text={'CANCEL'}
+              onPress={() => dispatch(hideConfirmModal())}
+              pressableStyles={[Styles.cancelButton]}
+              textStyles={[{fontSize:30}]}
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -60,21 +62,31 @@ export const Styles = StyleSheet.create({
   smallModal: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: Colors.COLOR2,
-    justifyContent: 'center',
+    backgroundColor: Colors.COLOR3,
+    justifyContent: 'space-between',
     alignContent: 'center',
     maxWidth: 330,
-    maxHeight: 600,
+    maxHeight: 300,
     borderRadius: 20,
     padding: 30,
     gap: 10,
   },
-  confirmButton: {
-    width: 150,
+  message: {
+    fontSize: 30,
+    alignContents: 'center',
+  },
+  bottomButtonsCont: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 15,
   },
   cancelButton: {
-    backgroundColor: Colors.COLOR2,
-  }
+    flex: 1.4,
+    backgroundColor: Colors.COLOR5,
+  },
+  confirmButton: {
+    flex: 1,
+  },
 })
 
 export default ConfirmModal;

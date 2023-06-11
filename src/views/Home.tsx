@@ -48,7 +48,9 @@ const Home: FC<HomeProps> = ({navigation}) => {
             />
           </View>
         </ScrollView>
-        <NewGameModal/>
+        <NewGameModal
+          navigation={navigation}
+        />
       </View>
   );
 };

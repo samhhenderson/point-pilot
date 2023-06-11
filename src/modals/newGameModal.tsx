@@ -7,7 +7,7 @@ import { hideNewGameModa, setConfirmModal } from "./modalsSlice";
 import { changeActiveGame } from "../views/gameSlice";
 import { changeActivePlayer, deletePlayer } from "../views/playerSlice";
 
-import { State, Player } from "../types";
+import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
@@ -15,7 +15,11 @@ import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
 
-const NewGameModal: FC = () => {
+type NewGameModalProps = {
+  navigation: NavigationPropType,
+}
+
+const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { 
     gameName, 
     useBid, 
@@ -25,28 +29,36 @@ const NewGameModal: FC = () => {
   const { newGame } = useSelector((state: State) => state.modals);
   const { playerList } = useSelector((state: State) => state.player);
 
-  const [ modalConfirmFunc, setModalConfirmFunc ] = useState<Function | null>(null);
+  const [ modalConfirmFunc, setModalConfirmFunc ] = useState<any>();
 
   const dispatch = useDispatch();
 
   const playerListArray:  JSX.Element[] = [];
 
   function handleDeletePlayer(player: Player) {
-    dispatch(setConfirmModal({message: 'ARE YOU SURE'}));
-    setModalConfirmFunc(() => dispatch(deletePlayer(player)));
+    setModalConfirmFunc(() => () => dispatch(deletePlayer(player)));
+    dispatch(setConfirmModal({message: `Remove player ${player.name} from list?`}));
+  }
+
+  function handlePlay () {
+    navigation.navigate('Game')
+    dispatch(hideNewGameModa())
   }
 
   playerList.forEach((player:Player) => {
     playerListArray.push(
-      <View style={Styles.gameOption}>
-        <CheckBox
-          value={player.active}
-          onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
-        />
-        <Text>{player.name}</Text>
+      <View style={Styles.playerListItem}>
+        <View style={Styles.nameCheckCont}>
+          <CheckBox
+            value={player.active}
+            onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
+          />
+          <Text style={[CommonStyles.text, Styles.listItemText]}>{player.name}</Text>
+        </View>
         <Control
             key={player.name}
             text={'X'}
+            pressableStyles={[Styles.deleteButton]}
             onPress={() => handleDeletePlayer(player)}
             textStyles={[{fontSize:40}]}
           />
@@ -63,42 +75,59 @@ const NewGameModal: FC = () => {
       <View style={Styles.modal}>
         <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
           <View style={Styles.header}>
-            <Text style={[CommonStyles.text, {fontSize: 40}]}>GAME:</Text>
+            <Text style={[CommonStyles.text, {fontSize: 30}]}>GAME:</Text>
             <TextInput 
               style={Styles.textInput}
               onChangeText={text => dispatch(changeActiveGame({gameName: text}))}
               value={gameName}
             />
           </View>
-          <View style={Styles.gameOption}>
+          <View style={Styles.listItem}>
             <CheckBox
               value={lowScoreWins}
               onValueChange={() => dispatch(changeActiveGame({lowScoreWins: !lowScoreWins}))}
             />
-            <Text style={CommonStyles.text}>LOW SCORE WINS</Text>
+            <Text style={[CommonStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
           </View>
-          <View style={Styles.gameOption}>
+          <View style={Styles.listItem}>
             <CheckBox
               value={useBid}
               onValueChange={() => {dispatch(changeActiveGame({useBid: !useBid}))}}
             />
-            <Text style={CommonStyles.text}>BIDS</Text>
+            <Text style={[CommonStyles.text, Styles.listItemText]}>BIDS</Text>
           </View>
-          <View style={Styles.gameOption}>
+          <View style={Styles.listItem}>
             <CheckBox
               value={teams}
               onValueChange={() => {dispatch(changeActiveGame({teams: !teams}))}}
             />
-            <Text style={CommonStyles.text}>TEAMS</Text>
+            <Text style={[CommonStyles.text, Styles.listItemText]}>TEAMS</Text>
           </View>
-          <ScrollView>
-            {playerListArray}
+          <ScrollView style={Styles.playerListView}>
+            <View style={Styles.playerListCont}>
+              {playerListArray}
+              <Control
+                onPress={() => console.log('make a new fucker')}
+                text={'+'}
+                pressableStyles={[Styles.addButton]}
+                textStyles={[{fontSize:40}]}
+              />
+            </View>
           </ScrollView>
-          <Control
-            onPress={() => dispatch(hideNewGameModa())}
-            text={'X'}
-            textStyles={[{fontSize:40}]}
-          />
+          <View style={Styles.bottomButtonsCont}>
+            <Control
+              onPress={handlePlay}
+              pressableStyles={[Styles.playButton]}
+              text={'PLAY!'}
+              textStyles={[{fontSize:30}]}
+            />
+            <Control
+              onPress={() => dispatch(hideNewGameModa())}
+              pressableStyles={[Styles.cancelButton]}
+              text={'CANCEL'}
+              textStyles={[{fontSize:30}]}
+            />
+          </View>
         </View>
       </View>
       <ConfirmModal
@@ -126,16 +155,60 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
   },
   textInput: {
-    fontSize: 40,
+    fontSize: 30,
     backgroundColor: Colors.COLOR3,
     paddingLeft: 10,
-    paddingRight: 10,
-    borderRadius: 2,
-    borderColor: 'black',
-    borderWidth: 1,
+    borderRadius: 5,
+    width: 190,
   },
-  gameOption: {
+  listItem: {
     flexDirection: 'row',
     gap: 15,
-  }
+    alignItems: 'center',
+  },
+  listItemText: {
+    fontSize: 20,
+  },
+  playerListView: {
+    borderColor: Colors.COLOR1,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  playerListCont: {
+    gap: 10,
+    padding: 10,
+  },
+  playerListItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  nameCheckCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  deleteButton: {
+    width: Sizes.smallButtons, 
+    height: Sizes.smallButtons,
+    backgroundColor: Colors.COLOR5,
+  },
+  addButton: {
+    borderRadius: 35,
+    backgroundColor: 'green',
+    borderColor: 'white',
+    borderWidth: 1,
+  },
+  bottomButtonsCont: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 15,
+  },
+  cancelButton: {
+    flex: 1.4,
+    backgroundColor: Colors.COLOR5,
+  },
+  playButton: {
+    flex: 1,
+  },
 });

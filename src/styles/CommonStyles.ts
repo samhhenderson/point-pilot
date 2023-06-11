@@ -12,11 +12,12 @@ export const CommonStyles = StyleSheet.create({
     maxWidth: 330,
     maxHeight: 600,
     borderRadius: 20,
-    padding: 30,
+    padding: 20,
     gap: 10,
   },
 
   text: {
-    color: 'white'
+    color: 'white',
+    fontSize: 20,
   }
 });

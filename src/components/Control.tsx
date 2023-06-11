@@ -19,7 +19,7 @@ const Control: FC<ControlProps> = ({
   pressableStyles = [], 
   textStyles = [], 
   onPress,
-  key = 1,
+  key = '1',
 }) => {
   const [isPressed, setIsPressed] = useState(false);
 

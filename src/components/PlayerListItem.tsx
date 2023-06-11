@@ -1,57 +1,82 @@
-import { FC, useRef } from "react";
-import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
+import { FC, useState, useEffect } from "react";
+import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
+import { hideNewGameModa, setConfirmModal } from "../modals/modalsSlice";
+import { changeActivePlayer, deletePlayer } from "../views/playerSlice";
 
+import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
-import * as Sizes from '../styles/Sizes';
+import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import CheckBox from "./CheckBox";
+import ConfirmModal from "../modals/ConfirmModal";
 
 type PlayerListItemProps = {
-  name: string,
+  player: Player,
+  setModalConfirmFunc: any,
 }
 
-const PlayerListItem: FC<PlayerListItemProps> = ({ name }) => {
+const PlayerListItem: FC<PlayerListItemProps> = ({ player, setModalConfirmFunc}) => {
+
   const dispatch = useDispatch();
 
-  return (
-    <View style={Styles.container} key={name}>
-
-      <Control
-        onPress={() => console.log('delete this fucker!')}
-        text={'X'}
-        pressableStyles={[Styles.deleteButton]}
-        textStyles={[{fontSize:40}]}
-      />
-    </View>
-  );
-}
-
-export const Styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 20,
-    borderRadius: 10,
-  },
-  gameNameButton: {
-    flexGrow: 1,
-    backgroundColor: Colors.COLOR2,
-    borderRadius: 2,
-    borderColor: 'white',
-    borderWidth: 1,
-    height: Sizes.smallButtons,
-  },
-  deleteButton: {
-    backgroundColor: Colors.COLOR5,
-    height: Sizes.smallButtons,
-    borderRadius: 2,
-    borderColor: 'white',
-    borderWidth: 1,
+  function handleDeletePlayer(player: Player) {
+    setModalConfirmFunc(() => () => dispatch(deletePlayer(player)));
+    dispatch(setConfirmModal({message: `Remove player ${player.name} from list?`}));
   }
-})
+
+
+  return (
+      <View style={Styles.playerListItem}>
+        <View style={Styles.checkboxNameCont}>
+          <CheckBox
+            value={player.active}
+            onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
+          />
+          <Text style={[CommonStyles.text]}>{player.name}</Text>
+        </View>
+        <Control
+            key={player.name}
+            text={'X'}
+            pressableStyles={[Styles.deleteButton]}
+            onPress={() => handleDeletePlayer(player)}
+            textStyles={[{fontSize:40}]}
+          />
+      </View>
+  )
+};
 
 export default PlayerListItem;
+
+const Styles = StyleSheet.create({
+  textInput: {
+    fontSize: 30,
+    backgroundColor: Colors.COLOR3,
+    paddingLeft: 10,
+    borderRadius: 5,
+    width: 190,
+  },
+  playerListItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  checkboxNameCont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  deleteButton: {
+    width: Sizes.smallButtons, 
+    height: Sizes.smallButtons,
+    backgroundColor: Colors.COLOR5,
+  },
+  addButton: {
+    borderRadius: 35,
+    backgroundColor: 'green',
+    borderColor: 'white',
+    borderWidth: 1,
+  },
+});
