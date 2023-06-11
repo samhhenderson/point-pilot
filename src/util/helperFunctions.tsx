@@ -13,3 +13,5 @@ export function pressStyle(...inputStyles: ViewStyle[]) {
     onPressOut: () => setIsPressed(false),
   };
 }
+
+

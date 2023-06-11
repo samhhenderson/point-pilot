@@ -24,6 +24,8 @@ export interface ModalsState {
   confirm: {
     vis: boolean,
     message: string,
+    confirmFunc: string,
+    confirmArgs: any[],
   }
 }
 

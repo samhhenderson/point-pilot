@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "
 import Checkbox from 'expo-checkbox';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa, setConfirmModal } from "./modalsSlice";
-import { changeActiveGame } from "../views/gameSlice";
+import { hideNewGameModa } from "./modalsSlice";
+import { changeActiveGame, addGame } from "../views/gameSlice";
 import { addPlayer } from "../views/playerSlice";
 
 import { State, Player, NavigationPropType } from "../types";
@@ -30,7 +30,6 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { newGame } = useSelector((state: State) => state.modals);
   const { playerList } = useSelector((state: State) => state.player);
 
-  const [ modalConfirmFunc, setModalConfirmFunc ] = useState<any>();
   const [ newPlayerName, setNewPlayerName ] = useState<string>();
 
   const dispatch = useDispatch();
@@ -40,6 +39,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   function handlePlay () {
     navigation.navigate('Game')
     dispatch(hideNewGameModa())
+    dispatch(addGame({gameName, useBid, lowScoreWins, teams}))
   }
 
   function handleNewPlayerDone() {
@@ -51,7 +51,6 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     playerListArray.push(
       <PlayerListItem
         player={player}
-        setModalConfirmFunc={setModalConfirmFunc}
       />
     )
   })
@@ -122,9 +121,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <ConfirmModal
-        onConfirm={modalConfirmFunc}
-      />
+      <ConfirmModal/>
     </Modal>
   );
 };
@@ -164,7 +161,7 @@ const Styles = StyleSheet.create({
   },
   playerListView: {
     borderColor: Colors.COLOR1,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
   },
   playerListCont: {

@@ -2,7 +2,8 @@ import { FC, useRef } from "react";
 import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
+import {  showNewGameModal, setConfirmModal } from "../modals/modalsSlice";
+import { setActiveGame } from "../views/gameSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
@@ -16,20 +17,33 @@ type GameListItemProps = {
 const GameListItem: FC<GameListItemProps> = ({ name }) => {
   const dispatch = useDispatch();
 
+  function handlePressGameItem() {
+    dispatch(setActiveGame(name));
+    dispatch(showNewGameModal());
+  }
+
+  function handleDeleteGameItem() {
+    dispatch(setConfirmModal({
+      message: `Remove ${name} from game list?`,
+      confirmFunc: 'deleteGame',
+      confirmArgs: [name],
+    }))
+  }
+
   return (
     <View style={Styles.container} key={name}>
       <Control
-          onPress={() => console.log('play this fucker!')}
-          text={name}
-          pressableStyles={[Styles.gameNameButton]}
-          textStyles={[{fontSize:30}]}
-        />
+        onPress={handlePressGameItem}
+        text={name}
+        pressableStyles={[Styles.gameNameButton]}
+        textStyles={[{fontSize:30}]}
+      />
       <Control
-          onPress={() => console.log('delete this fucker!')}
-          text={'X'}
-          pressableStyles={[Styles.deleteButton]}
-          textStyles={[{fontSize:40}]}
-        />
+        onPress={handleDeleteGameItem}
+        text={'X'}
+        pressableStyles={[Styles.deleteButton]}
+        textStyles={[{fontSize:30}]}
+      />
     </View>
   );
 }

@@ -15,20 +15,22 @@ import ConfirmModal from "../modals/ConfirmModal";
 
 type PlayerListItemProps = {
   player: Player,
-  setModalConfirmFunc?: any,
 }
 
-const PlayerListItem: FC<PlayerListItemProps> = ({ player, setModalConfirmFunc}) => {
+const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   const { teams } = useSelector((state: State) => state.game.activeGame)
   const dispatch = useDispatch();
 
-  function handleDeletePlayer(player: Player) {
-    setModalConfirmFunc(() => () => dispatch(deletePlayer(player)));
-    dispatch(setConfirmModal({message: `Remove player ${player.name} from list?`}));
+  function handleDeletePlayer() {
+    dispatch(setConfirmModal({
+      message: `Remove player ${player.name} from list?`,
+      confirmFunc: 'deletePlayer',
+      confirmArgs: [player.name],
+    }))
   }
 
  return (
-    <View key={player.name}style={Styles.playerListItem}>
+    <View key={player.name} style={Styles.playerListItem}>
       <View style={Styles.checkboxNameCont}>
         <CheckBox
           value={player.active}
@@ -44,11 +46,11 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player, setModalConfirmFunc})
         <Text style={[CommonStyles.text]}>{player.name}</Text>
       </View>
       <Control
-          text={'X'}
-          pressableStyles={[Styles.deleteButton]}
-          onPress={() => handleDeletePlayer(player)}
-          textStyles={[{fontSize:20}]}
-        />
+        text={'X'}
+        pressableStyles={[Styles.deleteButton]}
+        onPress={handleDeletePlayer}
+        textStyles={[{fontSize:20}]}
+      />
     </View>
   )
 };
@@ -69,7 +71,7 @@ const Styles = StyleSheet.create({
   checkboxNameCont: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 5,
   },
   deleteButton: {
     width: Sizes.smallButtons -10, 

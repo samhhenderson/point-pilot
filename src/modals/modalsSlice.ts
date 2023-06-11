@@ -15,6 +15,8 @@ export const modalsSlice = createSlice({
     confirm: {
       vis: false,
       message: '',
+      confirmFunc: '',
+      confirmArgs: [''],
     }
   } as ModalsState,
   reducers: {
@@ -37,6 +39,8 @@ export const modalsSlice = createSlice({
     setConfirmModal: (state, action) => {
       state.confirm.vis = true;
       state.confirm.message = action.payload.message;
+      state.confirm.confirmFunc = action.payload.confirmFunc;
+      state.confirm.confirmArgs = action.payload.confirmArgs;
     },
     hideConfirmModal: state => {
       state.confirm.vis = false

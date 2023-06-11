@@ -10,6 +10,7 @@ import { CommonStyles } from "../styles/CommonStyles";
 import GameListItem from "../components/GameListItem";
 import Control from "../components/Control";
 import NewGameModal from '../modals/NewGameModal';
+import ConfirmModal from "../modals/ConfirmModal";
 
 type HomeProps = {
   navigation: NavigationPropType,
@@ -40,12 +41,12 @@ const Home: FC<HomeProps> = ({navigation}) => {
               pressableStyles={[Styles.addButton]}
               textStyles={[{fontSize:40}]}
             />
-
           </View>
         </ScrollView>
         <NewGameModal
           navigation={navigation}
         />
+        <ConfirmModal/>
       </View>
   );
 };

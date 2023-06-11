@@ -1,8 +1,10 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { StyleSheet, View, Text, Modal } from "react-native";
 import Checkbox from "expo-checkbox";
 
 import { useSelector, useDispatch } from "react-redux";
+import { deleteGame } from "../views/gameSlice";
+import { deletePlayer } from "../views/playerSlice";
 
 import { State } from "../types";
 import * as Colors from '../styles/Colors';
@@ -11,17 +13,32 @@ import Control from "../components/Control";
 import { hideConfirmModal } from "./modalsSlice";
 
 type ConfirmModalProps = {
-  onConfirm: any,
+
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({ onConfirm }) => {
+const ConfirmModal: FC<ConfirmModalProps> = () => {
+
   const dispatch = useDispatch();
 
-  const { vis, message } = useSelector((state:State) => state.modals.confirm)
+  const { 
+    vis, 
+    message,
+    confirmFunc,
+    confirmArgs,
+   } = useSelector((state:State) => state.modals.confirm)
 
   function handleConfirm() {
-    onConfirm();
-    dispatch(hideConfirmModal());
+    switch(confirmFunc) {
+      case 'deleteGame':
+        dispatch(deleteGame(confirmArgs[0]));
+        break;
+      case 'deletePlayer':
+        dispatch(deletePlayer(confirmArgs[0]))
+        break;
+      default:
+        console.log('NO FUNCTION FOUND')
+    }
+    dispatch(hideConfirmModal())
   }
 
   return (
