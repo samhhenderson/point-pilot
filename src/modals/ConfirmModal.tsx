@@ -6,17 +6,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteGame } from "../views/gameSlice";
 import { deletePlayer } from "../views/playerSlice";
 
-import { State } from "../types";
+import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
 import { hideConfirmModal } from "./modalsSlice";
+import db from "../db/db-service";
 
 type ConfirmModalProps = {
-
+  navigation: NavigationPropType,
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = () => {
+const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
@@ -30,10 +31,13 @@ const ConfirmModal: FC<ConfirmModalProps> = () => {
   function handleConfirm() {
     switch(confirmFunc) {
       case 'deleteGame':
-        dispatch(deleteGame(confirmArgs[0]));
+        if (confirmArgs) dispatch(deleteGame(confirmArgs[0]));
         break;
       case 'deletePlayer':
-        dispatch(deletePlayer(confirmArgs[0]))
+        if (confirmArgs) dispatch(deletePlayer(confirmArgs[0]));
+        break;
+      case 'endGame':
+        navigation.navigate('Home');
         break;
       default:
         console.log('NO FUNCTION FOUND')

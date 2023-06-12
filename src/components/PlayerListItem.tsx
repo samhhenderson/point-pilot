@@ -23,14 +23,14 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   function handleDeletePlayer() {
     dispatch(setConfirmModal({
-      message: `Remove player ${player.name} from list?`,
+      message: `Remove ${player.name} from player list?`,
       confirmFunc: 'deletePlayer',
       confirmArgs: [player.name],
     }))
   }
 
  return (
-    <View key={player.name} style={Styles.playerListItem}>
+    <View style={Styles.playerListItem}>
       <View style={Styles.checkboxNameCont}>
         <CheckBox
           value={player.active}

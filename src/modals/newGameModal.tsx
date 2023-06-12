@@ -34,8 +34,6 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const playerListArray:  JSX.Element[] = [];
-
   function handlePlay () {
     navigation.navigate('Game')
     dispatch(hideNewGameModa())
@@ -46,14 +44,6 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     setNewPlayerName('');
     dispatch(addPlayer({name: newPlayerName}));
   }
-
-  playerList.forEach((player:Player) => {
-    playerListArray.push(
-      <PlayerListItem
-        player={player}
-      />
-    )
-  })
 
   return (
     <Modal
@@ -95,7 +85,12 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
-              {playerListArray}
+              {playerList.map((player, i) => (
+                <PlayerListItem
+                  key={i}
+                  player={player}
+                />
+              ))}
               <TextInput
                 style={Styles.textInput}
                 onChangeText={text => setNewPlayerName(text)}
@@ -121,7 +116,9 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <ConfirmModal/>
+      <ConfirmModal
+        navigation={navigation}
+      />
     </Modal>
   );
 };

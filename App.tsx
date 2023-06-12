@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Provider } from 'react-redux';
@@ -9,10 +10,16 @@ import store from './src/store'
 import Game from './src/views/Game';
 import Home from './src/views/Home';
 import * as Colors from './src/styles/Colors'
+import db from './src/db/db-service';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
+  useEffect(() => {
+
+  }, [])
+
   return (
     <Provider store={store}>
       <StatusBar style='light'/>

@@ -11,7 +11,6 @@ type ControlProps = {
   pressableStyles?: ViewStyle[] | {}[],
   textStyles?: ViewStyle[] | {}[],
   onPress: any,
-  key?: string | number,
 }
 
 const Control: FC<ControlProps> = ({ 
@@ -19,13 +18,11 @@ const Control: FC<ControlProps> = ({
   pressableStyles = [], 
   textStyles = [], 
   onPress,
-  key = '1',
 }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   return (
       <Pressable
-        key={key}
         style={[
           Styles.buttons,
           ...pressableStyles,
@@ -35,7 +32,7 @@ const Control: FC<ControlProps> = ({
         onPressOut={() => setIsPressed(false)}
         onPress={onPress}
       >
-        <Text key={key} style={[CommonStyles.text, ...textStyles]}>{text}</Text>
+        <Text style={[CommonStyles.text, ...textStyles]}>{text}</Text>
       </Pressable>
   );
 }

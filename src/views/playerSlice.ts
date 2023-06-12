@@ -5,10 +5,10 @@ export const playerSlice = createSlice({
   name: 'player',
   initialState: {
     playerList: [
-      {name: 'Sam', active: true, score: 0, bid: 0, team: 0}, 
-      {name: 'Emily', active: true, score: 0, bid: 0, team: 0},
-      {name: 'Kevin', active: false, score: 0, bid: 0, team: 0}, 
-      {name: 'Julia', active: false, score: 0, bid: 0, team: 0},
+      {name: 'Sam', active: true, score: 0, bid: 0, team: 0, place: 0,}, 
+      {name: 'Emily', active: true, score: 0, bid: 0, team: 0, place: 0,},
+      {name: 'Kevin', active: false, score: 0, bid: 0, team: 0, place: 0,}, 
+      {name: 'Julia', active: false, score: 0, bid: 0, team: 0, place: 0,},
     ],
   } as PlayerState,
   reducers: {
@@ -21,6 +21,7 @@ export const playerSlice = createSlice({
           score: 0,
           bid: 0,
           team: 0,
+          place: 0,
         });
       }
     },
@@ -41,6 +42,21 @@ export const playerSlice = createSlice({
     changeTeam: (state, action) => {
       const player = state.playerList.find((p) => p.name === action.payload);
       if (player) player.team === 9? player.team = 0 : player.team++;
+    },
+    calculatePlaces: state => {
+      state.playerList.sort((a, b) => b.score - a.score);
+      let currentPlace = 1;
+      state.playerList.every((player, i) => {
+        if (!player.active) return false;
+        if (i === 0) player.place = currentPlace;
+        else if (player.score === state.playerList[i - 1].score) {
+          player.place = currentPlace;
+        } else {
+          currentPlace++;
+          player.place = currentPlace;
+        }
+        return true;
+      })
     }
   }
 })
@@ -51,5 +67,6 @@ export const {
   changeActivePlayer, 
   changeScore,
   changeTeam,
+  calculatePlaces,
 } = playerSlice.actions;
 export default playerSlice.reducer;

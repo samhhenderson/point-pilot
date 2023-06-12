@@ -6,6 +6,7 @@ export interface Player {
   score: number,
   bid: number,
   team: 0|1|2|3|4|5|6|7|8|9,
+  place: number,
 }
 
 export interface PlayerState {
@@ -25,7 +26,7 @@ export interface ModalsState {
     vis: boolean,
     message: string,
     confirmFunc: string,
-    confirmArgs: any[],
+    confirmArgs?: any[],
   }
 }
 

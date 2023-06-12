@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-nativ
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "./modalsSlice";
-import { changeScore } from "../views/playerSlice";
+import { calculatePlaces, changeScore } from "../views/playerSlice";
 
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
@@ -82,7 +82,9 @@ const NumberModal: FC = () => {
       playerName: playerName, 
       scoreToAdd: score,
       isBid: isBid
-    }));  dispatch(hideNumberModal());
+    }));  
+    dispatch(calculatePlaces())
+    dispatch(hideNumberModal());
   }
 
   useEffect(() => {
@@ -100,7 +102,7 @@ const NumberModal: FC = () => {
         <View 
           style={[CommonStyles.largeModal, Styles.largeModalChanges]}
           onLayout={(event) => {
-            console.log(event.nativeEvent.layout.width)
+            
             setViewWidth(event.nativeEvent.layout.width)}}
         >
           <View style={[Styles.display, {width: viewWidth - 60}]}>

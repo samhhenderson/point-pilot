@@ -27,7 +27,6 @@ export const gameSlice = createSlice({
     },
     deleteGame: (state, action) => {
       const gameIndex = state.gameList.findIndex((g) => g.gameName === action.payload);
-      console.log('game', gameIndex)
       state.gameList.splice(gameIndex, 1);
     },
   }

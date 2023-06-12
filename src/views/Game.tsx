@@ -2,12 +2,14 @@ import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
+import { setConfirmModal } from "../modals/modalsSlice";
 
 import { Player, State, NavigationPropType } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
+import ConfirmModal from "../modals/ConfirmModal";
 import Control from "../components/Control";
 
 type GameProps = {
@@ -19,30 +21,35 @@ const Game: FC<GameProps> = ({ navigation }) => {
   
   const dispatch = useDispatch();
 
-  const playerList = useSelector((state: State) => state.player.playerList);
+  const { playerList } = useSelector((state: State) => state.player);
   const { gameName, useBid } = useSelector((state: State) => state.game.activeGame);
-
-  let activePlayerList:  JSX.Element[] = [];
-  
-  playerList.forEach((player:Player, i) => {
-    if (player.active) {
-    activePlayerList.push(
-      <ActivePlayer 
-        key={i}
-        bid={player.bid}
-        name={player.name} 
-        score={player.score}
-      />)
-    }
-  })
   
   useEffect(() => {
     if (useBid) setBidTitle('BID')
   }, [])
 
-
   function endGame() {
-    navigation.navigate('Home')
+    const winners: string[] = [];
+    playerList.every(player => {
+      if (player.place === 1) {
+        winners.push(player.name);
+        return true;
+      }
+      else return false;
+    })
+    let names = '';
+    let plural= '';
+    if (winners.length === 1) {
+      names = winners[0];
+    } else {
+      names = winners.join(' and ');
+      plural = 's';
+    }
+    dispatch(setConfirmModal({
+      message: `End game? ${names} will be the winner${plural}!`,
+      confirmFunc: 'endGame',
+    }))
+
   }
 
   return (
@@ -57,7 +64,17 @@ const Game: FC<GameProps> = ({ navigation }) => {
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {activePlayerList}
+            {playerList.map((player, i) => {
+              if (player.active) {
+                return(
+                  <ActivePlayer 
+                    key={i}
+                    bid={player.bid}
+                    name={player.name} 
+                    score={player.score}
+                  />)
+                }
+              })}
           </View>
           <View style={Styles.endGameContainer}>
             <Control
@@ -69,6 +86,9 @@ const Game: FC<GameProps> = ({ navigation }) => {
           </View>
         </ScrollView>
         <NumberModal/>
+        <ConfirmModal
+          navigation={navigation}
+        />
       </View>
   );
 };

@@ -20,21 +20,17 @@ const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const gameList = useSelector((state: State) => state.game.gameList);
 
-  const gameListRender: JSX.Element[] = [];
-  gameList.forEach((game:Game, i) => {
-    gameListRender.push(
-      <GameListItem
-        key={i}
-        name={game.gameName}
-      />)
-  })
-
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
           <Text style={[CommonStyles.text, Styles.title]}>Games</Text>
           <View style={Styles.gameListContainer}>
-            {gameListRender}
+            {gameList.map((game, i) => (
+              <GameListItem
+                key={i}
+                name={game.gameName}
+              />
+            ))}
             <Control
               onPress={() => dispatch(showNewGameModal())}
               text={'+'}
@@ -46,7 +42,9 @@ const Home: FC<HomeProps> = ({navigation}) => {
         <NewGameModal
           navigation={navigation}
         />
-        <ConfirmModal/>
+        <ConfirmModal
+          navigation={navigation}
+        />
       </View>
   );
 };
