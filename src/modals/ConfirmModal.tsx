@@ -11,7 +11,7 @@ import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
 import { hideConfirmModal } from "./modalsSlice";
-import db from "../db/db-service";
+import { db } from "../db/db-service";
 
 type ConfirmModalProps = {
   navigation: NavigationPropType,

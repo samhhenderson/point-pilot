@@ -1,5 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { PlayerState } from '../types';
+import { db, executeSqlAsync } from '../db/db-service';
+import { Query } from 'expo-sqlite';
+
+export const addPlayerToDB = createAsyncThunk(
+  'player/addPlayerToDB', 
+  (newPlayer, thunkApi) => {
+    const query = 
+    `CREATE TABLE Players (
+      playerName TEXT PRIMARY KEY,
+      icon TEXT
+    );
+    `
+    executeSqlAsync(query)
+      .then(response => console.log(response))
+      .catch(error => console.log(error))
+  }
+)
+
 
 export const playerSlice = createSlice({
   name: 'player',
@@ -58,6 +76,11 @@ export const playerSlice = createSlice({
         return true;
       })
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(addPlayerToDB.fulfilled, (state, action) => {
+      
+    })
   }
 })
 

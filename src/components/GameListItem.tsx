@@ -42,7 +42,7 @@ const GameListItem: FC<GameListItemProps> = ({ name }) => {
         onPress={handleDeleteGameItem}
         text={'X'}
         pressableStyles={[Styles.deleteButton]}
-        textStyles={[{fontSize:30}]}
+        textStyles={[{fontSize:20}]}
       />
     </View>
   );
@@ -54,17 +54,19 @@ export const Styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 20,
     borderRadius: 10,
+    alignItems: 'center',
   },
   gameNameButton: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR2,
-    borderRadius: 2,
+    borderRadius: 10,
     height: Sizes.smallButtons,
   },
   deleteButton: {
     backgroundColor: Colors.COLOR5,
-    height: Sizes.smallButtons,
-    borderRadius: 2,
+    height: Sizes.smallButtons - 10,
+    width: Sizes.smallButtons - 10,
+    borderRadius: 10,
   }
 })
 

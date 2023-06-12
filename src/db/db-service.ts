@@ -1,5 +1,16 @@
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('PlayerDB')
+export const db = SQLite.openDatabase('PlayerDB')
 
-export default db;
+export function executeSqlAsync(sqlStatement: string, params: string[] = []) {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        sqlStatement,
+        params,
+        (_, result) => resolve(result),
+        (_, error) => {reject(error); return true;}
+      );
+    });
+  });
+}

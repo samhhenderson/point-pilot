@@ -5,7 +5,7 @@ import Checkbox from 'expo-checkbox';
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModa } from "./modalsSlice";
 import { changeActiveGame, addGame } from "../views/gameSlice";
-import { addPlayer } from "../views/playerSlice";
+import { addPlayer, addPlayerToDB } from "../views/playerSlice";
 
 import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
