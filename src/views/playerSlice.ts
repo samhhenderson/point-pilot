@@ -8,9 +8,10 @@ export const addPlayer = createAsyncThunk(
   async (newPlayer: string, thunkApi) => {
     const query = 
     `INSERT INTO Players (name)
-    VALUES (?)`
+    VALUES (?)
+    RETURNING *;`
     return executeSqlAsync(query, [newPlayer])
-      .then(response => console.log('INSERT', response))
+      .then(response => response.rows._array[0])
       .catch(error => console.log('INSERT ' + error))
   }
 )
@@ -21,8 +22,7 @@ export const deletePlayer = createAsyncThunk(
     const query = 
     `DELETE FROM Players
     WHERE name = ?`
-    return executeSqlAsync(query, [deletedPlayer])
-      .then(response => console.log('DELETE Success'))
+    executeSqlAsync(query, [deletedPlayer])
       .catch(error => console.log('DELETE ' + error))
   }
 )
@@ -36,7 +36,6 @@ export const getPlayers = createAsyncThunk(
       .catch(error => console.log('GET PLAYERS ' + error))
   }
 )
-
 
 export const playerSlice = createSlice({
   name: 'player',

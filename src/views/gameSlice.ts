@@ -1,5 +1,21 @@
+//import redux methods
 import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk } from '@reduxjs/toolkit';
+
+//import other
 import { GameState } from '../types';
+import { executeSqlAsync } from '../db/db-service';
+
+export const getGames = createAsyncThunk(
+  'player/getGames',
+  async (thunkApi) => {
+    const query = `SELECT * FROM Players`;
+    return executeSqlAsync(query, [])
+      .then(response => response.rows._array)
+      .catch(error => console.log('GET PLAYERS ' + error))
+  }
+)
+
 
 export const gameSlice = createSlice({
   name: 'view',
