@@ -1,12 +1,16 @@
+//Expo and React imports
 import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
 import Checkbox from 'expo-checkbox';
 
+//Redux imports
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModa } from "./modalsSlice";
 import { changeActiveGame, addGame } from "../views/gameSlice";
-import { addPlayer, addPlayerToDB } from "../views/playerSlice";
+import { addPlayer } from "../views/playerSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
+//Other imports
 import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
@@ -33,6 +37,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const [ newPlayerName, setNewPlayerName ] = useState<string>('');
 
   const dispatch = useDispatch();
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   function handlePlay () {
     navigation.navigate('Game')
@@ -42,7 +47,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   function handleNewPlayerDone(): void {
     setNewPlayerName('');
-    dispatch(addPlayer({name: newPlayerName}));
+    dispatchThunk(addPlayer(newPlayerName));
   }
 
 
@@ -86,12 +91,17 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
-              {playerList.map((player, i) => (
-                <PlayerListItem
-                  key={i}
-                  player={player}
-                />
-              ))}
+              {playerList ?
+                Object.keys(playerList).map((player) => {
+                  const p = playerList[player];
+                  return (
+                    <PlayerListItem 
+                      key={p.name}
+                      player={p}
+                    />
+                  )
+                }) : null
+              }
               <TextInput
                 style={Styles.textInput}
                 onChangeText={text => setNewPlayerName(text)}

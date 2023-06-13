@@ -1,8 +1,10 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { showNewGameModal } from "../modals/modalsSlice";
+import { ThunkDispatch } from "redux-thunk";
+import { getPlayers } from "./playerSlice";
 
 import { State, NavigationPropType, Game } from "../types";
 import * as Colors from './../styles/Colors';
@@ -18,6 +20,12 @@ type HomeProps = {
 
 const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
+
+  useEffect(() => {
+    dispatchThunk(getPlayers())
+  }, [])
+
   const gameList = useSelector((state: State) => state.game.gameList);
 
   return (

@@ -2,15 +2,29 @@ import { NavigationProp } from "@react-navigation/native";
 
 export interface Player {
   name: string,
-  active: boolean,
+  icon: string,
+  active: number,
   score: number,
   bid: number,
   team: 0|1|2|3|4|5|6|7|8|9,
   place: number,
 }
+export function Player(name: string): Player{
+  return {
+    name, 
+    icon: '',
+    active: 0,
+    score: 0,
+    bid: 0,
+    team: 0,
+    place: 0,
+  }
+}
 
 export interface PlayerState {
-  playerList: Player[]
+  playerList: {
+    [key: string]: Player
+  }
 }
 
 export interface ModalsState {

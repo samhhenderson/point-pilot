@@ -3,86 +3,101 @@ import { Player, PlayerState } from '../types';
 import { db, executeSqlAsync } from '../db/db-service';
 import { Query } from 'expo-sqlite';
 
-export const addPlayerToDB = createAsyncThunk(
-  'player/addPlayerToDB', 
-  (newPlayer: string, thunkApi) => {
-    const testQuery = 
-    `INSERT INTO Players (playerName)
+export const addPlayer = createAsyncThunk(
+  'player/addPlayer', 
+  async (newPlayer: string, thunkApi) => {
+    const query = 
+    `INSERT INTO Players (name)
     VALUES (?)`
-    executeSqlAsync(testQuery, [newPlayer])
-      .then(response => console.log(response))
+    return executeSqlAsync(query, [newPlayer])
+      .then(response => console.log('INSERT', response))
       .catch(error => console.log('INSERT ' + error))
   }
 )
 
+export const deletePlayer = createAsyncThunk(
+  'player/deletePlayer', 
+  async (deletedPlayer: string, thunkApi) => {
+    const query = 
+    `DELETE FROM Players
+    WHERE name = ?`
+    return executeSqlAsync(query, [deletedPlayer])
+      .then(response => console.log('DELETE Success'))
+      .catch(error => console.log('DELETE ' + error))
+  }
+)
+
+export const getPlayers = createAsyncThunk(
+  'player/getPlayers',
+  async (thunkApi) => {
+    const query = `SELECT * FROM Players`;
+    return executeSqlAsync(query, [])
+      .then(response => response.rows._array)
+      .catch(error => console.log('GET PLAYERS ' + error))
+  }
+)
+
+
 export const playerSlice = createSlice({
   name: 'player',
   initialState: {
-    playerList: [
-      {name: 'Sam', active: true, score: 0, bid: 0, team: 0, place: 0,}, 
-      {name: 'Emily', active: true, score: 0, bid: 0, team: 0, place: 0,},
-      {name: 'Kevin', active: false, score: 0, bid: 0, team: 0, place: 0,}, 
-      {name: 'Julia', active: false, score: 0, bid: 0, team: 0, place: 0,},
-    ],
+    playerList: {}
   } as PlayerState,
   reducers: {
-    addPlayer: (state, action) => {
-      //double check that the new player is unique
-      if (!state.playerList.some(player => player.name === action.payload.name)) {
-        state.playerList.push({
-          name: action.payload.name, 
-          active: false, 
-          score: 0,
-          bid: 0,
-          team: 0,
-          place: 0,
-        });
-      }
-    },
-    deletePlayer: (state, action) => {
-      const index = state.playerList.findIndex((p) => p.name === action.payload);
-      state.playerList.splice(index, 1);
-    },
     changeActivePlayer: (state, action) => {
-      const player = state.playerList.find((p) => p.name === action.payload);
-      if (player) player.active = !player.active;
+      state.playerList[action.payload].active === 1 ? 
+        state.playerList[action.payload].active = 0 : 
+        state.playerList[action.payload].active = 1;
     },
     changeScore: (state, action) => {
       const { playerName, scoreToAdd, isBid } = action.payload;
-      const player = state.playerList.find((p) => p.name === playerName);
+      const player = state.playerList[playerName];
       if (player && !isBid) player.score += scoreToAdd;
       else if (player) player.bid += scoreToAdd;
     },
     changeTeam: (state, action) => {
-      const player = state.playerList.find((p) => p.name === action.payload);
+      const player = state.playerList[action.payload];
       if (player) player.team === 9? player.team = 0 : player.team++;
     },
     calculatePlaces: state => {
-      state.playerList.sort((a, b) => b.score - a.score);
+      const activePlayers: Player[] = [];
+      for (const player in state.playerList) {
+        if (state.playerList[player].active) {
+          activePlayers.push(state.playerList[player]);
+        }
+      }
+      activePlayers.sort((a, b) => b.score - a.score);
       let currentPlace = 1;
-      state.playerList.every((player, i) => {
-        if (!player.active) return false;
+      activePlayers.forEach((player, i) => {
         if (i === 0) player.place = currentPlace;
-        else if (player.score === state.playerList[i - 1].score) {
+        else if (player.score === activePlayers[i - 1].score) {
           player.place = currentPlace;
         } else {
           currentPlace++;
           player.place = currentPlace;
         }
-        return true;
       })
     }
   },
   extraReducers: builder => {
-    builder.addCase(addPlayerToDB.fulfilled, (state, action) => {
-      
-    })
+    builder.addCase(addPlayer.fulfilled, (state, action) => {
+      if (!state.playerList[action.meta.arg]) {
+        state.playerList[action.meta.arg] = Player(action.meta.arg);
+      }
+    });
+    builder.addCase(deletePlayer.fulfilled, (state, action) => {
+      delete state.playerList[action.meta.arg];
+    });
+    builder.addCase(getPlayers.fulfilled, (state, action) => {
+      if (action.payload) {action.payload.forEach((player: Player) => {
+        state.playerList[player.name] = player;
+        })
+      }
+    });
   }
 })
 
 export const { 
-  addPlayer, 
-  deletePlayer,
   changeActivePlayer, 
   changeScore,
   changeTeam,
