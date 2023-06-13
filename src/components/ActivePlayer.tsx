@@ -32,13 +32,13 @@ const ActivePlayer: FC<PlayerProps> = ({ name, score, bid }) => {
     <View style={Styles.container} key={name}>
       <Text style={[CommonStyles.text, {fontSize: 50}]}>{name}</Text>
       <View style={Styles.pointsContainer}>
-        {useBid &&       
+        {useBid ?       
         <Control
           onPress={() => openNumberModal(true)}
           text={bid.toString()}
           pressableStyles={[Styles.bidButton]}
           textStyles={[Styles.bidText]}
-        />}
+        /> : null}
         <Control
           onPress={() => openNumberModal(false)}
           text={score.toString()}

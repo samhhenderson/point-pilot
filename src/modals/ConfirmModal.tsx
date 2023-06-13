@@ -5,6 +5,7 @@ import Checkbox from "expo-checkbox";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteGame } from "../views/gameSlice";
 import { deletePlayer } from "../views/playerSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
@@ -20,6 +21,7 @@ type ConfirmModalProps = {
 const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 
   const dispatch = useDispatch();
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   const { 
     vis, 
@@ -34,7 +36,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
         if (confirmArgs) dispatch(deleteGame(confirmArgs[0]));
         break;
       case 'deletePlayer':
-        if (confirmArgs) dispatch(deletePlayer(confirmArgs[0]));
+        if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
         break;
       case 'endGame':
         navigation.navigate('Home');

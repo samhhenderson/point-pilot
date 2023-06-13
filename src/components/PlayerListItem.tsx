@@ -33,15 +33,15 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
     <View style={Styles.playerListItem}>
       <View style={Styles.checkboxNameCont}>
         <CheckBox
-          value={player.active}
+          value={!!player.active}
           onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
         />
-        {teams && 
+        {teams ?
         <Control
           text={player.team.toString()}
           onPress={() => dispatch(changeTeam(player.name))}
           pressableStyles={[Styles.teamButton]}
-        />
+        /> : null
         }
         <Text style={[CommonStyles.text]}>{player.name}</Text>
       </View>

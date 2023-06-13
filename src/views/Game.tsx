@@ -23,20 +23,18 @@ const Game: FC<GameProps> = ({ navigation }) => {
 
   const { playerList } = useSelector((state: State) => state.player);
   const { gameName, useBid } = useSelector((state: State) => state.game.activeGame);
-  
+
   useEffect(() => {
     if (useBid) setBidTitle('BID')
   }, [])
 
   function endGame() {
     const winners: string[] = [];
-    playerList.every(player => {
-      if (player.place === 1) {
-        winners.push(player.name);
-        return true;
+    for (const player in playerList) {
+      if (playerList[player].place === 1) {
+        winners.push(player);
       }
-      else return false;
-    })
+    }
     let names = '';
     let plural= '';
     if (winners.length === 1) {
@@ -49,7 +47,6 @@ const Game: FC<GameProps> = ({ navigation }) => {
       message: `End game? ${names} will be the winner${plural}!`,
       confirmFunc: 'endGame',
     }))
-
   }
 
   return (
@@ -64,17 +61,19 @@ const Game: FC<GameProps> = ({ navigation }) => {
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {playerList.map((player, i) => {
-              if (player.active) {
-                return(
+            {Object.keys(playerList).map((player) => {
+              const p = playerList[player];
+              if (p.active) {
+                return (
                   <ActivePlayer 
-                    key={i}
-                    bid={player.bid}
-                    name={player.name} 
-                    score={player.score}
-                  />)
-                }
-              })}
+                    key={player}
+                    bid={p.bid}
+                    name={player} 
+                    score={p.score}
+                  />
+                )
+              }
+            })}
           </View>
           <View style={Styles.endGameContainer}>
             <Control
