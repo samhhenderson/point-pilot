@@ -1,23 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { PlayerState } from '../types';
+import { Player, PlayerState } from '../types';
 import { db, executeSqlAsync } from '../db/db-service';
 import { Query } from 'expo-sqlite';
 
 export const addPlayerToDB = createAsyncThunk(
   'player/addPlayerToDB', 
-  (newPlayer, thunkApi) => {
-    const query = 
-    `CREATE TABLE Players (
-      playerName TEXT PRIMARY KEY,
-      icon TEXT
-    );
-    `
-    executeSqlAsync(query)
+  (newPlayer: string, thunkApi) => {
+    const testQuery = 
+    `INSERT INTO Players (playerName)
+    VALUES (?)`
+    executeSqlAsync(testQuery, [newPlayer])
       .then(response => console.log(response))
-      .catch(error => console.log(error))
+      .catch(error => console.log('INSERT ' + error))
   }
 )
-
 
 export const playerSlice = createSlice({
   name: 'player',

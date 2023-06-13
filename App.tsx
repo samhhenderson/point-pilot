@@ -21,24 +21,29 @@ export default function App() {
     const createPlayerTable = 
     `CREATE TABLE IF NOT EXISTS Players (
       playerName TEXT PRIMARY KEY,
-      icon TEXT
+      icon TEXT DEFAULT 'none',
+      active BOOLEAN DEFAULT false,
+      score INTEGER DEFAULT 0,
+      bid INTEGER DEFAULT 0,
+      team INTEGER DEFAULT 0,
+      place INTEGER DEFAULT 0,
     );`
     executeSqlAsync(createPlayerTable)
       .then(response => console.log(response))
       .catch(error => console.log('CREATE TABLE ' + error))
 
-    //executeSqlAsync('DELETE FROM Players;')
+    // //executeSqlAsync('DELETE FROM Players;')
 
-    const testQuery = 
-    `INSERT INTO Players (playerName, icon)
-    VALUES (?, ?)`
-    executeSqlAsync(testQuery, ['Sam', 'Ugly'])
-      .then(response => console.log(response))
-      .catch(error => console.log('INSERT ' + error))
+    // const testQuery = 
+    // `INSERT INTO Players (playerName, icon)
+    // VALUES (?, ?)`
+    // executeSqlAsync(testQuery, ['Sam', 'Ugly'])
+    //   .then(response => console.log(response))
+    //   .catch(error => console.log('INSERT ' + error))
     
-    executeSqlAsync('SELECT * FROM Players;')
-      .then((response) => console.log(response.rows._array))
-      .catch(error => console.log(error))
+    // executeSqlAsync('SELECT * FROM Players;')
+    //   .then((response) => console.log(response.rows._array))
+    //   .catch(error => console.log(error))
   }, [])
 
   return (

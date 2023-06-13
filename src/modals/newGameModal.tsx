@@ -30,7 +30,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { newGame } = useSelector((state: State) => state.modals);
   const { playerList } = useSelector((state: State) => state.player);
 
-  const [ newPlayerName, setNewPlayerName ] = useState<string>();
+  const [ newPlayerName, setNewPlayerName ] = useState<string>('');
 
   const dispatch = useDispatch();
 
@@ -40,10 +40,11 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     dispatch(addGame({gameName, useBid, lowScoreWins, teams}))
   }
 
-  function handleNewPlayerDone() {
+  function handleNewPlayerDone(): void {
     setNewPlayerName('');
     dispatch(addPlayer({name: newPlayerName}));
   }
+
 
   return (
     <Modal
