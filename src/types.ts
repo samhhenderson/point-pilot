@@ -38,9 +38,10 @@ export interface ModalsState {
 export interface Game {
   id: number,
   name: string,
-  lowScoreWins: number,
-  useBid: number,
-  teams: number,
+  lowScoreWins: 0 | 1,
+  useBid: 0 | 1,
+  teams: 0 | 1,
+  display: 0 | 1,
 }
 
 export interface GameState {
@@ -54,7 +55,8 @@ export interface GameState {
 export interface Session {
   id: number,
   date: string,
-  game_id: number,
+  gameId: number,
+  complete: 0 | 1,
 }
 
 export interface SessionState {
@@ -68,11 +70,10 @@ export interface State {
   player: PlayerState,
   modals: ModalsState,
   game: GameState,
-  session: SessionState,
 }
 
 export type NavigationPropType = NavigationProp<
-  { Home: undefined, Game: undefined, History: undefined, Settings: undefined }, 
-  'Home' | 'Game' | 'History' | 'Settings'
+  { Home: undefined, Session: undefined, History: undefined, Settings: undefined }, 
+  'Home' | 'Session' | 'History' | 'Settings'
 >
  

@@ -2,8 +2,8 @@ import { FC, useRef } from "react";
 import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import {  showNewGameModal, setConfirmModal } from "../modals/modalsSlice";
-import { setActiveGame } from "../views/gameSlice";
+import {  showNewGameModal, setConfirmModal } from "../redux/modalsSlice";
+import { setActiveGame } from "../redux/gameSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';

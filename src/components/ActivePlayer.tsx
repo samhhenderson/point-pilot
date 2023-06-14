@@ -2,8 +2,8 @@ import { FC, useState, useEffect} from "react";
 import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNumberModal, hideNumberModal } from "../modals/modalsSlice";
-import { setNumberModalPlayer } from "../modals/modalsSlice";
+import { showNumberModal, hideNumberModal } from "../redux/modalsSlice";
+import { setNumberModalPlayer } from "../redux/modalsSlice";
 
 import { State } from "../types";
 import * as Colors from '../styles/Colors'

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import playerReducer from './views/playerSlice';
-import modalsReducer from './modals/modalsSlice';
-import gameReducer from './views/gameSlice';
+import playerReducer from './playerSlice';
+import modalsReducer from './modalsSlice';
+import gameReducer from './gameSlice';
 
 export default configureStore({ 
   reducer: {

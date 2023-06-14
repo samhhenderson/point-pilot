@@ -3,15 +3,15 @@ import { StyleSheet, View, Text, Modal } from "react-native";
 import Checkbox from "expo-checkbox";
 
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGame } from "../views/gameSlice";
-import { deletePlayer } from "../views/playerSlice";
+import { deleteGame } from "../redux/gameSlice";
+import { deletePlayer } from "../redux/playerSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
-import { hideConfirmModal } from "./modalsSlice";
+import { hideConfirmModal } from "../redux/modalsSlice";
 import { db } from "../db/db-service";
 
 type ConfirmModalProps = {
@@ -38,7 +38,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
       case 'deletePlayer':
         if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
         break;
-      case 'endGame':
+      case 'endSession':
         navigation.navigate('Home');
         break;
       default:

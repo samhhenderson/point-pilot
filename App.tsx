@@ -9,27 +9,24 @@ import { SQLResultSet } from 'expo-sqlite';
 
 // Import Redux modules
 import { Provider } from 'react-redux';
-import store from './src/store';
+import store from './src/redux/store';
 import { ThunkDispatch } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, } from 'react-redux';
+import { getPlayers } from './src/redux/playerSlice';
+import { getGames } from './src/redux/gameSlice';
 
 // Import other modules
 import { State } from './src/types';
-import Game from './src/views/Game';
+import Session from './src/views/Session';
 import Home from './src/views/Home';
 import { executeSqlAsync } from './src/db/db-service';
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
-
+function App() {
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   useEffect(() => {
-
-    // executeSqlAsync('DROP TABLE IF EXISTS players;')
-    // .then(response => console.log(response))
-    // .catch(error => console.log('DELETE TABLE ' + error))
-
     const createPlayerTable = 
     `CREATE TABLE IF NOT EXISTS players (
       name TEXT PRIMARY KEY,
@@ -41,22 +38,36 @@ export default function App() {
       place INTEGER DEFAULT 0
     );`
     executeSqlAsync(createPlayerTable)
-      .catch(error => console.log('CREATE PLAYER TABLE ' + error))
+    .catch(error => console.log('CREATE PLAYER TABLE ' + error))
 
     const createGameTable =
     `CREATE TABLE IF NOT EXISTS games (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT UNIQUE,
+      name TEXT,
       lowScoreWins INTEGER CHECK(lowScoreWins IN (0,1)),
       useBid INTEGER CHECK(useBid IN (0,1)),
       teams INTEGER CHECK(teams IN (0,1))
     );`
     executeSqlAsync(createGameTable)
-      .catch(error => console.log('CREATE GAME TABLE ' + error))
+    .catch(error => console.log('CREATE GAME TABLE ' + error))
+
+    const createSessionTable =
+    `CREATE TABLE IF NOT EXISTS sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId INTEGER,
+      date TEXT,
+      complete INTEGER CHECK(complete IN (0,1)),
+      FOREIGN KEY(gameId) REFERENCES games(id)
+    );`
+    executeSqlAsync(createSessionTable)
+    .catch(error => console.log('CREATE SESSION TABLE ' + error))
+
+    dispatchThunk(getPlayers())
+    dispatchThunk(getGames());
   }, [])
 
   return (
-    <Provider store={store}>
+    <>
       <StatusBar style='light'/>
       <NavigationContainer>
         <Stack.Navigator
@@ -69,13 +80,21 @@ export default function App() {
             component={Home}
           />
           <Stack.Screen
-            name='Game'
-            component={Game}
+            name='Session'
+            component={Session}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </Provider>
+    </>
   );
+}
+
+export default function AppWithProvider() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
 }
 
 const Styles = StyleSheet.create({

@@ -5,9 +5,9 @@ import Checkbox from 'expo-checkbox';
 
 //Redux imports
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa } from "./modalsSlice";
-import { changeActiveGame, addGame } from "../views/gameSlice";
-import { addPlayer } from "../views/playerSlice";
+import { hideNewGameModa } from "../redux/modalsSlice";
+import { changeActiveGame, addGame } from "../redux/gameSlice";
+import { addPlayer } from "../redux/playerSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
@@ -26,10 +26,11 @@ type NewGameModalProps = {
 
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { 
+    id,
     name, 
     useBid, 
     lowScoreWins, 
-    teams 
+    teams,
   } = useSelector((state: State) => state.game.activeGame);
   const { newGame } = useSelector((state: State) => state.modals);
   const { byId } = useSelector((state: State) => state.player);
@@ -40,10 +41,10 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   function handlePlay () {
-    navigation.navigate('Game')
+    navigation.navigate('Session')
     dispatch(hideNewGameModa())
     //give the game an id of 0 for now - DB will reassign
-    dispatchThunk(addGame({id: 0, name, useBid, lowScoreWins, teams}))
+    dispatchThunk(addGame({id: 0, name, useBid, lowScoreWins, teams, display: 1}))
   }
 
   function handleNewPlayerDone(): void {

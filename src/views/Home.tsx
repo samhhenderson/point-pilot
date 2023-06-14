@@ -2,17 +2,17 @@ import { FC, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { showNewGameModal } from "../modals/modalsSlice";
+import { showNewGameModal } from "../redux/modalsSlice";
 import { ThunkDispatch } from "redux-thunk";
-import { getPlayers } from "./playerSlice";
-import { getGames } from "./gameSlice";
+import { getPlayers } from "../redux/playerSlice";
+import { getGames } from "../redux/gameSlice";
 
-import { State, NavigationPropType, Game } from "../types";
+import { State, NavigationPropType, } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import GameListItem from "../components/GameListItem";
 import Control from "../components/Control";
-import NewGameModal from '../modals/newGameModal';
+import NewGameModal from '../modals/NewGameModal';
 import ConfirmModal from "../modals/ConfirmModal";
 import { executeSqlAsync } from "../db/db-service";
 
@@ -25,8 +25,7 @@ const Home: FC<HomeProps> = ({navigation}) => {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   useEffect(() => {
-    dispatchThunk(getPlayers())
-    dispatchThunk(getGames());
+
   }, [])
 
   const game = useSelector((state: State) => state.game);

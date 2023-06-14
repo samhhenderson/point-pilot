@@ -2,8 +2,8 @@ import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa, setConfirmModal } from "../modals/modalsSlice";
-import { changeActivePlayer, deletePlayer, changeTeam} from "../views/playerSlice";
+import { hideNewGameModa, setConfirmModal } from "../redux/modalsSlice";
+import { changeActivePlayer, deletePlayer, changeTeam} from "../redux/playerSlice";
 
 import { State, Player, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';

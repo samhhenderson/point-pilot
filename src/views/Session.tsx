@@ -2,21 +2,21 @@ import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setConfirmModal } from "../modals/modalsSlice";
+import { setConfirmModal } from "../redux/modalsSlice";
 
-import { Player, State, NavigationPropType } from "../types";
-import * as Colors from './../styles/Colors';
+import { State, NavigationPropType } from "../types";
+import * as Colors from '../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import Control from "../components/Control";
 
-type GameProps = {
+type SessionProps = {
   navigation: NavigationPropType,
 }
 
-const Game: FC<GameProps> = ({ navigation }) => {
+const Session: FC<SessionProps> = ({ navigation }) => {
   const [bidTitle, setBidTitle] = useState('');
   
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
     if (useBid) setBidTitle('BID')
   }, [])
 
-  function endGame() {
+  function endSession() {
     const winners: string[] = [];
     for (const player in byId) {
       if (byId[player].place === 1) {
@@ -45,7 +45,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
     }
     dispatch(setConfirmModal({
       message: `End game? ${names} will be the winner${plural}!`,
-      confirmFunc: 'endGame',
+      confirmFunc: 'endSession',
     }))
   }
 
@@ -77,7 +77,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
           </View>
           <View style={Styles.endGameContainer}>
             <Control
-              onPress={endGame}
+              onPress={endSession}
               text={'END GAME'}
               pressableStyles={[Styles.endGameButton]}
               textStyles={[{fontSize:30}]}
@@ -92,7 +92,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
   );
 };
 
-export default Game;
+export default Session;
 
 const Styles = StyleSheet.create({
   app: {

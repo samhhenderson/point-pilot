@@ -49,7 +49,7 @@ export const getGames = createAsyncThunk(
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
-    activeGame: {id: 0, name: '', lowScoreWins: 0, useBid: 0, teams: 0},
+    activeGame: {id: 0, name: '', lowScoreWins: 0, useBid: 0, teams: 0, display: 1},
     byId: {},
     allIds: [],
   } as GameState,
