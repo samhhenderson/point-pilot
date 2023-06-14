@@ -9,32 +9,35 @@ import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CommonStyles } from "../styles/CommonStyles";
 import Control from "./Control";
+import { State } from "../types";
 
 type GameListItemProps = {
-  name: string,
+  id: number,
 }
 
-const GameListItem: FC<GameListItemProps> = ({ name }) => {
+const GameListItem: FC<GameListItemProps> = ({ id }) => {
   const dispatch = useDispatch();
 
+  const game = useSelector((state: State) => state.game);
+
   function handlePressGameItem() {
-    dispatch(setActiveGame(name));
+    dispatch(setActiveGame(id));
     dispatch(showNewGameModal());
   }
 
   function handleDeleteGameItem() {
     dispatch(setConfirmModal({
-      message: `Remove ${name} from game list?`,
+      message: `Remove ${game.byId[id].name} from game list?`,
       confirmFunc: 'deleteGame',
-      confirmArgs: [name],
+      confirmArgs: [id],
     }))
   }
 
   return (
-    <View style={Styles.container} key={name}>
+    <View style={Styles.container}>
       <Control
         onPress={handlePressGameItem}
-        text={name}
+        text={game.byId[id].name}
         pressableStyles={[Styles.gameNameButton]}
         textStyles={[{fontSize:30}]}
       />

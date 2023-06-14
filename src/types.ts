@@ -38,14 +38,17 @@ export interface ModalsState {
 export interface Game {
   id: number,
   name: string,
-  lowScoreWins: boolean,
-  useBid: boolean,
-  teams: boolean,
+  lowScoreWins: number,
+  useBid: number,
+  teams: number,
 }
 
 export interface GameState {
   activeGame: Game,
-  gameList: Game[]
+  byId: {
+    [key: number]: Game
+  },
+  allIds: number[],
 }
 
 export interface Session {

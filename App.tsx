@@ -26,12 +26,12 @@ export default function App() {
 
   useEffect(() => {
 
-    // executeSqlAsync('DROP TABLE IF EXISTS Players;')
+    // executeSqlAsync('DROP TABLE IF EXISTS players;')
     // .then(response => console.log(response))
-    // .catch(error => console.log('CREATE TABLE ' + error))
+    // .catch(error => console.log('DELETE TABLE ' + error))
 
     const createPlayerTable = 
-    `CREATE TABLE IF NOT EXISTS Players (
+    `CREATE TABLE IF NOT EXISTS players (
       name TEXT PRIMARY KEY,
       icon TEXT DEFAULT 'none',
       active INTEGER DEFAULT 0,
@@ -41,21 +41,18 @@ export default function App() {
       place INTEGER DEFAULT 0
     );`
     executeSqlAsync(createPlayerTable)
-      .catch(error => console.log('CREATE TABLE ' + error))
+      .catch(error => console.log('CREATE PLAYER TABLE ' + error))
 
-
-    // //executeSqlAsync('DELETE FROM Players;')
-
-    // const testQuery = 
-    // `INSERT INTO Players (playerName, icon)
-    // VALUES (?, ?)`
-    // executeSqlAsync(testQuery, ['Sam', 'Ugly'])
-    //   .then(response => console.log(response))
-    //   .catch(error => console.log('INSERT ' + error))
-    
-    // executeSqlAsync('SELECT * FROM Players;')
-    //   .then((response) => console.log(response.rows._array))
-    //   .catch(error => console.log(error))
+    const createGameTable =
+    `CREATE TABLE IF NOT EXISTS games (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE,
+      lowScoreWins INTEGER CHECK(lowScoreWins IN (0,1)),
+      useBid INTEGER CHECK(useBid IN (0,1)),
+      teams INTEGER CHECK(teams IN (0,1))
+    );`
+    executeSqlAsync(createGameTable)
+      .catch(error => console.log('CREATE GAME TABLE ' + error))
   }, [])
 
   return (

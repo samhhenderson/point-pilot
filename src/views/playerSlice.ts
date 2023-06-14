@@ -7,7 +7,7 @@ export const addPlayer = createAsyncThunk(
   'player/addPlayer', 
   async (newPlayer: string, thunkApi) => {
     const query = 
-    `INSERT INTO Players (name)
+    `INSERT INTO players (name)
     VALUES (?)
     RETURNING *;`
     return executeSqlAsync(query, [newPlayer])
@@ -20,7 +20,7 @@ export const deletePlayer = createAsyncThunk(
   'player/deletePlayer', 
   async (deletedPlayer: string, thunkApi) => {
     const query = 
-    `DELETE FROM Players
+    `DELETE FROM players
     WHERE name = ?`
     executeSqlAsync(query, [deletedPlayer])
       .catch(error => console.log('DELETE ' + error))
@@ -30,7 +30,7 @@ export const deletePlayer = createAsyncThunk(
 export const getPlayers = createAsyncThunk(
   'player/getPlayers',
   async (thunkApi) => {
-    const query = `SELECT * FROM Players`;
+    const query = `SELECT * FROM players`;
     return executeSqlAsync(query, [])
       .then(response => response.rows._array)
       .catch(error => console.log('GET PLAYERS ' + error))
@@ -87,8 +87,9 @@ export const playerSlice = createSlice({
       delete state.byId[action.meta.arg];
     });
     builder.addCase(getPlayers.fulfilled, (state, action) => {
-      if (action.payload) {action.payload.forEach((player: Player) => {
-        state.byId[player.name] = player;
+      if (action.payload) {
+        action.payload.forEach((player: Player) => {
+          state.byId[player.name] = player;
         })
       }
     });

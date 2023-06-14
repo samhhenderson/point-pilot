@@ -42,7 +42,8 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   function handlePlay () {
     navigation.navigate('Game')
     dispatch(hideNewGameModa())
-    dispatch(addGame({name, useBid, lowScoreWins, teams}))
+    //give the game an id of 0 for now - DB will reassign
+    dispatchThunk(addGame({id: 0, name, useBid, lowScoreWins, teams}))
   }
 
   function handleNewPlayerDone(): void {
@@ -70,21 +71,21 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={lowScoreWins}
+              value={!!lowScoreWins}
               onValueChange={() => dispatch(changeActiveGame({lowScoreWins: !lowScoreWins}))}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={useBid}
+              value={!!useBid}
               onValueChange={() => {dispatch(changeActiveGame({useBid: !useBid}))}}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>BIDS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={teams}
+              value={!!teams}
               onValueChange={() => {dispatch(changeActiveGame({teams: !teams}))}}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>TEAMS</Text>

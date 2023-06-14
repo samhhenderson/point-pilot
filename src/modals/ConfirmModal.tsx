@@ -33,7 +33,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
   function handleConfirm() {
     switch(confirmFunc) {
       case 'deleteGame':
-        if (confirmArgs) dispatch(deleteGame(confirmArgs[0]));
+        if (confirmArgs) dispatchThunk(deleteGame(confirmArgs[0]));
         break;
       case 'deletePlayer':
         if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
