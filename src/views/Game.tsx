@@ -21,8 +21,8 @@ const Game: FC<GameProps> = ({ navigation }) => {
   
   const dispatch = useDispatch();
 
-  const { playerList } = useSelector((state: State) => state.player);
-  const { gameName, useBid } = useSelector((state: State) => state.game.activeGame);
+  const { byId } = useSelector((state: State) => state.player);
+  const { name, useBid } = useSelector((state: State) => state.game.activeGame);
 
   useEffect(() => {
     if (useBid) setBidTitle('BID')
@@ -30,8 +30,8 @@ const Game: FC<GameProps> = ({ navigation }) => {
 
   function endGame() {
     const winners: string[] = [];
-    for (const player in playerList) {
-      if (playerList[player].place === 1) {
+    for (const player in byId) {
+      if (byId[player].place === 1) {
         winners.push(player);
       }
     }
@@ -52,7 +52,7 @@ const Game: FC<GameProps> = ({ navigation }) => {
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>{gameName}</Text>
+          <Text style={[CommonStyles.text, Styles.title]}>{name}</Text>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
@@ -61,8 +61,8 @@ const Game: FC<GameProps> = ({ navigation }) => {
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {Object.keys(playerList).map((player) => {
-              const p = playerList[player];
+            {Object.keys(byId).map((player) => {
+              const p = byId[player];
               if (p.active) {
                 return (
                   <ActivePlayer 

@@ -11,7 +11,7 @@ import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import GameListItem from "../components/GameListItem";
 import Control from "../components/Control";
-import NewGameModal from '../modals/NewGameModal';
+import NewGameModal from '../modals/newGameModal';
 import ConfirmModal from "../modals/ConfirmModal";
 
 type HomeProps = {
@@ -36,7 +36,7 @@ const Home: FC<HomeProps> = ({navigation}) => {
             {gameList.map((game, i) => (
               <GameListItem
                 key={i}
-                name={game.gameName}
+                name={game.name}
               />
             ))}
             <Control

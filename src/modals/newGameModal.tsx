@@ -26,13 +26,13 @@ type NewGameModalProps = {
 
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const { 
-    gameName, 
+    name, 
     useBid, 
     lowScoreWins, 
     teams 
   } = useSelector((state: State) => state.game.activeGame);
   const { newGame } = useSelector((state: State) => state.modals);
-  const { playerList } = useSelector((state: State) => state.player);
+  const { byId } = useSelector((state: State) => state.player);
 
   const [ newPlayerName, setNewPlayerName ] = useState<string>('');
 
@@ -42,7 +42,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   function handlePlay () {
     navigation.navigate('Game')
     dispatch(hideNewGameModa())
-    dispatch(addGame({gameName, useBid, lowScoreWins, teams}))
+    dispatch(addGame({name, useBid, lowScoreWins, teams}))
   }
 
   function handleNewPlayerDone(): void {
@@ -63,8 +63,8 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
             <Text style={[CommonStyles.text, {fontSize: 30}]}>GAME:</Text>
             <TextInput 
               style={Styles.textInput}
-              onChangeText={text => dispatch(changeActiveGame({gameName: text}))}
-              value={gameName}
+              onChangeText={text => dispatch(changeActiveGame({name: text}))}
+              value={name}
               returnKeyType="done"
             />
           </View>
@@ -91,9 +91,9 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
-              {playerList ?
-                Object.keys(playerList).map((player) => {
-                  const p = playerList[player];
+              {byId ?
+                Object.keys(byId).map((player) => {
+                  const p = byId[player];
                   return (
                     <PlayerListItem 
                       key={p.name}

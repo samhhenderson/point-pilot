@@ -1,6 +1,7 @@
 import { NavigationProp } from "@react-navigation/native";
 
 export interface Player {
+  id: number
   name: string,
   icon: string,
   active: number,
@@ -9,22 +10,12 @@ export interface Player {
   team: 0|1|2|3|4|5|6|7|8|9,
   place: number,
 }
-export function Player(name: string): Player{
-  return {
-    name, 
-    icon: '',
-    active: 0,
-    score: 0,
-    bid: 0,
-    team: 0,
-    place: 0,
-  }
-}
 
 export interface PlayerState {
-  playerList: {
+  byId: {
     [key: string]: Player
-  }
+  },
+  allIds: number[],
 }
 
 export interface ModalsState {
@@ -45,7 +36,8 @@ export interface ModalsState {
 }
 
 export interface Game {
-  gameName: string,
+  id: number,
+  name: string,
   lowScoreWins: boolean,
   useBid: boolean,
   teams: boolean,
@@ -56,10 +48,24 @@ export interface GameState {
   gameList: Game[]
 }
 
+export interface Session {
+  id: number,
+  date: string,
+  game_id: number,
+}
+
+export interface SessionState {
+  byId: {
+    [key: number]: Session
+  },
+  allIds: number[],
+}
+
 export interface State {
   player: PlayerState,
   modals: ModalsState,
   game: GameState,
+  session: SessionState,
 }
 
 export type NavigationPropType = NavigationProp<

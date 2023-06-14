@@ -11,7 +11,7 @@ export const addPlayer = createAsyncThunk(
     VALUES (?)
     RETURNING *;`
     return executeSqlAsync(query, [newPlayer])
-      .then(response => response.rows._array[0])
+      .then((response): Player => response.rows._array[0])
       .catch(error => console.log('INSERT ' + error))
   }
 )
@@ -40,29 +40,30 @@ export const getPlayers = createAsyncThunk(
 export const playerSlice = createSlice({
   name: 'player',
   initialState: {
-    playerList: {}
+    byId: {},
+    allIds: [],
   } as PlayerState,
   reducers: {
     changeActivePlayer: (state, action) => {
-      state.playerList[action.payload].active === 1 ? 
-        state.playerList[action.payload].active = 0 : 
-        state.playerList[action.payload].active = 1;
+      state.byId[action.payload].active === 1 ? 
+        state.byId[action.payload].active = 0 : 
+        state.byId[action.payload].active = 1;
     },
     changeScore: (state, action) => {
       const { playerName, scoreToAdd, isBid } = action.payload;
-      const player = state.playerList[playerName];
+      const player = state.byId[playerName];
       if (player && !isBid) player.score += scoreToAdd;
       else if (player) player.bid += scoreToAdd;
     },
     changeTeam: (state, action) => {
-      const player = state.playerList[action.payload];
+      const player = state.byId[action.payload];
       if (player) player.team === 9? player.team = 0 : player.team++;
     },
     calculatePlaces: state => {
       const activePlayers: Player[] = [];
-      for (const player in state.playerList) {
-        if (state.playerList[player].active) {
-          activePlayers.push(state.playerList[player]);
+      for (const player in state.byId) {
+        if (state.byId[player].active) {
+          activePlayers.push(state.byId[player]);
         }
       }
       activePlayers.sort((a, b) => b.score - a.score);
@@ -80,16 +81,14 @@ export const playerSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(addPlayer.fulfilled, (state, action) => {
-      if (!state.playerList[action.meta.arg]) {
-        state.playerList[action.meta.arg] = Player(action.meta.arg);
-      }
+      if (action.payload) state.byId[action.meta.arg] = action.payload;
     });
     builder.addCase(deletePlayer.fulfilled, (state, action) => {
-      delete state.playerList[action.meta.arg];
+      delete state.byId[action.meta.arg];
     });
     builder.addCase(getPlayers.fulfilled, (state, action) => {
       if (action.payload) {action.payload.forEach((player: Player) => {
-        state.playerList[player.name] = player;
+        state.byId[player.name] = player;
         })
       }
     });
