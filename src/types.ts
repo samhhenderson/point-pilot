@@ -26,6 +26,7 @@ export interface ModalsState {
   }
   newGame: {
     vis: boolean,
+    gameId: number,
   }
   confirm: {
     vis: boolean,
@@ -38,10 +39,10 @@ export interface ModalsState {
 export interface Game {
   id: number,
   name: string,
-  lowScoreWins: 0 | 1,
-  useBid: 0 | 1,
-  teams: 0 | 1,
-  display: 0 | 1,
+  lowScoreWins: boolean,
+  useBid: boolean,
+  teams: boolean,
+  display: boolean,
 }
 
 export interface GameState {
@@ -56,7 +57,7 @@ export interface Session {
   id: number,
   date: string,
   gameId: number,
-  complete: 0 | 1,
+  complete: boolean,
 }
 
 export interface SessionState {

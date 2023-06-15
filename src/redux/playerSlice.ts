@@ -88,6 +88,8 @@ export const playerSlice = createSlice({
     });
     builder.addCase(getPlayers.fulfilled, (state, action) => {
       if (action.payload) {
+        state.byId = {};
+        state.allIds = [];
         action.payload.forEach((player: Player) => {
           state.byId[player.name] = player;
         })

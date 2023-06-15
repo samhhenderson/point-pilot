@@ -57,7 +57,7 @@ const Home: FC<HomeProps> = ({navigation}) => {
               />
             ))}
             <Control
-              onPress={() => dispatch(showNewGameModal())}
+              onPress={() => dispatch(showNewGameModal(0))}
               text={'+'}
               pressableStyles={[Styles.addButton]}
               textStyles={[{fontSize:40}]}

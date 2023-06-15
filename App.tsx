@@ -14,6 +14,7 @@ import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, } from 'react-redux';
 import { getPlayers } from './src/redux/playerSlice';
 import { getGames } from './src/redux/gameSlice';
+import { getSessions } from './src/redux/sessionSlice';
 
 // Import other modules
 import { State } from './src/types';
@@ -62,8 +63,9 @@ function App() {
     executeSqlAsync(createSessionTable)
     .catch(error => console.log('CREATE SESSION TABLE ' + error))
 
-    dispatchThunk(getPlayers())
+    dispatchThunk(getPlayers());
     dispatchThunk(getGames());
+    dispatchThunk(getSessions());
   }, [])
 
   return (

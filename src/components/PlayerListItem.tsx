@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa, setConfirmModal } from "../redux/modalsSlice";
+import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 import { changeActivePlayer, deletePlayer, changeTeam} from "../redux/playerSlice";
 
 import { State, Player, NavigationPropType } from "../types";
@@ -15,10 +15,10 @@ import ConfirmModal from "../modals/ConfirmModal";
 
 type PlayerListItemProps = {
   player: Player,
+  teams?: boolean,
 }
 
-const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
-  const { teams } = useSelector((state: State) => state.game.activeGame)
+const PlayerListItem: FC<PlayerListItemProps> = ({ player, teams = false }) => {
   const dispatch = useDispatch();
 
   function handleDeletePlayer() {

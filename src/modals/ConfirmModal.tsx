@@ -3,8 +3,9 @@ import { StyleSheet, View, Text, Modal } from "react-native";
 import Checkbox from "expo-checkbox";
 
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGame } from "../redux/gameSlice";
+import { deleteGame, updateGame } from "../redux/gameSlice";
 import { deletePlayer } from "../redux/playerSlice";
+import { hideNewGameModal } from "../redux/modalsSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import { State, NavigationPropType } from "../types";
@@ -28,8 +29,9 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
     message,
     confirmFunc,
     confirmArgs,
-   } = useSelector((state:State) => state.modals.confirm)
+  } = useSelector((state:State) => state.modals.confirm)
 
+  // We can't store functions in redux, so we have to do this
   function handleConfirm() {
     switch(confirmFunc) {
       case 'deleteGame':
@@ -40,6 +42,11 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
         break;
       case 'endSession':
         navigation.navigate('Home');
+        break;
+      case 'updateGame':
+        if (confirmArgs) dispatchThunk(updateGame(confirmArgs[0]));
+        dispatch(hideNewGameModal());
+        navigation.navigate('Session');
         break;
       default:
         console.log('NO FUNCTION FOUND')

@@ -3,13 +3,13 @@ import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-nati
 
 import { useSelector, useDispatch } from 'react-redux';
 import {  showNewGameModal, setConfirmModal } from "../redux/modalsSlice";
-import { setActiveGame } from "../redux/gameSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CommonStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import { State } from "../types";
+
 
 type GameListItemProps = {
   id: number,
@@ -21,8 +21,7 @@ const GameListItem: FC<GameListItemProps> = ({ id }) => {
   const game = useSelector((state: State) => state.game);
 
   function handlePressGameItem() {
-    dispatch(setActiveGame(id));
-    dispatch(showNewGameModal());
+    dispatch(showNewGameModal(id));
   }
 
   function handleDeleteGameItem() {

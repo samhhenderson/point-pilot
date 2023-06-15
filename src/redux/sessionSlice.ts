@@ -6,20 +6,19 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { SessionState, Session } from '../types';
 import { executeSqlAsync } from '../db/db-service';
 
-
 export const addSession = createAsyncThunk(
   'session/addSession', 
-  async (session: Session, thunkApi) => {
+  async (gameId: number, thunkApi) => {
     const query = 
     `INSERT INTO sessions (date, gameId, complete)
-    VALUES (?, ?, ?, ?)
+    VALUES (?, ?, ?)
     RETURNING *;`
     return executeSqlAsync(query, [
-      session.date, 
-      session.gameId, 
-      session.complete, 
+      new Date().toDateString(), 
+      gameId, 
+      0, 
     ])
-    .then((response): Session => response.rows._array[0])
+    .then(response => response.rows._array[0])
     .catch(error => console.log('INSERT ' + error))
   }
 )
@@ -41,10 +40,10 @@ export const updateSession = createAsyncThunk(
     const query =
     `UPDATE sessions
     SET date = ?, complete = ?
-    WHERE id = ?`
+    WHERE id = ?;`
     return executeSqlAsync(query, [
       updatedSession.date,
-      updatedSession.complete,
+      updatedSession.complete? 1 : 0,
       updatedSession.id
     ])
     .then((response): Session => response.rows._array[0])
@@ -54,18 +53,18 @@ export const updateSession = createAsyncThunk(
 
 export const getSessions = createAsyncThunk(
   'session/getSessions',
-  async (thunkApi) => {
+  async (_, thunkApi) => {
     const query = `SELECT * FROM sessions`;
     return executeSqlAsync(query, [])
       .then(response => response.rows._array)
-      .catch(error => console.log('GET GAMES ' + error))
+      .catch(error => console.log('GET SESSIONS ' + error))
   }
 )
 
 export const sessionSlice = createSlice({
   name: 'session',
   initialState: {
-    activeSession: {date: '', gameId: 0, complete: 0},
+    activeSession: {id: 0, date: '', gameId: 0, complete: false},
     byId: {},
     allIds: [],
   } as SessionState,
@@ -76,23 +75,37 @@ export const sessionSlice = createSlice({
     // Add new session - only executes at PLAY!
     builder.addCase(addSession.fulfilled, (state, action) => {
       if (action.payload) {
-        state.byId[action.payload.id] = action.payload;
+        state.byId[action.payload.id] = {
+          id: action.payload.id,
+          date: action.payload.date,
+          gameId: action.payload.gameId,
+          complete: !!action.payload.complete,
+        } as Session;
         state.allIds.push(action.payload.id);
       }
     });
-    // Delete and update session - will be needed when HISTORY is implemented
+    // Delete will be needed when HISTORY is implemented
     builder.addCase(deleteSession.fulfilled, (state, action) => {
       delete state.byId[action.meta.arg];
       state.allIds = state.allIds.filter((id) => id !== action.meta.arg);
     });
 
     builder.addCase(getSessions.fulfilled, (state, action) => {
+
       if (action.payload) {
-        action.payload.forEach((session: Session) => {
-          state.byId[session.id] = session;
+        state.byId = {};
+        state.allIds = [];
+        action.payload.forEach((session) => {
+          state.byId[session.id] = {
+            id: session.id,
+            date: session.date,
+            gameId: session.gameId,
+            complete: !!session.complete,
+          } as Session;
           state.allIds.push(session.id);
         })
       }
+      console.log('GET SESSIONS: ', state.byId)
     });
     // Update session - only executes at END GAME
     builder.addCase(updateSession.fulfilled, (state, action) => {
