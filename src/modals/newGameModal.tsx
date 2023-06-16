@@ -75,8 +75,11 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           confirmFunc: 'updateGame',
           confirmArgs: [activeGame],
         }))
+    } else if (activeGame.id === 0) {
+      // dispatch addSession action only after addGame action is complete
+      // this is b/c the SQLite ID doesn't exist yet, need to get it first
+      dispatchThunk(addGame(activeGame));
     } else {
-      if (activeGame.id === 0) dispatchThunk(addGame(activeGame));
       dispatchThunk(addSession(activeGame.id));
       dispatch(hideNewGameModal());
       navigation.navigate('Session');

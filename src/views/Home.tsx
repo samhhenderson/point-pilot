@@ -24,10 +24,6 @@ const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
-  useEffect(() => {
-
-  }, [])
-
   const game = useSelector((state: State) => state.game);
 
   //Dev only button

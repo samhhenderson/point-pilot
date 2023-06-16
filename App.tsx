@@ -15,6 +15,7 @@ import { useDispatch, } from 'react-redux';
 import { getPlayers } from './src/redux/playerSlice';
 import { getGames } from './src/redux/gameSlice';
 import { getSessions } from './src/redux/sessionSlice';
+import { getPlayerSessions } from './src/redux/playerSessionSlice';
 
 // Import other modules
 import { State } from './src/types';
@@ -63,9 +64,24 @@ function App() {
     executeSqlAsync(createSessionTable)
     .catch(error => console.log('CREATE SESSION TABLE ' + error))
 
+    const createPlayerSessionTable =
+    `CREATE TABLE IF NOT EXISTS sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      playerId INTEGER,
+      sessionId INTEGER,
+      score INTEGER DEFAULT 0,
+      bid INTEGER DEFAULT 0,
+      team INTEGER DEFAULT 0,
+      FOREIGN KEY(gameId) REFERENCES games(id),
+      FOREIGN KEY(sessionId) REFERENCES sessions(id)
+    );`
+    executeSqlAsync(createPlayerSessionTable)
+    .catch(error => console.log('CREATE SESSION TABLE ' + error))
+
     dispatchThunk(getPlayers());
     dispatchThunk(getGames());
     dispatchThunk(getSessions());
+    dispatchThunk(getPlayerSessions());
   }, [])
 
   return (

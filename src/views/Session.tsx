@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ScrollView} from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { setConfirmModal } from "../redux/modalsSlice";
 
-import { State, NavigationPropType } from "../types";
+import { State, NavigationPropType, Game, Session, Player } from "../types";
 import * as Colors from '../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
@@ -17,22 +17,36 @@ type SessionProps = {
 }
 
 const Session: FC<SessionProps> = ({ navigation }) => {
-  const [bidTitle, setBidTitle] = useState('');
-  
+
   const dispatch = useDispatch();
 
-  const { byId } = useSelector((state: State) => state.player);
-  const { name, useBid } = useSelector((state: State) => state.game.activeGame);
+  const { player, session, game } = useSelector((state: State) => state);
+  
+  const [ activeGame, setActiveGame ] = useState<Game>({
+    id: 0, 
+    name: 'Game', 
+    lowScoreWins: false, 
+    useBid: false, 
+    teams: false, 
+    display: false
+  });
 
-  useEffect(() => {
-    if (useBid) setBidTitle('BID')
-  }, [])
+  // List of player Id's that have a session with the active sessionID
+  const [ activePlayerIds, setActivePlayerIds ] = useState<Player[]>([])
+
+  // Go in reverse, since the active session is most likely the last one
+  for (let i = session.allIds.length - 1; i >= 0; i--) {
+    if (!session.byId[session.allIds[i]].complete) {
+      let activeSession = session.byId[session.allIds[i]]
+      setActiveGame(game.byId[activeSession.gameId]);
+    }
+  }
 
   function endSession() {
     const winners: string[] = [];
-    for (const player in byId) {
-      if (byId[player].place === 1) {
-        winners.push(player);
+    for (const p in player.byId) {
+      if (player.byId[p].place === 1) {
+        winners.push(p);
       }
     }
     let names = '';
@@ -52,23 +66,25 @@ const Session: FC<SessionProps> = ({ navigation }) => {
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>{name}</Text>
+          <Text style={[CommonStyles.text, Styles.title]}>{activeGame!.name}</Text>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
               <View style={APStyles.pointsContainer}>
-                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>{bidTitle}</Text>
+                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>
+                  {activeGame!.useBid ? 'BID' : ''}
+                  </Text>
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
               </View>
             </View>
-            {Object.keys(byId).map((player) => {
-              const p = byId[player];
+            {player.allIds.map(id => {
+              const p = player.byId[id];
               if (p.active) {
                 return (
                   <ActivePlayer 
-                    key={player}
+                    key={p.id}
                     bid={p.bid}
-                    name={player} 
+                    name={p.name} 
                     score={p.score}
                   />
                 )

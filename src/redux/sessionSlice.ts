@@ -76,9 +76,7 @@ export const sessionSlice = createSlice({
     builder.addCase(addSession.fulfilled, (state, action) => {
       if (action.payload) {
         state.byId[action.payload.id] = {
-          id: action.payload.id,
-          date: action.payload.date,
-          gameId: action.payload.gameId,
+          ...action.payload,
           complete: !!action.payload.complete,
         } as Session;
         state.allIds.push(action.payload.id);
@@ -97,9 +95,7 @@ export const sessionSlice = createSlice({
         state.allIds = [];
         action.payload.forEach((session) => {
           state.byId[session.id] = {
-            id: session.id,
-            date: session.date,
-            gameId: session.gameId,
+            ...action.payload,
             complete: !!session.complete,
           } as Session;
           state.allIds.push(session.id);

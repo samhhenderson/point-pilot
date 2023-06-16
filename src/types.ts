@@ -67,10 +67,28 @@ export interface SessionState {
   allIds: number[],
 }
 
+export interface PlayerSession {
+  id: number,
+  playerId: number,
+  sessionId: number,
+  score: number,
+  bid: number,
+  team: number,
+}
+
+export interface PlayerSessionState {
+  byId: {
+    [key: number]: PlayerSession
+  },
+  allIds: number[],
+}
+
 export interface State {
   player: PlayerState,
   modals: ModalsState,
   game: GameState,
+  session: SessionState,
+  playerSession: PlayerSessionState,
 }
 
 export type NavigationPropType = NavigationProp<
