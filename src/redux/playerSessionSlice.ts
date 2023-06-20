@@ -57,7 +57,7 @@ export const getPlayerSessions = createAsyncThunk(
     const query = `SELECT * FROM playerSessions`;
     return executeSqlAsync(query, [])
       .then(response => response.rows._array)
-      .catch(error => console.log('GET SESSIONS ' + error))
+      .catch(error => console.log('GET PLAYER SESSIONS ' + error))
   }
 )
 
@@ -94,7 +94,7 @@ export const playerSessionSlice = createSlice({
           state.allIds.push(playerSession.id);
         })
       }
-      console.log('GET SESSIONS: ', state.byId)
+      console.log('GET PLAYER SESSIONS: ', state.byId)
     });
     // Update playerSession - only executes at END GAME
     builder.addCase(updatePlayerSession.fulfilled, (state, action) => {

@@ -16,11 +16,11 @@ type SessionProps = {
   navigation: NavigationPropType,
 }
 
-const Session: FC<SessionProps> = ({ navigation }) => {
+const SessionView: FC<SessionProps> = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const { player, session, game } = useSelector((state: State) => state);
+  const { player, session, game, playerSession } = useSelector((state: State) => state);
   
   const [ activeGame, setActiveGame ] = useState<Game>({
     id: 0, 
@@ -32,15 +32,30 @@ const Session: FC<SessionProps> = ({ navigation }) => {
   });
 
   // List of player Id's that have a session with the active sessionID
-  const [ activePlayerIds, setActivePlayerIds ] = useState<Player[]>([])
+  const [ activePlayerIds, setActivePlayerIds ] = useState<Number[]>([])
 
   // Go in reverse, since the active session is most likely the last one
-  for (let i = session.allIds.length - 1; i >= 0; i--) {
-    if (!session.byId[session.allIds[i]].complete) {
-      let activeSession = session.byId[session.allIds[i]]
+  useEffect(() => {
+    const activeSession = session.allIds
+      .map(id => session.byId[id])
+      .reverse()
+      .find(s => !s.complete);
+
+    if (activeSession) {
       setActiveGame(game.byId[activeSession.gameId]);
+      setActivePlayerIds(playerSession.allIds
+        .filter(id => activeSession.id === playerSession.byId[id].sessionId)
+      )
     }
-  }
+
+    // for (let i = session.allIds.length - 1; i >= 0; i--) {
+    //   if (!session.byId[session.allIds[i]].complete) {
+    //     let activeSession = session.byId[session.allIds[i]]
+    //     setActiveGame(game.byId[activeSession.gameId]);
+    //     break;
+    //   }
+    // }
+  }, [session, game])
 
   function endSession() {
     const winners: string[] = [];
@@ -66,7 +81,7 @@ const Session: FC<SessionProps> = ({ navigation }) => {
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>{activeGame!.name}</Text>
+          <Text style={[CommonStyles.text, Styles.title]}>{activeGame.name}</Text>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
@@ -108,7 +123,7 @@ const Session: FC<SessionProps> = ({ navigation }) => {
   );
 };
 
-export default Session;
+export default SessionView;
 
 const Styles = StyleSheet.create({
   app: {

@@ -9,6 +9,7 @@ import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 import { addGame, updateGame } from "../redux/gameSlice";
 import { addPlayer } from "../redux/playerSlice";
 import { addSession } from "../redux/sessionSlice";
+import { addPlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
@@ -69,16 +70,26 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     // Only show the confirm modal if we've changed an existing game
     if (activeGame.id !== 0 && JSON.stringify(activeGame) !== 
       JSON.stringify(game.byId[activeGame.id])) {
-        dispatch(setConfirmModal({
-          vis: true,
-          message: 'Change existing game? This may affect previous sessions.',
-          confirmFunc: 'updateGame',
-          confirmArgs: [activeGame],
-        }))
+        // dispatch(setConfirmModal({
+        //   vis: true,
+        //   message: 'Change existing game? This may affect previous sessions.',
+        //   confirmFunc: 'updateGame',
+        //   confirmArgs: [activeGame],
+        // }))
     } else if (activeGame.id === 0) {
       // dispatch addSession action only after addGame action is complete
       // this is b/c the SQLite ID doesn't exist yet, need to get it first
-      dispatchThunk(addGame(activeGame));
+      dispatchThunk(addGame(activeGame))
+      .then((action) => {
+        dispatchThunk(addSession(action.payload.id))
+        .then((action) => {
+          dispatchThunk(addPlayerSession({
+            playerId: player.activePlayerId,
+            sessionId: action.payload.id,
+          }))
+          dispatch(hideNewGameModal());
+        })
+      });
     } else {
       dispatchThunk(addSession(activeGame.id));
       dispatch(hideNewGameModal());

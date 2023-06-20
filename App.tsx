@@ -19,7 +19,7 @@ import { getPlayerSessions } from './src/redux/playerSessionSlice';
 
 // Import other modules
 import { State } from './src/types';
-import Session from './src/views/Session';
+import Session from './src/views/SessionView';
 import Home from './src/views/Home';
 import { executeSqlAsync } from './src/db/db-service';
 
@@ -65,14 +65,14 @@ function App() {
     .catch(error => console.log('CREATE SESSION TABLE ' + error))
 
     const createPlayerSessionTable =
-    `CREATE TABLE IF NOT EXISTS sessions (
+    `CREATE TABLE IF NOT EXISTS playerSessions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       playerId INTEGER,
       sessionId INTEGER,
       score INTEGER DEFAULT 0,
       bid INTEGER DEFAULT 0,
       team INTEGER DEFAULT 0,
-      FOREIGN KEY(gameId) REFERENCES games(id),
+      FOREIGN KEY(playerId) REFERENCES players(id),
       FOREIGN KEY(sessionId) REFERENCES sessions(id)
     );`
     executeSqlAsync(createPlayerSessionTable)
