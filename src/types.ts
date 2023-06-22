@@ -1,69 +1,101 @@
-import { NavigationProp } from "@react-navigation/native";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
 
+//PLAYER
 export interface Player {
+  id: number
   name: string,
   icon: string,
-  active: number,
-  score: number,
-  bid: number,
-  team: 0|1|2|3|4|5|6|7|8|9,
-  place: number,
-}
-export function Player(name: string): Player{
-  return {
-    name, 
-    icon: '',
-    active: 0,
-    score: 0,
-    bid: 0,
-    team: 0,
-    place: 0,
-  }
 }
 
 export interface PlayerState {
-  playerList: {
-    [key: string]: Player
-  }
+  byId: {
+    [key: number]: Player
+  },
+  allIds: number[],
 }
 
+//MODALS
 export interface ModalsState {
   number: {
     vis: boolean,
-    playerName: string,
+    playerSessionId: number,
     isBid: boolean
   }
   newGame: {
     vis: boolean,
+    gameId: number,
   }
   confirm: {
     vis: boolean,
     message: string,
     confirmFunc: string,
     confirmArgs?: any[],
+    confirmed: boolean,
   }
 }
 
+//GAME
 export interface Game {
-  gameName: string,
+  id: number,
+  name: string,
   lowScoreWins: boolean,
   useBid: boolean,
   teams: boolean,
+  display: boolean,
 }
 
 export interface GameState {
-  activeGame: Game,
-  gameList: Game[]
+  byId: {
+    [key: number]: Game
+  },
+  allIds: number[],
+}
+
+//SESSION
+export interface Session {
+  id: number,
+  date: string,
+  gameId: number,
+  complete: boolean,
+}
+
+export interface SessionState {
+  byId: {
+    [key: number]: Session
+  },
+  allIds: number[],
+}
+
+//PLAYERSESSION
+export interface PlayerSession {
+  id: number,
+  playerId: number,
+  sessionId: number,
+  score: number,
+  bid: number,
+  team: number,
+}
+
+export interface PlayerSessionState {
+  tempById: {
+    [key: number]: PlayerSession
+  },
+  byId: {
+    [key: number]: PlayerSession
+  },
+  allIds: number[],
 }
 
 export interface State {
   player: PlayerState,
   modals: ModalsState,
   game: GameState,
+  session: SessionState,
+  playerSession: PlayerSessionState,
 }
 
 export type NavigationPropType = NavigationProp<
-  { Home: undefined, Game: undefined, History: undefined, Settings: undefined }, 
-  'Home' | 'Game' | 'History' | 'Settings'
+  { Home: undefined, SessionView: {sessionId: number}, History: undefined, Settings: undefined }, 
+  'Home' | 'SessionView' | 'History' | 'Settings'
 >
- 
+

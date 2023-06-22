@@ -3,16 +3,18 @@ import { StyleSheet, View, Text, Modal } from "react-native";
 import Checkbox from "expo-checkbox";
 
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGame } from "../views/gameSlice";
-import { deletePlayer } from "../views/playerSlice";
+import { deleteGame, updateGame } from "../redux/gameSlice";
+import { deletePlayer } from "../redux/playerSlice";
+import { hideNewGameModal } from "../redux/modalsSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
-import { hideConfirmModal } from "./modalsSlice";
+import { hideConfirmModal } from "../redux/modalsSlice";
 import { db } from "../db/db-service";
+import { updateSession } from "../redux/sessionSlice";
 
 type ConfirmModalProps = {
   navigation: NavigationPropType,
@@ -28,22 +30,30 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
     message,
     confirmFunc,
     confirmArgs,
-   } = useSelector((state:State) => state.modals.confirm)
+  } = useSelector((state:State) => state.modals.confirm)
 
+  // We can't store functions in redux, so we have to do this
   function handleConfirm() {
     switch(confirmFunc) {
       case 'deleteGame':
-        if (confirmArgs) dispatch(deleteGame(confirmArgs[0]));
+        if (confirmArgs) dispatchThunk(deleteGame(confirmArgs[0]));
         break;
       case 'deletePlayer':
         if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
         break;
-      case 'endGame':
+      case 'endSession':
+        if (confirmArgs) dispatchThunk(updateSession(confirmArgs[0]));
         navigation.navigate('Home');
         break;
+      case 'confirmAsyncOperation':
+        if (confirmArgs) confirmArgs[0](true);
       default:
         console.log('NO FUNCTION FOUND')
     }
+    dispatch(hideConfirmModal())
+  }
+
+  function handleCancel() {
     dispatch(hideConfirmModal())
   }
 
@@ -65,7 +75,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
             />
             <Control
               text={'CANCEL'}
-              onPress={() => dispatch(hideConfirmModal())}
+              onPress={handleCancel}
               pressableStyles={[Styles.cancelButton]}
               textStyles={[{fontSize:30}]}
             />

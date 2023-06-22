@@ -5,13 +5,15 @@ import Checkbox from 'expo-checkbox';
 
 //Redux imports
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModa } from "./modalsSlice";
-import { changeActiveGame, addGame } from "../views/gameSlice";
-import { addPlayer } from "../views/playerSlice";
+import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
+import { addGame, updateGame } from "../redux/gameSlice";
+import { addPlayer } from "../redux/playerSlice";
+import { addSession } from "../redux/sessionSlice";
+import { addPlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
-import { State, Player, NavigationPropType } from "../types";
+import { State, Game, NavigationPropType, PlayerSessionState} from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
@@ -19,43 +21,119 @@ import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
 import PlayerListItem from "../components/PlayerListItem";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 type NewGameModalProps = {
   navigation: NavigationPropType,
 }
 
+const defaultGame: Game = {
+  id: 0,
+  name: '',
+  useBid: false,
+  lowScoreWins: false,
+  teams: false,
+  display: true,
+}
+
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
-  const { 
-    gameName, 
-    useBid, 
-    lowScoreWins, 
-    teams 
-  } = useSelector((state: State) => state.game.activeGame);
-  const { newGame } = useSelector((state: State) => state.modals);
-  const { playerList } = useSelector((state: State) => state.player);
 
-  const [ newPlayerName, setNewPlayerName ] = useState<string>('');
-
+  const { modals, player, game } = useSelector((state: State) => state);
+  const tempPlayerSessions = useSelector((state: State) => state.playerSession.tempById);
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
-  function handlePlay () {
-    navigation.navigate('Game')
-    dispatch(hideNewGameModa())
-    dispatch(addGame({gameName, useBid, lowScoreWins, teams}))
-  }
+  const [ newPlayerName, setNewPlayerName ] = useState<string>('');
+  const [ activeGame, setActiveGame ] = useState<Game>(defaultGame);
+  
+  useEffect(() => {
+    if (modals.newGame.vis) {
+      setNewPlayerName('');
+
+      // If we're editing a game, set the active game to that game
+      // Otherwise, set the active game to a new game
+      if (modals.newGame.gameId !== 0) {
+        setActiveGame(game.byId[modals.newGame.gameId]);
+      } else setActiveGame(defaultGame);
+    }
+
+  }, [modals.newGame.vis])
+
+
+
+  async function handlePlay () {
+
+    //TEMPORARY - CREATE CUSTOM MODALS FOR THESE
+    if (Object.keys(tempPlayerSessions).length < 2) {
+      alert('Please select at least 2 players');
+      return;
+    }
+
+    if (activeGame.name === '') {
+      alert('Please enter a game name');
+      return;
+    }
+
+    // // Only show confirm modal if we're editing an existing game
+    // async function showConfirmModal() {
+    //   return new Promise((resolve, reject) => {
+    //     dispatch(setConfirmModal({
+    //       vis: true,
+    //       message: 'Change existing game? This may affect previous sessions.',
+    //       confirmFunc: 'confirmAsyncOperation',
+    //       confirmArgs: [resolve],
+    //     }))
+    //   })
+    // }
+
+    async function getGameId() {
+      // If game doesn't exist, add it and get the id back
+      try {
+        if (activeGame.id === 0) {
+          const addGameAction = await dispatchThunk(addGame(activeGame));
+          return addGameAction.payload.id;
+        // If we've changed the game, add it and get the id back
+        } else if (JSON.stringify(activeGame) !== JSON.stringify(game.byId[activeGame.id])) {
+          const updateGameAction = await dispatchThunk(updateGame(activeGame));
+          return updateGameAction.payload.id;
+        // Otherwise, just return the id
+        } else return activeGame.id
+      } catch (err) {
+        console.log('GET GAME ID ', err)
+      }
+    }
+
+    function setPlayerSessions(sessionId: number) {
+      return Promise.all(Object.values(tempPlayerSessions).map(async (value) => {
+        return dispatchThunk(addPlayerSession({
+          playerId: value.playerId,
+          sessionId,
+          team: value.team,
+        }))
+      }))
+    }
+    try {
+      const gameId = await getGameId();
+      const sessionId = await dispatchThunk(addSession(gameId));
+      // Add all player sessions to the database and redux state before navigating
+      await setPlayerSessions(sessionId.payload.id);
+      dispatch(hideNewGameModal());
+      navigation.navigate('SessionView', {sessionId: sessionId.payload.id as number});
+    } catch (err) {
+      console.log('HANDLE PLAY ', err)
+    }
+  };
 
   function handleNewPlayerDone(): void {
     setNewPlayerName('');
     dispatchThunk(addPlayer(newPlayerName));
   }
 
-
   return (
     <Modal
       animationType='slide'
       transparent={true}
-      visible={newGame.vis}
+      visible={modals.newGame.vis}
     >
       <View style={Styles.modal}>
         <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
@@ -63,41 +141,50 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
             <Text style={[CommonStyles.text, {fontSize: 30}]}>GAME:</Text>
             <TextInput 
               style={Styles.textInput}
-              onChangeText={text => dispatch(changeActiveGame({gameName: text}))}
-              value={gameName}
+              onChangeText={text => setActiveGame({...activeGame, name: text})}
+              value={activeGame.name}
               returnKeyType="done"
             />
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={lowScoreWins}
-              onValueChange={() => dispatch(changeActiveGame({lowScoreWins: !lowScoreWins}))}
+              value={!!activeGame.lowScoreWins}
+              onValueChange={() => setActiveGame({
+                ...activeGame, 
+                lowScoreWins: !activeGame.lowScoreWins,
+              })}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={useBid}
-              onValueChange={() => {dispatch(changeActiveGame({useBid: !useBid}))}}
+              value={activeGame.useBid}
+              onValueChange={() => setActiveGame({
+                ...activeGame, 
+                useBid: !activeGame.useBid,
+              })}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>BIDS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
-              value={teams}
-              onValueChange={() => {dispatch(changeActiveGame({teams: !teams}))}}
+              value={activeGame.teams}
+              onValueChange={() => setActiveGame({
+                ...activeGame, 
+                teams: !activeGame.teams,
+              })}
             />
             <Text style={[CommonStyles.text, Styles.listItemText]}>TEAMS</Text>
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
-              {playerList ?
-                Object.keys(playerList).map((player) => {
-                  const p = playerList[player];
+              {player.allIds ?
+                player.allIds.map((id) => {
                   return (
                     <PlayerListItem 
-                      key={p.name}
-                      player={p}
+                      key={id}
+                      id={id}
+                      teams={activeGame.teams}
                     />
                   )
                 }) : null
@@ -119,7 +206,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
               textStyles={[{fontSize:30}]}
             />
             <Control
-              onPress={() => dispatch(hideNewGameModa())}
+              onPress={() => dispatch(hideNewGameModal())}
               pressableStyles={[Styles.cancelButton]}
               text={'CANCEL'}
               textStyles={[{fontSize:30}]}

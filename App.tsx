@@ -9,57 +9,85 @@ import { SQLResultSet } from 'expo-sqlite';
 
 // Import Redux modules
 import { Provider } from 'react-redux';
-import store from './src/store';
+import store from './src/redux/store';
 import { ThunkDispatch } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, } from 'react-redux';
+import { getPlayers } from './src/redux/playerSlice';
+import { getGames } from './src/redux/gameSlice';
+import { getSessions } from './src/redux/sessionSlice';
+import { getPlayerSessions } from './src/redux/playerSessionSlice';
 
 // Import other modules
 import { State } from './src/types';
-import Game from './src/views/Game';
+import SessionView from './src/views/SessionView';
 import Home from './src/views/Home';
 import { executeSqlAsync } from './src/db/db-service';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined,
+  SessionView: {sessionId: number},
+}
 
-export default function App() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
+function App() {
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   useEffect(() => {
-
-    // executeSqlAsync('DROP TABLE IF EXISTS Players;')
-    // .then(response => console.log(response))
-    // .catch(error => console.log('CREATE TABLE ' + error))
-
     const createPlayerTable = 
-    `CREATE TABLE IF NOT EXISTS Players (
-      name TEXT PRIMARY KEY,
-      icon TEXT DEFAULT 'none',
-      active INTEGER DEFAULT 0,
-      score INTEGER DEFAULT 0,
-      bid INTEGER DEFAULT 0,
-      team INTEGER DEFAULT 0,
-      place INTEGER DEFAULT 0
+    `CREATE TABLE IF NOT EXISTS players (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      icon TEXT DEFAULT 'none'
     );`
     executeSqlAsync(createPlayerTable)
-      .catch(error => console.log('CREATE TABLE ' + error))
+    .catch(error => console.log('CREATE PLAYER TABLE ' + error))
 
+    const createGameTable =
+    `CREATE TABLE IF NOT EXISTS games (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      lowScoreWins INTEGER CHECK(lowScoreWins IN (0,1)),
+      useBid INTEGER CHECK(useBid IN (0,1)),
+      teams INTEGER CHECK(teams IN (0,1))
+    );`
+    executeSqlAsync(createGameTable)
+    .catch(error => console.log('CREATE GAME TABLE ' + error))
 
-    // //executeSqlAsync('DELETE FROM Players;')
+    const createSessionTable =
+    `CREATE TABLE IF NOT EXISTS sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId INTEGER,
+      date TEXT,
+      complete INTEGER CHECK(complete IN (0,1)),
+      FOREIGN KEY(gameId) REFERENCES games(id)
+    );`
+    executeSqlAsync(createSessionTable)
+    .catch(error => console.log('CREATE SESSION TABLE ' + error))
 
-    // const testQuery = 
-    // `INSERT INTO Players (playerName, icon)
-    // VALUES (?, ?)`
-    // executeSqlAsync(testQuery, ['Sam', 'Ugly'])
-    //   .then(response => console.log(response))
-    //   .catch(error => console.log('INSERT ' + error))
-    
-    // executeSqlAsync('SELECT * FROM Players;')
-    //   .then((response) => console.log(response.rows._array))
-    //   .catch(error => console.log(error))
+    const createPlayerSessionTable =
+    `CREATE TABLE IF NOT EXISTS playerSessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      playerId INTEGER,
+      sessionId INTEGER,
+      score INTEGER DEFAULT 0,
+      bid INTEGER DEFAULT 0,
+      team INTEGER DEFAULT 1,
+      place INTEGER DEFAULT 0,
+      FOREIGN KEY(playerId) REFERENCES players(id),
+      FOREIGN KEY(sessionId) REFERENCES sessions(id)
+    );`
+    executeSqlAsync(createPlayerSessionTable)
+    .catch(error => console.log('CREATE SESSION TABLE ' + error))
+
+    dispatchThunk(getPlayers());
+    dispatchThunk(getGames());
+    dispatchThunk(getSessions());
+    dispatchThunk(getPlayerSessions());
   }, [])
 
   return (
-    <Provider store={store}>
+    <>
       <StatusBar style='light'/>
       <NavigationContainer>
         <Stack.Navigator
@@ -72,13 +100,21 @@ export default function App() {
             component={Home}
           />
           <Stack.Screen
-            name='Game'
-            component={Game}
+            name='SessionView'
+            component={SessionView}
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </Provider>
+    </>
   );
+}
+
+export default function AppWithProvider() {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
 }
 
 const Styles = StyleSheet.create({

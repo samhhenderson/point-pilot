@@ -1,17 +1,37 @@
-import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-native";
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { State } from "../types";
 
-export function pressStyle(...inputStyles: ViewStyle[]) {
-  const [isPressed, setIsPressed] = useState(false);
-
-  return {
-    style: [
-      ...inputStyles,
-      { opacity: isPressed ? 0.8 : 1.0 },
-    ],
-    onPressIn: () => setIsPressed(true),
-    onPressOut: () => setIsPressed(false),
-  };
+type PlayerSessionIdPlace = {
+  playerSessionId: number,
+  place: number,
 }
 
+export function useCalculatePlaces(
+  playerSessionIds: number[],
+  ): PlayerSessionIdPlace[] {
 
+  const playerSessions = useSelector((state: State) => {
+    return playerSessionIds.map((id: number) => state.playerSession.byId[id]);
+  });
+
+  const lowScoreWins = useSelector((state: State) => {
+    return state.game.byId[state.session.byId[playerSessions[0].sessionId]
+    .gameId].lowScoreWins;
+  })
+
+  const sortedPlayerSessions = [...playerSessions].sort((a, b) => {
+    if (lowScoreWins) return a.score - b.score;
+    else return b.score - a.score;
+  });
+  const places: PlayerSessionIdPlace[] = [];
+  let currentPlace = 1;
+  sortedPlayerSessions.forEach((ps, i) => {
+    if (i === 0 || ps.score === sortedPlayerSessions[i - 1].score) {
+      places.push({playerSessionId: ps.id, place: currentPlace})
+    } else {
+      currentPlace++;
+      places.push({playerSessionId: ps.id, place: currentPlace})
+    }
+  })
+  return places;
+}
