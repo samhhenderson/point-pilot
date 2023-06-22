@@ -1,5 +1,6 @@
-import { NavigationProp } from "@react-navigation/native";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
 
+//PLAYER
 export interface Player {
   id: number
   name: string,
@@ -13,15 +14,16 @@ export interface Player {
 
 export interface PlayerState {
   byId: {
-    [key: string]: Player
+    [key: number]: Player
   },
   allIds: number[],
 }
 
+//MODALS
 export interface ModalsState {
   number: {
     vis: boolean,
-    playerName: string,
+    playerSessionId: number,
     isBid: boolean
   }
   newGame: {
@@ -33,9 +35,11 @@ export interface ModalsState {
     message: string,
     confirmFunc: string,
     confirmArgs?: any[],
+    confirmed: boolean,
   }
 }
 
+//GAME
 export interface Game {
   id: number,
   name: string,
@@ -46,13 +50,13 @@ export interface Game {
 }
 
 export interface GameState {
-  activeGame: Game,
   byId: {
     [key: number]: Game
   },
   allIds: number[],
 }
 
+//SESSION
 export interface Session {
   id: number,
   date: string,
@@ -67,6 +71,7 @@ export interface SessionState {
   allIds: number[],
 }
 
+//PLAYERSESSION
 export interface PlayerSession {
   id: number,
   playerId: number,
@@ -77,6 +82,9 @@ export interface PlayerSession {
 }
 
 export interface PlayerSessionState {
+  tempById: {
+    [key: number]: PlayerSession
+  },
   byId: {
     [key: number]: PlayerSession
   },
@@ -92,7 +100,7 @@ export interface State {
 }
 
 export type NavigationPropType = NavigationProp<
-  { Home: undefined, Session: undefined, History: undefined, Settings: undefined }, 
-  'Home' | 'Session' | 'History' | 'Settings'
+  { Home: undefined, SessionView: {sessionId: number}, History: undefined, Settings: undefined }, 
+  'Home' | 'SessionView' | 'History' | 'Settings'
 >
- 
+

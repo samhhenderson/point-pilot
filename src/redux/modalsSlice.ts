@@ -6,7 +6,7 @@ export const modalsSlice = createSlice({
   initialState: {
     number: {
       vis: false,
-      playerName: 'Emily',
+      playerSessionId: 0,
       isBid: false,
     },
     newGame: {
@@ -18,18 +18,17 @@ export const modalsSlice = createSlice({
       message: '',
       confirmFunc: '',
       confirmArgs: [''],
+      confirmed: false,
     }
   } as ModalsState,
   reducers: {
-    showNumberModal: state => {
-      state.number.vis = true
-    },
     hideNumberModal: state => {
       state.number.vis = false;
     },
-    setNumberModalPlayer:(state, action) => {
-      state.number.playerName = action.payload.playerName;
+    setNumberModal:(state, action) => {
+      state.number.playerSessionId = action.payload.playerSessionId;
       state.number.isBid = action.payload.isBid;
+      state.number.vis = true
     },
     showNewGameModal: (state, action) => {
       state.newGame.gameId = action.payload;
@@ -51,9 +50,8 @@ export const modalsSlice = createSlice({
 })
 
 export const { 
-  showNumberModal, 
   hideNumberModal,
-  setNumberModalPlayer,
+  setNumberModal,
   showNewGameModal,
   hideNewGameModal,
   setConfirmModal,

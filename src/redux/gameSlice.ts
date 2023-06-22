@@ -6,7 +6,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { GameState, Game } from '../types';
 import { executeSqlAsync } from '../db/db-service';
 
-
 export const addGame = createAsyncThunk(
   'game/addGame', 
   async (game: Game, thunkApi) => {
@@ -20,7 +19,7 @@ export const addGame = createAsyncThunk(
       game.useBid? 1 : 0, 
       game.teams? 1 : 0,
     ])
-    .then((response): Game => response.rows._array[0])
+    .then((response) => response.rows._array[0])
     .catch(error => console.log('INSERT ' + error))
   }
 )
@@ -38,37 +37,43 @@ export const deleteGame = createAsyncThunk(
 
 export const getGames = createAsyncThunk(
   'game/getGames',
-  async (_, thunkApi) => {
+  (_, thunkApi) => {
     const query = `SELECT * FROM games`;
     return executeSqlAsync(query, [])
       .then(response => response.rows._array)
-      .catch(error => console.log('GET GAMES ' + error))
+      .catch(error => {
+        console.log('GET GAMES ' + error);
+        return thunkApi.rejectWithValue(error);
+      });
   }
-)
+);
 
 export const updateGame = createAsyncThunk(
   'game/updateGame',
-  async (updatedGame: Game, thunkApi) => {
+  (updatedGame: Game, thunkApi) => {
     const query =
-    `UPDATE games
-    SET name = ?, lowScoreWins = ?, useBid = ?, teams = ?
-    WHERE id = ?;`
+      `UPDATE games
+      SET name = ?, lowScoreWins = ?, useBid = ?, teams = ?
+      WHERE id = ?
+      RETURNING *;`;
     return executeSqlAsync(query, [
       updatedGame.name,
-      updatedGame.lowScoreWins? 1 : 0,
-      updatedGame.useBid? 1 : 0,
-      updatedGame.teams? 1 : 0,
+      updatedGame.lowScoreWins ? 1 : 0,
+      updatedGame.useBid ? 1 : 0,
+      updatedGame.teams ? 1 : 0,
       updatedGame.id
     ])
-    .then((response): Game => response.rows._array[0])
-    .catch(error => console.log('UPDATE ' + error))
+      .then(response => response.rows._array[0])
+      .catch(error => {
+        console.log('UPDATE ' + error);
+        return thunkApi.rejectWithValue(error);
+      });
   }
-)
+);
 
 export const gameSlice = createSlice({
   name: 'game',
   initialState: {
-    activeGame: {id: 0, name: '', lowScoreWins: false, useBid: false, teams: false, display: false},
     byId: {},
     allIds: [],
   } as GameState,

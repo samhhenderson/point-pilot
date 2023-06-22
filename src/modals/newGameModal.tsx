@@ -13,7 +13,7 @@ import { addPlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
-import { State, Game, NavigationPropType } from "../types";
+import { State, Game, NavigationPropType, PlayerSessionState} from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
@@ -21,25 +21,31 @@ import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
 import PlayerListItem from "../components/PlayerListItem";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 type NewGameModalProps = {
   navigation: NavigationPropType,
 }
 
+const defaultGame: Game = {
+  id: 0,
+  name: '',
+  useBid: false,
+  lowScoreWins: false,
+  teams: false,
+  display: true,
+}
+
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   const { modals, player, game } = useSelector((state: State) => state);
+  const tempPlayerSessions = useSelector((state: State) => state.playerSession.tempById);
+  const dispatch = useDispatch();
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   const [ newPlayerName, setNewPlayerName ] = useState<string>('');
-  const [ activeGame, setActiveGame ] = useState<Game>({
-    id: 0,
-    name: '',
-    useBid: false,
-    lowScoreWins: false,
-    teams: false,
-    display: true,
-  });
-
+  const [ activeGame, setActiveGame ] = useState<Game>(defaultGame);
+  
   useEffect(() => {
     if (modals.newGame.vis) {
       setNewPlayerName('');
@@ -48,54 +54,63 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
       // Otherwise, set the active game to a new game
       if (modals.newGame.gameId !== 0) {
         setActiveGame(game.byId[modals.newGame.gameId]);
-      } else {
-        setActiveGame({
-          id: 0,
-          name: '',
-          useBid: false,
-          lowScoreWins: false,
-          teams: false,
-          display: true,
-        });
-      }
+      } else setActiveGame(defaultGame);
     }
 
   }, [modals.newGame.vis])
 
-  const dispatch = useDispatch();
-  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
-  function handlePlay () {
 
-    // Only show the confirm modal if we've changed an existing game
-    if (activeGame.id !== 0 && JSON.stringify(activeGame) !== 
-      JSON.stringify(game.byId[activeGame.id])) {
-        // dispatch(setConfirmModal({
-        //   vis: true,
-        //   message: 'Change existing game? This may affect previous sessions.',
-        //   confirmFunc: 'updateGame',
-        //   confirmArgs: [activeGame],
-        // }))
-    } else if (activeGame.id === 0) {
-      // dispatch addSession action only after addGame action is complete
-      // this is b/c the SQLite ID doesn't exist yet, need to get it first
-      dispatchThunk(addGame(activeGame))
-      .then((action) => {
-        dispatchThunk(addSession(action.payload.id))
-        .then((action) => {
-          dispatchThunk(addPlayerSession({
-            playerId: player.activePlayerId,
-            sessionId: action.payload.id,
-          }))
-          dispatch(hideNewGameModal());
-        })
-      });
-    } else {
-      dispatchThunk(addSession(activeGame.id));
-      dispatch(hideNewGameModal());
-      navigation.navigate('Session');
+  async function handlePlay () {
+
+    // // Only show confirm modal if we're editing an existing game
+    // async function showConfirmModal() {
+    //   return new Promise((resolve, reject) => {
+    //     dispatch(setConfirmModal({
+    //       vis: true,
+    //       message: 'Change existing game? This may affect previous sessions.',
+    //       confirmFunc: 'confirmAsyncOperation',
+    //       confirmArgs: [resolve],
+    //     }))
+    //   })
+    // }
+
+    async function getGameId() {
+      // If game doesn't exist, add it and get the id back
+      try {
+        if (activeGame.id === 0) {
+          const addGameAction = await dispatchThunk(addGame(activeGame));
+          return addGameAction.payload.id;
+        // If we've changed the game, add it and get the id back
+        } else if (JSON.stringify(activeGame) !== JSON.stringify(game.byId[activeGame.id])) {
+          const updateGameAction = await dispatchThunk(updateGame(activeGame));
+          return updateGameAction.payload.id;
+        // Otherwise, just return the id
+        } else return activeGame.id
+      } catch (err) {
+        console.log('GET GAME ID ', err)
+      }
     }
-  }
+
+    function setPlayerSessions(sessionId: number) {
+      return Promise.all(Object.values(tempPlayerSessions).map(async (value) => {
+        return dispatchThunk(addPlayerSession({
+          playerId: value.playerId,
+          sessionId,
+          team: value.team,
+        }))
+      }))
+    }
+    try {
+      const gameId = await getGameId();
+      const sessionId = await dispatchThunk(addSession(gameId));
+      await setPlayerSessions(sessionId.payload.id);
+      dispatch(hideNewGameModal());
+      navigation.navigate('SessionView', {sessionId: sessionId.payload.id as number});
+    } catch (err) {
+      console.log('HANDLE PLAY ', err)
+    }
+  };
 
   function handleNewPlayerDone(): void {
     setNewPlayerName('');
@@ -151,13 +166,12 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
-              {player.byId ?
-                Object.keys(player.byId).map((pla) => {
-                  const p = player.byId[pla];
+              {player.allIds ?
+                player.allIds.map((id) => {
                   return (
                     <PlayerListItem 
-                      key={p.name}
-                      player={p}
+                      key={id}
+                      id={id}
                       teams={activeGame.teams}
                     />
                   )

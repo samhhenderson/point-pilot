@@ -17,9 +17,11 @@ import { db } from "../db/db-service";
 
 type ConfirmModalProps = {
   navigation: NavigationPropType,
+  resolve?: () => void,
+  reject?: () => void,
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
+const ConfirmModal: FC<ConfirmModalProps> = ({ navigation, resolve, reject }) => {
 
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -41,13 +43,11 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
         if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
         break;
       case 'endSession':
+        if (resolve) resolve();
         navigation.navigate('Home');
         break;
-      case 'updateGame':
-        if (confirmArgs) dispatchThunk(updateGame(confirmArgs[0]));
-        dispatch(hideNewGameModal());
-        navigation.navigate('Session');
-        break;
+      case 'confirmAsyncOperation':
+        if (confirmArgs) confirmArgs[0](true);
       default:
         console.log('NO FUNCTION FOUND')
     }

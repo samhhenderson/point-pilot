@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-nativ
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "../redux/modalsSlice";
 import { calculatePlaces, changeScore } from "../redux/playerSlice";
+import { updatePlayerSession } from "../redux/playerSessionSlice";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
@@ -12,9 +14,18 @@ import { CommonStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 
 const NumberModal: FC = () => {
-  const { vis, playerName, isBid} = useSelector((state: State) => state.modals.number);
+  const { 
+    vis, 
+    playerSessionId, 
+    isBid
+  } = useSelector((state: State) => state.modals.number);
+
+  const playerSession = useSelector((state: State) => {
+    return state.playerSession.byId[playerSessionId]
+  });
 
   const dispatch = useDispatch();
+  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
   const [numDisplay, setNumDisplay] = useState('0');
   const [isPositive, setIsPositive] = useState(true);
@@ -78,12 +89,10 @@ const NumberModal: FC = () => {
   function acceptScore() {
     let score: number = parseInt(numDisplay);
     if (posOrNegSign === '-') score *= -1;
-    dispatch(changeScore({
-      playerName: playerName, 
-      scoreToAdd: score,
-      isBid: isBid
+    dispatchThunk(updatePlayerSession({
+      ...playerSession,
+      [isBid ? 'bid' : 'score']: score
     }));  
-    dispatch(calculatePlaces())
     dispatch(hideNumberModal());
   }
 

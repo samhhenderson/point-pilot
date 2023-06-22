@@ -4,65 +4,48 @@ import { StyleSheet, Text, View, ScrollView} from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { setConfirmModal } from "../redux/modalsSlice";
 
-import { State, NavigationPropType, Game, Session, Player } from "../types";
+import { State, NavigationPropType, Game } from "../types";
 import * as Colors from '../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
 import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import Control from "../components/Control";
+import { useCalculatePlaces } from "../util/helperFunctions";
 
-type SessionProps = {
+type SessionViewProps = {
   navigation: NavigationPropType,
+  route: any,
 }
 
-const SessionView: FC<SessionProps> = ({ navigation }) => {
-
+const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
+  const { sessionId } = route.params;
   const dispatch = useDispatch();
 
   const { player, session, game, playerSession } = useSelector((state: State) => state);
   
-  const [ activeGame, setActiveGame ] = useState<Game>({
-    id: 0, 
-    name: 'Game', 
-    lowScoreWins: false, 
-    useBid: false, 
-    teams: false, 
-    display: false
+  const [ activeGame, setActiveGame ] = useState<Game>(() => {
+    return game.byId[session.byId[sessionId].gameId];
   });
 
   // List of player Id's that have a session with the active sessionID
-  const [ activePlayerIds, setActivePlayerIds ] = useState<Number[]>([])
+  const [ activePlayerSessionIds, setActivePlayerSessionIds ] = 
+    useState<number[]>(() => {
+      return playerSession.allIds.filter(id => {
+        return playerSession.byId[id].sessionId === sessionId
+        })
+    });
 
-  // Go in reverse, since the active session is most likely the last one
-  useEffect(() => {
-    const activeSession = session.allIds
-      .map(id => session.byId[id])
-      .reverse()
-      .find(s => !s.complete);
-
-    if (activeSession) {
-      setActiveGame(game.byId[activeSession.gameId]);
-      setActivePlayerIds(playerSession.allIds
-        .filter(id => activeSession.id === playerSession.byId[id].sessionId)
-      )
-    }
-
-    // for (let i = session.allIds.length - 1; i >= 0; i--) {
-    //   if (!session.byId[session.allIds[i]].complete) {
-    //     let activeSession = session.byId[session.allIds[i]]
-    //     setActiveGame(game.byId[activeSession.gameId]);
-    //     break;
-    //   }
-    // }
-  }, [session, game])
+  const playerSessionIdPlaces = useCalculatePlaces(activePlayerSessionIds)
 
   function endSession() {
+
     const winners: string[] = [];
-    for (const p in player.byId) {
-      if (player.byId[p].place === 1) {
-        winners.push(p);
-      }
+    for (const psip of playerSessionIdPlaces) {
+      if (psip.place === 1) {
+        winners.push(player.byId[playerSession.byId[psip.playerSessionId]
+            .playerId].name);
+      } else break;
     }
     let names = '';
     let plural= '';
@@ -81,7 +64,9 @@ const SessionView: FC<SessionProps> = ({ navigation }) => {
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>{activeGame.name}</Text>
+          <Text style={[CommonStyles.text, Styles.title]}>
+            {activeGame.name}
+          </Text>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
               <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
@@ -89,22 +74,21 @@ const SessionView: FC<SessionProps> = ({ navigation }) => {
                 <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>
                   {activeGame!.useBid ? 'BID' : ''}
                   </Text>
-                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>SCORE</Text>
+                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>
+                  SCORE
+                </Text>
               </View>
             </View>
-            {player.allIds.map(id => {
-              const p = player.byId[id];
-              if (p.active) {
+            {activePlayerSessionIds.length > 0 ? 
+              activePlayerSessionIds.map(id => {
                 return (
                   <ActivePlayer 
-                    key={p.id}
-                    bid={p.bid}
-                    name={p.name} 
-                    score={p.score}
+                    key={id}
+                    playerSessionId={id}
+                    useBid={activeGame.useBid}
                   />
                 )
-              }
-            })}
+              }): null}
           </View>
           <View style={Styles.endGameContainer}>
             <Control
@@ -112,7 +96,7 @@ const SessionView: FC<SessionProps> = ({ navigation }) => {
               text={'END GAME'}
               pressableStyles={[Styles.endGameButton]}
               textStyles={[{fontSize:30}]}
-              />
+            />
           </View>
         </ScrollView>
         <NumberModal/>

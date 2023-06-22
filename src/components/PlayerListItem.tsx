@@ -4,8 +4,13 @@ import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 import { changeActivePlayer, deletePlayer, changeTeam} from "../redux/playerSlice";
+import { 
+  setTempPlayerSession, 
+  deleteTempPlayerSession,
+  changeTempPlayerSessionTeam,
+} from "../redux/playerSessionSlice";
 
-import { State, Player, NavigationPropType } from "../types";
+import { State, Player, NavigationPropType, PlayerSession } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CommonStyles } from "../styles/CommonStyles";
@@ -14,18 +19,40 @@ import CheckBox from "./CheckBox";
 import ConfirmModal from "../modals/ConfirmModal";
 
 type PlayerListItemProps = {
-  player: Player,
+  id: number,
   teams?: boolean,
 }
 
-const PlayerListItem: FC<PlayerListItemProps> = ({ player, teams = false }) => {
+const PlayerListItem: FC<PlayerListItemProps> = ({ id, teams = false}) => {
+  const tempPlayerSession = useSelector((state: State) => state.playerSession.tempById[id]);
+  const player: Player = useSelector((state: State) => state.player.byId[id]);
   const dispatch = useDispatch();
+
+  const [ active, setActive ] = useState<boolean>(false);
+
+  function handleChangeActive() {
+    if (!active) {
+      dispatch(setTempPlayerSession(
+        {
+          id: player.id,
+          playerId: player.id,
+          sessionId: 0,
+          score: 0,
+          bid: 0,
+          team: 1,
+        } as PlayerSession
+      ));
+    } else {
+      dispatch(deleteTempPlayerSession(player.id));
+    }
+    setActive(!active);
+  }
 
   function handleDeletePlayer() {
     dispatch(setConfirmModal({
       message: `Remove ${player.name} from player list?`,
       confirmFunc: 'deletePlayer',
-      confirmArgs: [player.name],
+      confirmArgs: [player.id],
     }))
   }
 
@@ -33,13 +60,13 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player, teams = false }) => {
     <View style={Styles.playerListItem}>
       <View style={Styles.checkboxNameCont}>
         <CheckBox
-          value={!!player.active}
-          onValueChange={() => {dispatch(changeActivePlayer(player.name))}}
+          value={active}
+          onValueChange={handleChangeActive}
         />
         {teams ?
         <Control
-          text={player.team.toString()}
-          onPress={() => dispatch(changeTeam(player.name))}
+          text={tempPlayerSession ? tempPlayerSession.team.toString() : ''}
+          onPress={() => dispatch(changeTempPlayerSessionTeam(player.id))}
           pressableStyles={[Styles.teamButton]}
         /> : null
         }

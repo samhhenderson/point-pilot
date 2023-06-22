@@ -6,9 +6,15 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { PlayerSessionState, PlayerSession } from '../types';
 import { executeSqlAsync } from '../db/db-service';
 
+type newPlayerSessionType = {
+  playerId: number,
+  sessionId: number,
+  team: number,
+}
+
 export const addPlayerSession = createAsyncThunk(
   'playerSession/addPlayerSession', 
-  async (newPlayerSession: PlayerSession, thunkApi) => {
+  async (newPlayerSession: newPlayerSessionType, thunkApi) => {
     const query = 
     `INSERT INTO playerSessions (playerId, sessionId)
     VALUES (?, ?)
@@ -36,9 +42,11 @@ export const deletePlayerSession = createAsyncThunk(
 export const updatePlayerSession = createAsyncThunk(
   'playerSession/updatePlayerSession',
   async (updatedPlayerSession: PlayerSession, thunkApi) => {
+    //Because the numpad needs to be very responsive, we update the redux store immediately
+    thunkApi.dispatch(updatePlayerSessionState(updatedPlayerSession))
     const query =
     `UPDATE playerSessions
-    SET score = ?, bid = ?, team = ?,
+    SET score = ?, bid = ?, team = ?
     WHERE id = ?;`
     return executeSqlAsync(query, [
       updatedPlayerSession.score,
@@ -64,11 +72,29 @@ export const getPlayerSessions = createAsyncThunk(
 export const playerSessionSlice = createSlice({
   name: 'playerSession',
   initialState: {
+    tempById: {},
     byId: {},
     allIds: [],
   } as PlayerSessionState,
   reducers: {
-
+    updatePlayerSessionState: (state, action) => {
+      state.byId[action.payload.id] = action.payload;
+    },
+    setTempPlayerSession: (state, action) => {
+      state.tempById[action.payload.id] = action.payload;
+    },
+    deleteTempPlayerSession: (state, action) => {
+      delete state.tempById[action.payload];
+    },
+    clearTempPlayerSessions: (state) => {
+      state.tempById = {};
+    },
+    changeTempPlayerSessionTeam: (state, action) => {
+      const tempSession = state.tempById[action.payload];
+      if (tempSession) {
+        tempSession.team === 9 ? tempSession.team = 1 : tempSession.team++;
+      }
+    },
   },
   extraReducers: (builder) => {
     // Add new playerSession - only executes at PLAY!
@@ -94,21 +120,17 @@ export const playerSessionSlice = createSlice({
           state.allIds.push(playerSession.id);
         })
       }
-      console.log('GET PLAYER SESSIONS: ', state.byId)
-    });
-    // Update playerSession - only executes at END GAME
-    builder.addCase(updatePlayerSession.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.byId[action.payload.id] = action.payload;
-      }
     });
     
   },
 })
 
 export const { 
-
-
+  setTempPlayerSession,
+  deleteTempPlayerSession,
+  clearTempPlayerSessions,
+  changeTempPlayerSessionTeam,
+  updatePlayerSessionState,
 } = playerSessionSlice.actions;
 
 export default playerSessionSlice.reducer;

@@ -101,7 +101,6 @@ export const sessionSlice = createSlice({
           state.allIds.push(session.id);
         })
       }
-      console.log('GET SESSIONS: ', state.byId)
     });
     // Update session - only executes at END GAME
     builder.addCase(updateSession.fulfilled, (state, action) => {

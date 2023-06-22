@@ -19,11 +19,16 @@ import { getPlayerSessions } from './src/redux/playerSessionSlice';
 
 // Import other modules
 import { State } from './src/types';
-import Session from './src/views/SessionView';
+import SessionView from './src/views/SessionView';
 import Home from './src/views/Home';
 import { executeSqlAsync } from './src/db/db-service';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined,
+  SessionView: {sessionId: number},
+}
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -31,7 +36,8 @@ function App() {
   useEffect(() => {
     const createPlayerTable = 
     `CREATE TABLE IF NOT EXISTS players (
-      name TEXT PRIMARY KEY,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
       icon TEXT DEFAULT 'none',
       active INTEGER DEFAULT 0,
       score INTEGER DEFAULT 0,
@@ -71,7 +77,8 @@ function App() {
       sessionId INTEGER,
       score INTEGER DEFAULT 0,
       bid INTEGER DEFAULT 0,
-      team INTEGER DEFAULT 0,
+      team INTEGER DEFAULT 1,
+      place INTEGER DEFAULT 0,
       FOREIGN KEY(playerId) REFERENCES players(id),
       FOREIGN KEY(sessionId) REFERENCES sessions(id)
     );`
@@ -98,8 +105,8 @@ function App() {
             component={Home}
           />
           <Stack.Screen
-            name='Session'
-            component={Session}
+            name='SessionView'
+            component={SessionView}
           />
         </Stack.Navigator>
       </NavigationContainer>

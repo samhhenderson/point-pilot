@@ -8,8 +8,8 @@ export function executeSqlAsync(sqlStatement: string, params: any[] = []) {
       tx.executeSql(
         sqlStatement,
         params,
-        (_, result) => resolve(result),
-        (_, error) => {reject(error); return true;}
+        (tx, result) => resolve(result),
+        (tx, error) => {reject(error); return true;}
       );
     });
   });
