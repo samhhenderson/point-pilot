@@ -38,12 +38,7 @@ function App() {
     `CREATE TABLE IF NOT EXISTS players (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
-      icon TEXT DEFAULT 'none',
-      active INTEGER DEFAULT 0,
-      score INTEGER DEFAULT 0,
-      bid INTEGER DEFAULT 0,
-      team INTEGER DEFAULT 0,
-      place INTEGER DEFAULT 0
+      icon TEXT DEFAULT 'none'
     );`
     executeSqlAsync(createPlayerTable)
     .catch(error => console.log('CREATE PLAYER TABLE ' + error))

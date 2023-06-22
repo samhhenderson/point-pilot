@@ -36,15 +36,15 @@ export const deleteSession = createAsyncThunk(
 
 export const updateSession = createAsyncThunk(
   'session/updateSession',
-  async (updatedSession: Session, thunkApi) => {
+  async (updatedSessionId: number, thunkApi) => {
     const query =
     `UPDATE sessions
     SET date = ?, complete = ?
     WHERE id = ?;`
     return executeSqlAsync(query, [
-      updatedSession.date,
-      updatedSession.complete? 1 : 0,
-      updatedSession.id
+      new Date().toDateString(),
+      1,
+      updatedSessionId
     ])
     .then((response): Session => response.rows._array[0])
     .catch(error => console.log('UPDATE ' + error))
@@ -100,6 +100,7 @@ export const sessionSlice = createSlice({
           } as Session;
           state.allIds.push(session.id);
         })
+        console.log('GET SESSIONS', action.payload)
       }
     });
     // Update session - only executes at END GAME
@@ -108,7 +109,6 @@ export const sessionSlice = createSlice({
         state.byId[action.payload.id] = action.payload;
       }
     });
-    
   },
 })
 

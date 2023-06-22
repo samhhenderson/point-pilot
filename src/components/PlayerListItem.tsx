@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
-import { changeActivePlayer, deletePlayer, changeTeam} from "../redux/playerSlice";
 import { 
   setTempPlayerSession, 
   deleteTempPlayerSession,

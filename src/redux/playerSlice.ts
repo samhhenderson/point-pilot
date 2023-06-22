@@ -43,42 +43,7 @@ export const playerSlice = createSlice({
     byId: {},
     allIds: [],
   } as PlayerState,
-  reducers: {
-    changeActivePlayer: (state, action) => {
-      state.byId[action.payload].active === 1 ? 
-        state.byId[action.payload].active = 0 : 
-        state.byId[action.payload].active = 1;
-    },
-    changeScore: (state, action) => {
-      const { playerName, scoreToAdd, isBid } = action.payload;
-      const player = state.byId[playerName];
-      if (player && !isBid) player.score += scoreToAdd;
-      else if (player) player.bid += scoreToAdd;
-    },
-    changeTeam: (state, action) => {
-      const player = state.byId[action.payload];
-      if (player) player.team === 9? player.team = 0 : player.team++;
-    },
-    calculatePlaces: state => {
-      const activePlayers: Player[] = [];
-      for (const player in state.byId) {
-        if (state.byId[player].active) {
-          activePlayers.push(state.byId[player]);
-        }
-      }
-      activePlayers.sort((a, b) => b.score - a.score);
-      let currentPlace = 1;
-      activePlayers.forEach((player, i) => {
-        if (i === 0) player.place = currentPlace;
-        else if (player.score === activePlayers[i - 1].score) {
-          player.place = currentPlace;
-        } else {
-          currentPlace++;
-          player.place = currentPlace;
-        }
-      })
-    }
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addCase(addPlayer.fulfilled, (state, action) => {
       if (action.payload) {
@@ -104,9 +69,6 @@ export const playerSlice = createSlice({
 })
 
 export const { 
-  changeActivePlayer, 
-  changeScore,
-  changeTeam,
-  calculatePlaces,
+
 } = playerSlice.actions;
 export default playerSlice.reducer;

@@ -23,18 +23,12 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { player, session, game, playerSession } = useSelector((state: State) => state);
-  
-  const [ activeGame, setActiveGame ] = useState<Game>(() => {
-    return game.byId[session.byId[sessionId].gameId];
-  });
 
-  // List of player Id's that have a session with the active sessionID
-  const [ activePlayerSessionIds, setActivePlayerSessionIds ] = 
-    useState<number[]>(() => {
-      return playerSession.allIds.filter(id => {
-        return playerSession.byId[id].sessionId === sessionId
-        })
-    });
+  const activeGame = game.byId[session.byId[sessionId].gameId];
+
+  const activePlayerSessionIds = playerSession.allIds.filter(id => {
+    return playerSession.byId[id].sessionId === sessionId
+  })
 
   const playerSessionIdPlaces = useCalculatePlaces(activePlayerSessionIds)
 
@@ -58,6 +52,7 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
     dispatch(setConfirmModal({
       message: `End game? ${names} will be the winner${plural}!`,
       confirmFunc: 'endSession',
+      confirmArgs: [sessionId],
     }))
   }
 

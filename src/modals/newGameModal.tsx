@@ -63,6 +63,17 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   async function handlePlay () {
 
+    //TEMPORARY - CREATE CUSTOM MODALS FOR THESE
+    if (Object.keys(tempPlayerSessions).length < 2) {
+      alert('Please select at least 2 players');
+      return;
+    }
+
+    if (activeGame.name === '') {
+      alert('Please enter a game name');
+      return;
+    }
+
     // // Only show confirm modal if we're editing an existing game
     // async function showConfirmModal() {
     //   return new Promise((resolve, reject) => {
@@ -104,6 +115,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     try {
       const gameId = await getGameId();
       const sessionId = await dispatchThunk(addSession(gameId));
+      // Add all player sessions to the database and redux state before navigating
       await setPlayerSessions(sessionId.payload.id);
       dispatch(hideNewGameModal());
       navigation.navigate('SessionView', {sessionId: sessionId.payload.id as number});

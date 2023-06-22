@@ -22,9 +22,16 @@ type HomeProps = {
 
 const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
-  const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
-
   const game = useSelector((state: State) => state.game);
+  const { session } = useSelector((state: State) => state);
+
+  // useEffect(() => {
+  //   const lastSession = session.byId[session.allIds[-1]];
+  //   console.log(lastSession)
+  //   if (!lastSession.complete) {
+  //     navigation.navigate('SessionView', {sessionId: lastSession.id})
+  //   }
+  // }, []);
 
   //Dev only button
   async function dropTables() {
@@ -42,37 +49,37 @@ const Home: FC<HomeProps> = ({navigation}) => {
   }
 
   return (
-      <View style={Styles.app}>
-        <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>Games</Text>
-          <View style={Styles.gameListContainer}>
-            {game.allIds.map((id) => (
-              <GameListItem
-                key={id}
-                id={id}
-              />
-            ))}
-            <Control
-              onPress={() => dispatch(showNewGameModal(0))}
-              text={'+'}
-              pressableStyles={[Styles.addButton]}
-              textStyles={[{fontSize:40}]}
+    <View style={Styles.app}>
+      <ScrollView contentContainerStyle={Styles.game}>
+        <Text style={[CommonStyles.text, Styles.title]}>Games</Text>
+        <View style={Styles.gameListContainer}>
+          {game.allIds.map((id) => (
+            <GameListItem
+              key={id}
+              id={id}
             />
-            <Control
-              onPress={dropTables}
-              text={'-'}
-              pressableStyles={[Styles.addButton, {backgroundColor: 'red'}]}
-              textStyles={[{fontSize:40}]}
-            />
-          </View>
-        </ScrollView>
-        <NewGameModal
-          navigation={navigation}
-        />
-        <ConfirmModal
-          navigation={navigation}
-        />
-      </View>
+          ))}
+          <Control
+            onPress={() => dispatch(showNewGameModal(0))}
+            text={'+'}
+            pressableStyles={[Styles.addButton]}
+            textStyles={[{fontSize:40}]}
+          />
+          <Control
+            onPress={dropTables}
+            text={'-'}
+            pressableStyles={[Styles.addButton, {backgroundColor: 'red'}]}
+            textStyles={[{fontSize:40}]}
+          />
+        </View>
+      </ScrollView>
+      <NewGameModal
+        navigation={navigation}
+      />
+      <ConfirmModal
+        navigation={navigation}
+      />
+    </View>
   );
 };
 

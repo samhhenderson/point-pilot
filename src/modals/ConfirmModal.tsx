@@ -14,14 +14,13 @@ import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
 import { hideConfirmModal } from "../redux/modalsSlice";
 import { db } from "../db/db-service";
+import { updateSession } from "../redux/sessionSlice";
 
 type ConfirmModalProps = {
   navigation: NavigationPropType,
-  resolve?: () => void,
-  reject?: () => void,
 }
 
-const ConfirmModal: FC<ConfirmModalProps> = ({ navigation, resolve, reject }) => {
+const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -43,7 +42,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation, resolve, reject }) =>
         if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
         break;
       case 'endSession':
-        if (resolve) resolve();
+        if (confirmArgs) dispatchThunk(updateSession(confirmArgs[0]));
         navigation.navigate('Home');
         break;
       case 'confirmAsyncOperation':
@@ -51,6 +50,10 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation, resolve, reject }) =>
       default:
         console.log('NO FUNCTION FOUND')
     }
+    dispatch(hideConfirmModal())
+  }
+
+  function handleCancel() {
     dispatch(hideConfirmModal())
   }
 
@@ -72,7 +75,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation, resolve, reject }) =>
             />
             <Control
               text={'CANCEL'}
-              onPress={() => dispatch(hideConfirmModal())}
+              onPress={handleCancel}
               pressableStyles={[Styles.cancelButton]}
               textStyles={[{fontSize:30}]}
             />

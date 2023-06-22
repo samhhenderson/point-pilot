@@ -33,6 +33,5 @@ export function useCalculatePlaces(
       places.push({playerSessionId: ps.id, place: currentPlace})
     }
   })
-  console.log('calculating, bitch')
   return places;
 }

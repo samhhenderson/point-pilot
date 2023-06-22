@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-nativ
 
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "../redux/modalsSlice";
-import { calculatePlaces, changeScore } from "../redux/playerSlice";
 import { updatePlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
