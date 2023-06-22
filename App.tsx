@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { SQLResultSet } from 'expo-sqlite';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 // Import Redux modules
 import { Provider } from 'react-redux';
@@ -19,16 +19,11 @@ import { getPlayerSessions } from './src/redux/playerSessionSlice';
 
 // Import other modules
 import { State } from './src/types';
-import SessionView from './src/views/SessionView';
-import Home from './src/views/Home';
+import History from './src/views/History';
+import Game from './src/views/Game';
 import { executeSqlAsync } from './src/db/db-service';
 
-type RootStackParamList = {
-  Home: undefined,
-  SessionView: {sessionId: number},
-}
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator();
 
 function App() {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -86,24 +81,15 @@ function App() {
     dispatchThunk(getPlayerSessions());
   }, [])
 
+
   return (
     <>
       <StatusBar style='light'/>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false
-          }}
-        >
-          <Stack.Screen
-            name='Home'
-            component={Home}
-          />
-          <Stack.Screen
-            name='SessionView'
-            component={SessionView}
-          />
-        </Stack.Navigator>
+        <Tab.Navigator screenOptions={{headerShown: false}}>
+          <Tab.Screen name='Game' component={Game} />
+          <Tab.Screen name='History' component={History} />
+        </Tab.Navigator>
       </NavigationContainer>
     </>
   );

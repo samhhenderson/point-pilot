@@ -1,12 +1,13 @@
+
+// Import React and React Native modules
 import { FC, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 
+// Import Redux modules
 import { useSelector, useDispatch } from 'react-redux';
 import { showNewGameModal } from "../redux/modalsSlice";
-import { ThunkDispatch } from "redux-thunk";
-import { getPlayers } from "../redux/playerSlice";
-import { getGames } from "../redux/gameSlice";
 
+// Import other modules
 import { State, NavigationPropType, } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
@@ -22,16 +23,8 @@ type HomeProps = {
 
 const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
-  const game = useSelector((state: State) => state.game);
-  const { session } = useSelector((state: State) => state);
+  const { game } = useSelector((state: State) => state);
 
-  // useEffect(() => {
-  //   const lastSession = session.byId[session.allIds[-1]];
-  //   console.log(lastSession)
-  //   if (!lastSession.complete) {
-  //     navigation.navigate('SessionView', {sessionId: lastSession.id})
-  //   }
-  // }, []);
 
   //Dev only button
   async function dropTables() {

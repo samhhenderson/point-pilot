@@ -64,7 +64,6 @@ export const getSessions = createAsyncThunk(
 export const sessionSlice = createSlice({
   name: 'session',
   initialState: {
-    activeSession: {id: 0, date: '', gameId: 0, complete: false},
     byId: {},
     allIds: [],
   } as SessionState,
@@ -95,12 +94,12 @@ export const sessionSlice = createSlice({
         state.allIds = [];
         action.payload.forEach((session) => {
           state.byId[session.id] = {
-            ...action.payload,
+            ...session,
             complete: !!session.complete,
           } as Session;
           state.allIds.push(session.id);
         })
-        console.log('GET SESSIONS', action.payload)
+
       }
     });
     // Update session - only executes at END GAME

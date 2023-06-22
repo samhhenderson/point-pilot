@@ -1,12 +1,19 @@
+
+// Import React and React Native modules
 import { FC, useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 
+// Import Redux modules
 import { useSelector, useDispatch } from 'react-redux';
 import { showNewGameModal } from "../redux/modalsSlice";
 import { ThunkDispatch } from "redux-thunk";
 import { getPlayers } from "../redux/playerSlice";
 import { getGames } from "../redux/gameSlice";
 
+// Import other modules
 import { State, NavigationPropType, } from "../types";
 import * as Colors from './../styles/Colors';
 import { CommonStyles } from "../styles/CommonStyles";
@@ -22,24 +29,31 @@ type GameProps = {
   navigation: NavigationPropType,
 }
 
-const Game: FC<GameProps> = ({navigation}) => {
+type RootStackParamList = {
+  Home: undefined,
+  SessionView: {sessionId: number},
+}
 
-  const { session } = useSelector((state: State) => state);
-  const [ incompleteSession, setIncompleteSession ] = useState(() => {
-    const lastSession = session.byId[session.allIds[-1]];
-    if (!lastSession.complete) {
-      return lastSession;
-    }
-    return null;
-  });
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const Game: FC<GameProps> = ({navigation}) => {
 
   return (
     <View style={Styles.app}>
-      {incompleteSession ? (
-        <SessionView sessionId={incompleteSession.id} />
-      ) : (
-        <Home navigation={navigation} />
-      )}
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false
+        }}
+      >
+        <Stack.Screen
+          name='Home'
+          component={Home}
+        />
+        <Stack.Screen
+          name='SessionView'
+          component={SessionView}
+        />
+      </Stack.Navigator>
     </View>
   );
 };

@@ -74,18 +74,6 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
       return;
     }
 
-    // // Only show confirm modal if we're editing an existing game
-    // async function showConfirmModal() {
-    //   return new Promise((resolve, reject) => {
-    //     dispatch(setConfirmModal({
-    //       vis: true,
-    //       message: 'Change existing game? This may affect previous sessions.',
-    //       confirmFunc: 'confirmAsyncOperation',
-    //       confirmArgs: [resolve],
-    //     }))
-    //   })
-    // }
-
     async function getGameId() {
       // If game doesn't exist, add it and get the id back
       try {

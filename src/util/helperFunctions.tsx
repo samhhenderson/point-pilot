@@ -35,3 +35,8 @@ export function useCalculatePlaces(
   })
   return places;
 }
+
+export function findActiveSession() {
+  const sessionsById = useSelector((state: State) => state.session.byId);
+  
+}
