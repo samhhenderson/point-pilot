@@ -34,6 +34,7 @@ const Home: FC<HomeProps> = ({navigation}) => {
       await executeSqlAsync('DROP TABLE IF EXISTS games;')
       await executeSqlAsync('DROP TABLE IF EXISTS sessions;')
       await executeSqlAsync('DROP TABLE IF EXISTS playerSessions;')
+      await executeSqlAsync('DROP TABLE IF EXISTS settings;')
       await executeSqlAsync('PRAGMA foreign_keys = ON;')
       console.log('TABLES DROPPED')
     } catch (err) {

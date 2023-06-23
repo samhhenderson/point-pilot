@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 // Import Redux modules
-import { Provider } from 'react-redux';
+import { Provider, useSelector} from 'react-redux';
 import store from './src/redux/store';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, } from 'react-redux';
@@ -16,22 +16,26 @@ import { getPlayers } from './src/redux/playerSlice';
 import { getGames } from './src/redux/gameSlice';
 import { getSessions } from './src/redux/sessionSlice';
 import { getPlayerSessions } from './src/redux/playerSessionSlice';
+import { getSettings } from './src/redux/settingSlice';
 
 // Import other modules
 import { State } from './src/types';
 import History from './src/views/History';
 import Game from './src/views/Game';
+import Settings from './src/views/SettingsView';
 import { executeSqlAsync } from './src/db/db-service';
 
 type RootStackParamList = {
   Game: undefined,
   History: undefined,
+  Settings: undefined,
 }
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function App() {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
+  const settings = useSelector((state:State) => state.setting.byId)
 
   useEffect(() => {
     const createPlayerTable = 
@@ -80,10 +84,32 @@ function App() {
     executeSqlAsync(createPlayerSessionTable)
     .catch(error => console.log('CREATE SESSION TABLE ' + error))
 
+    const createSettingsTable = 
+    `CREATE TABLE IF NOT EXISTS settings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      value BLOB
+    );`
+    const insertSettings =
+    'INSERT OR IGNORE INTO settings (id, name, value) VALUES (?, ?, ?)'
+    executeSqlAsync(createSettingsTable)
+    .then(() => {
+      for (const name in settings) {
+        executeSqlAsync(insertSettings, [
+          settings[name].id, 
+          settings[name].name, 
+          settings[name].value
+        ])
+      }
+    })
+    .then(() => dispatchThunk(getSettings()))
+    .catch(error => console.log('CREATE SETTINGS TABLE ' + error))
+
     dispatchThunk(getPlayers());
     dispatchThunk(getGames());
     dispatchThunk(getSessions());
     dispatchThunk(getPlayerSessions());
+  
   }, [])
 
 
@@ -99,6 +125,10 @@ function App() {
           <Tab.Screen 
             name='History' 
             component={History} 
+          />
+          <Tab.Screen 
+            name='Settings' 
+            component={Settings} 
           />
         </Tab.Navigator>
       </NavigationContainer>

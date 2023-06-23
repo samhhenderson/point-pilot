@@ -20,5 +20,10 @@ export const CommonStyles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 20,
-  }
+  },
+  title: {
+    fontSize: 40,
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });

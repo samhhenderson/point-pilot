@@ -30,9 +30,11 @@ const History: FC<HistoryProps> = ({navigation}) => {
 
     <View style={Styles.app}>
       <FlatList
-        ListHeaderComponent={<Text style={[CommonStyles.text, Styles.title]}>
-          HISTORY
-        </Text>}
+        ListHeaderComponent={
+          <Text style={[CommonStyles.text, CommonStyles.title]}>
+            HISTORY
+          </Text>
+        }
         data={session.allIds}
         renderItem={({item}) => (
           <SessionListItem

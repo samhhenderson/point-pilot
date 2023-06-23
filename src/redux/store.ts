@@ -4,6 +4,7 @@ import modalsReducer from './modalsSlice';
 import gameReducer from './gameSlice';
 import sessionReducer from './sessionSlice';
 import playerSessionReducer from './playerSessionSlice';
+import settingReducer from './settingSlice';
 
 export default configureStore({ 
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     game: gameReducer,
     session: sessionReducer,
     playerSession: playerSessionReducer,
+    setting: settingReducer,
   }
 })

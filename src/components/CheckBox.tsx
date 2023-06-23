@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 import Checkbox from "expo-checkbox";
 
 import * as Colors from '../styles/Colors';
@@ -8,14 +8,21 @@ import * as Sizes from '../styles/Sizes';
 type CheckBoxProps = {
   value: boolean,
   onValueChange: () => void,
+  styles?: ViewStyle[] | {}[],
+  color?: string,
 }
 
-const CheckBox: FC<CheckBoxProps> = ({ value, onValueChange }) => {
+const CheckBox: FC<CheckBoxProps> = ({ 
+  value, 
+  onValueChange, 
+  styles = [], 
+  color = Colors.COLOR1,
+}) => {
 
   return (
     <Checkbox 
-      style={Styles.checkbox} 
-      color={Colors.COLOR1}
+      style={[Styles.checkbox, ...styles]} 
+      color={color}
       value={value}
       onValueChange={onValueChange}
     />

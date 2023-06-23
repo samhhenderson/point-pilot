@@ -23,6 +23,10 @@ const NumberModal: FC = () => {
     return state.playerSession.byId[playerSessionId]
   });
 
+  const resetBid = useSelector((state: State) => {
+    return state.setting.byId['resetBid'].value
+  });
+
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
 
@@ -92,6 +96,10 @@ const NumberModal: FC = () => {
       ...playerSession,
       [isBid ? 'bid' : 'score']: score
     }));  
+    // if (!isBid && resetBid) dispatchThunk(updatePlayerSession({
+    //   ...playerSession,
+    //   bid: 0
+    // }));
     dispatch(hideNumberModal());
   }
 

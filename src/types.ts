@@ -86,12 +86,26 @@ export interface PlayerSessionState {
   allIds: number[],
 }
 
+//SETTING
+export interface Setting {
+  id: number,
+  name: string,
+  value: string | number | boolean,
+}
+
+export interface SettingState {
+  byId: {
+    [key: string]: Setting
+  },
+}
+
 export interface State {
   player: PlayerState,
   modals: ModalsState,
   game: GameState,
   session: SessionState,
   playerSession: PlayerSessionState,
+  setting: SettingState,
 }
 
 export type NavigationPropType = NavigationProp<

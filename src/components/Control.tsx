@@ -7,7 +7,7 @@ import { CommonStyles } from "../styles/CommonStyles";
 
 
 type ControlProps = {
-  text: string,
+  text?: string,
   pressableStyles?: ViewStyle[] | {}[],
   textStyles?: ViewStyle[] | {}[],
   onPress: any,
