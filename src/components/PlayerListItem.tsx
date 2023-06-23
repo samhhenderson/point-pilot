@@ -90,8 +90,8 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
   },
   teamButton: {
-    width: Sizes.smallButtons,
-    height: Sizes.smallButtons,
+    width: Sizes.SMALL_BUTTONS,
+    height: Sizes.SMALL_BUTTONS,
     backgroundColor: Colors.COLOR1,
   },
   checkboxNameCont: {
@@ -100,8 +100,8 @@ const Styles = StyleSheet.create({
     gap: 5,
   },
   deleteButton: {
-    width: Sizes.smallButtons -10, 
-    height: Sizes.smallButtons -10,
+    width: Sizes.SMALL_BUTTONS -10, 
+    height: Sizes.SMALL_BUTTONS -10,
     backgroundColor: Colors.COLOR5,
   },
   addButton: {

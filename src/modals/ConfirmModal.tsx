@@ -59,7 +59,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 
   return (
     <Modal
-      animationType='slide'
+      animationType='fade'
       transparent={true}
       visible={vis}
     >
@@ -91,6 +91,7 @@ export const Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   smallModal: {
     flex: 1,

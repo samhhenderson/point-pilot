@@ -24,8 +24,8 @@ const CheckBox: FC<CheckBoxProps> = ({ value, onValueChange }) => {
 
 export const Styles = StyleSheet.create({
   checkbox: {
-    width: Sizes.smallButtons, 
-    height: Sizes.smallButtons, 
+    width: Sizes.SMALL_BUTTONS, 
+    height: Sizes.SMALL_BUTTONS, 
     borderRadius: 10
   },
 })

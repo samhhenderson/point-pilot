@@ -12,9 +12,14 @@ export const addSession = createAsyncThunk(
     const query = 
     `INSERT INTO sessions (date, gameId, complete)
     VALUES (?, ?, ?)
-    RETURNING *;`
+    RETURNING *;`;
+    const date = new Date().toLocaleString('en-US', {
+      month: 'numeric',
+      day: 'numeric',
+      year: '2-digit',
+    });
     return executeSqlAsync(query, [
-      new Date().toDateString(), 
+      date, 
       gameId, 
       0, 
     ])
@@ -40,9 +45,14 @@ export const updateSession = createAsyncThunk(
     const query =
     `UPDATE sessions
     SET date = ?, complete = ?
-    WHERE id = ?;`
+    WHERE id = ?;`;
+    const date = new Date().toLocaleString('en-US', {
+      month: 'numeric',
+      day: 'numeric',
+      year: '2-digit',
+    });
     return executeSqlAsync(query, [
-      new Date().toDateString(),
+      date,
       1,
       updatedSessionId
     ])

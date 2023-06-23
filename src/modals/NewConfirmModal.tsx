@@ -1,45 +1,29 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { StyleSheet, View, Text, Modal } from "react-native";
-import Checkbox from "expo-checkbox";
 
-import { useSelector, useDispatch } from "react-redux";
-import { deleteGame, updateGame } from "../redux/gameSlice";
-import { deletePlayer } from "../redux/playerSlice";
-import { hideNewGameModal } from "../redux/modalsSlice";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-
-import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
-import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
-import { db } from "../db/db-service";
-import { updateSession } from "../redux/sessionSlice";
 
-type AsyncConfirmModalProps = {
+
+type NewConfirmModalProps = {
   vis: boolean,
   message: string,
   confirmFunc: any,
-  cancleFunc: any,
+  cancelFunc: any,
 }
 
-const AsyncConfirmModal: FC<AsyncConfirmModalProps> = ({ 
+const NewConfirmModal: FC<NewConfirmModalProps> = ({ 
   vis,
   message,
   confirmFunc,
-  cancleFunc,
+  cancelFunc,
 }) => {
 
-  function handleConfirm() {
-
-  }
-
-  function handleCancel() {
-
-  }
 
   return (
+
     <Modal
-      animationType='slide'
+      animationType='fade'
       transparent={true}
       visible={vis}
     >
@@ -49,13 +33,13 @@ const AsyncConfirmModal: FC<AsyncConfirmModalProps> = ({
           <View style={Styles.bottomButtonsCont}>
             <Control
               text={'YES'}
-              onPress={handleConfirm}
+              onPress={confirmFunc}
               pressableStyles={[Styles.confirmButton]}
               textStyles={[{fontSize:30}]}
             />
             <Control
               text={'CANCEL'}
-              onPress={handleCancel}
+              onPress={cancelFunc}
               pressableStyles={[Styles.cancelButton]}
               textStyles={[{fontSize:30}]}
             />
@@ -63,6 +47,7 @@ const AsyncConfirmModal: FC<AsyncConfirmModalProps> = ({
         </View>
       </View>
     </Modal>
+
   );
 }
 
@@ -71,7 +56,9 @@ export const Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+
   smallModal: {
     flex: 1,
     flexDirection: 'column',
@@ -102,4 +89,4 @@ export const Styles = StyleSheet.create({
   },
 })
 
-export default AsyncConfirmModal;
+export default NewConfirmModal;

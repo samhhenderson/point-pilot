@@ -23,7 +23,12 @@ import History from './src/views/History';
 import Game from './src/views/Game';
 import { executeSqlAsync } from './src/db/db-service';
 
-const Tab = createBottomTabNavigator();
+type RootStackParamList = {
+  Game: undefined,
+  History: undefined,
+}
+
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function App() {
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -87,8 +92,14 @@ function App() {
       <StatusBar style='light'/>
       <NavigationContainer>
         <Tab.Navigator screenOptions={{headerShown: false}}>
-          <Tab.Screen name='Game' component={Game} />
-          <Tab.Screen name='History' component={History} />
+          <Tab.Screen 
+            name='Game' 
+            component={Game} 
+          />
+          <Tab.Screen 
+            name='History' 
+            component={History} 
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </>

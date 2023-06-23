@@ -23,14 +23,10 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
   const dispatch = useDispatch();
 
   const { player, session, game, playerSession } = useSelector((state: State) => state);
+  const playerSessionIdPlaces = useCalculatePlaces(sessionId)
 
+  const activePlayerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
   const activeGame = game.byId[session.byId[sessionId].gameId];
-
-  const activePlayerSessionIds = playerSession.allIds.filter(id => {
-    return playerSession.byId[id].sessionId === sessionId
-  })
-
-  const playerSessionIdPlaces = useCalculatePlaces(activePlayerSessionIds)
 
   function endSession() {
 
@@ -46,7 +42,7 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
     if (winners.length === 1) {
       names = winners[0];
     } else {
-      names = winners.join(' and ');
+      names = winners.join(' & ');
       plural = 's';
     }
     dispatch(setConfirmModal({
@@ -132,6 +128,7 @@ const Styles = StyleSheet.create({
   bidAndScoreText: {
     fontSize: 20,
     width: 70,
+    textAlign: 'center',
   },
   endGameContainer: {
     alignItems: 'center',

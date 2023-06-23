@@ -95,7 +95,13 @@ export interface State {
 }
 
 export type NavigationPropType = NavigationProp<
-  { Home: undefined, SessionView: {sessionId: number}, History: undefined, Settings: undefined }, 
-  'Home' | 'SessionView' | 'History' | 'Settings'
+  { 
+    Home: undefined, 
+    SessionView: {sessionId: number}, 
+    History: undefined, 
+    Settings: undefined,
+    Game: undefined,
+  }, 
+  'Home' | 'SessionView' | 'History' | 'Settings' | 'Game'
 >
 

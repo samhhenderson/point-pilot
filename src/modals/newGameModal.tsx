@@ -1,7 +1,6 @@
 //Expo and React imports
 import { FC, useState, useEffect } from "react";
-import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
-import Checkbox from 'expo-checkbox';
+import { StyleSheet, Text, View, Modal, TextInput, ScrollView } from "react-native";
 
 //Redux imports
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,7 +20,6 @@ import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
 import PlayerListItem from "../components/PlayerListItem";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 type NewGameModalProps = {
   navigation: NavigationPropType,
@@ -119,7 +117,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   return (
     <Modal
-      animationType='slide'
+      animationType='fade'
       transparent={true}
       visible={modals.newGame.vis}
     >
@@ -216,6 +214,7 @@ const Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   largeModalChanges: {
     flexDirection: 'column',

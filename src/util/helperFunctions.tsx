@@ -7,15 +7,21 @@ type PlayerSessionIdPlace = {
 }
 
 export function useCalculatePlaces(
-  playerSessionIds: number[],
+  sessionId: number,
   ): PlayerSessionIdPlace[] {
+
+  const playerSessionIds = useSelector((state: State) => {
+    return state.playerSession.allIds.filter(id => {
+      return state.playerSession.byId[id].sessionId === sessionId
+    })
+  });
 
   const playerSessions = useSelector((state: State) => {
     return playerSessionIds.map((id: number) => state.playerSession.byId[id]);
   });
 
   const lowScoreWins = useSelector((state: State) => {
-    return state.game.byId[state.session.byId[playerSessions[0].sessionId]
+    return state.game.byId[state.session.byId[sessionId]
     .gameId].lowScoreWins;
   })
 
@@ -38,5 +44,5 @@ export function useCalculatePlaces(
 
 export function findActiveSession() {
   const sessionsById = useSelector((state: State) => state.session.byId);
-  
+
 }

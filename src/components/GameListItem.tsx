@@ -62,12 +62,12 @@ export const Styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: Colors.COLOR2,
     borderRadius: 10,
-    height: Sizes.smallButtons,
+    height: Sizes.SMALL_BUTTONS,
   },
   deleteButton: {
     backgroundColor: Colors.COLOR5,
-    height: Sizes.smallButtons - 10,
-    width: Sizes.smallButtons - 10,
+    height: Sizes.SMALL_BUTTONS - 10,
+    width: Sizes.SMALL_BUTTONS - 10,
     borderRadius: 10,
   }
 })

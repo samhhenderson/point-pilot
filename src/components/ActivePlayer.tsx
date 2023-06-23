@@ -30,7 +30,15 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
 
   return (
     <View style={Styles.container}>
-      <Text style={[CommonStyles.text, {fontSize: 50}]}>{player.name}</Text>
+      <View style={Styles.nameCont}>
+        <Text 
+          style={[CommonStyles.text, {fontSize: 35}]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {player.name}
+        </Text>
+      </View>
       <View style={Styles.pointsContainer}>
         {useBid ?       
         <Control
@@ -58,13 +66,12 @@ export const Styles = StyleSheet.create({
     borderWidth: 5,
     justifyContent: 'space-between',
     padding: 10,
-    gap: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
   pointsContainer: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 12,
   },
   bidButton: {
     backgroundColor: Colors.COLOR3,
@@ -72,5 +79,9 @@ export const Styles = StyleSheet.create({
   bidText: {
     fontSize: 40,
     color: 'black'
-  }
+  },
+  nameCont: {
+    overflow: 'hidden',
+    flexShrink: 1,
+  },
 })

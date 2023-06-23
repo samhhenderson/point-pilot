@@ -102,7 +102,7 @@ const NumberModal: FC = () => {
 
   return (
     <Modal
-      animationType='slide'
+      animationType='fade'
       transparent={true}
       visible={vis}
     >
@@ -143,6 +143,7 @@ const Styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   largeModalChanges: {
     flexDirection: 'row',
