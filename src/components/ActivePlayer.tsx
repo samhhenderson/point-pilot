@@ -6,8 +6,9 @@ import { setNumberModal, hideNumberModal } from "../redux/modalsSlice";
 
 
 import { State } from "../types";
-import * as Colors from '../styles/Colors'
-import { CommonStyles } from "../styles/CommonStyles";
+import * as Colors from '../styles/Colors';
+import * as Sizes from '../styles/Sizes';
+import { CStyles } from "../styles/CommonStyles";
 
 import Control from "./Control";
 
@@ -32,7 +33,7 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
     <View style={Styles.container}>
       <View style={Styles.nameCont}>
         <Text 
-          style={[CommonStyles.text, {fontSize: 35}]}
+          style={[CStyles.text, {fontSize: 35}]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >
@@ -66,7 +67,7 @@ export const Styles = StyleSheet.create({
     borderWidth: 5,
     justifyContent: 'space-between',
     padding: 10,
-    borderRadius: 10,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
     alignItems: 'center',
   },
   pointsContainer: {

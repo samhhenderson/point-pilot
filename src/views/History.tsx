@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // Import other modules
 import { State, NavigationPropType, } from "../types";
 import * as Colors from './../styles/Colors';
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import SessionListItem from "../components/SessionListItem";
 
 type HistoryProps = {
@@ -29,12 +29,10 @@ const History: FC<HistoryProps> = ({navigation}) => {
   return (
 
     <View style={Styles.app}>
-      <FlatList
-        ListHeaderComponent={
-          <Text style={[CommonStyles.text, CommonStyles.title]}>
+          <Text style={[CStyles.text, CStyles.title]}>
             HISTORY
           </Text>
-        }
+      <FlatList
         data={session.allIds}
         renderItem={({item}) => (
           <SessionListItem

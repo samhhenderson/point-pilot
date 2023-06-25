@@ -11,6 +11,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
+import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { hideConfirmModal } from "../redux/modalsSlice";
 import { db } from "../db/db-service";
@@ -64,7 +65,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
       visible={vis}
     >
       <View style={Styles.modal}>
-        <View style={Styles.smallModal}>
+        <View style={CStyles.smallModal}>
           <Text style={Styles.message}>{message}</Text>
           <View style={Styles.bottomButtonsCont}>
             <Control
@@ -92,18 +93,6 @@ export const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  smallModal: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: Colors.COLOR3,
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    maxWidth: 330,
-    maxHeight: 300,
-    borderRadius: 20,
-    padding: 30,
-    gap: 10,
   },
   message: {
     fontSize: 30,

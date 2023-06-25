@@ -9,7 +9,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 
 const NumberModal: FC = () => {
@@ -90,16 +90,24 @@ const NumberModal: FC = () => {
   }
 
   function acceptScore() {
-    let score: number = parseInt(numDisplay);
-    if (posOrNegSign === '-') score *= -1;
+    let delta: number = parseInt(numDisplay);
+    let newBid: number = playerSession.bid;
+    let newScore: number = playerSession.score;
+
+    if (posOrNegSign === '-') delta *= -1;
+
+    if (isBid) newBid += delta;
+    else {
+      if (resetBid) newBid = 0;
+      newScore += delta;
+    }
+
     dispatchThunk(updatePlayerSession({
       ...playerSession,
-      [isBid ? 'bid' : 'score']: score
+      bid: newBid,
+      score: newScore,
     }));  
-    // if (!isBid && resetBid) dispatchThunk(updatePlayerSession({
-    //   ...playerSession,
-    //   bid: 0
-    // }));
+
     dispatch(hideNumberModal());
   }
 
@@ -116,7 +124,7 @@ const NumberModal: FC = () => {
     >
       <View style={Styles.modal}>
         <View 
-          style={[CommonStyles.largeModal, Styles.largeModalChanges]}
+          style={[CStyles.largeModal, Styles.largeModalChanges]}
           onLayout={(event) => {
             
             setViewWidth(event.nativeEvent.layout.width)}}
@@ -161,7 +169,7 @@ const Styles = StyleSheet.create({
   },
   display: {
     height: 70,
-    borderRadius: 20,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
     flexDirection: 'row',
     backgroundColor: Colors.DARK,
     color: 'white',

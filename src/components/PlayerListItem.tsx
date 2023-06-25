@@ -12,7 +12,7 @@ import {
 import { State, Player, NavigationPropType, PlayerSession } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import CheckBox from "./CheckBox";
 import ConfirmModal from "../modals/ConfirmModal";
@@ -63,13 +63,17 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ id, teams = false}) => {
           onValueChange={handleChangeActive}
         />
         {teams ?
-        <Control
-          text={tempPlayerSession ? tempPlayerSession.team.toString() : ''}
-          onPress={() => dispatch(changeTempPlayerSessionTeam(player.id))}
-          pressableStyles={[Styles.teamButton]}
-        /> : null
+          <Control
+            text={tempPlayerSession ? tempPlayerSession.team.toString() : ''}
+            onPress={() => dispatch(changeTempPlayerSessionTeam(player.id))}
+            pressableStyles={[Styles.teamButton]}
+          /> : null
         }
-        <Text style={[CommonStyles.text]}>{player.name}</Text>
+        <Text 
+          style={[CStyles.text, {flexShrink: 1}]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >{player.name}</Text>
       </View>
       <Control
         text={'X'}
@@ -98,6 +102,7 @@ const Styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
+    flexShrink: 1,
   },
   deleteButton: {
     width: Sizes.SMALL_BUTTONS -10, 

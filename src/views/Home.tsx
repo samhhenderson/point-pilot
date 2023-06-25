@@ -10,7 +10,8 @@ import { showNewGameModal } from "../redux/modalsSlice";
 // Import other modules
 import { State, NavigationPropType, } from "../types";
 import * as Colors from './../styles/Colors';
-import { CommonStyles } from "../styles/CommonStyles";
+import * as Sizes from '../styles/Sizes';
+import { CStyles } from "../styles/CommonStyles";
 import GameListItem from "../components/GameListItem";
 import Control from "../components/Control";
 import NewGameModal from '../modals/NewGameModal';
@@ -25,27 +26,10 @@ const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
   const { game } = useSelector((state: State) => state);
 
-
-  //Dev only button
-  async function dropTables() {
-    try {
-      await executeSqlAsync('PRAGMA foreign_keys = OFF;')
-      await executeSqlAsync('DROP TABLE IF EXISTS players;')
-      await executeSqlAsync('DROP TABLE IF EXISTS games;')
-      await executeSqlAsync('DROP TABLE IF EXISTS sessions;')
-      await executeSqlAsync('DROP TABLE IF EXISTS playerSessions;')
-      await executeSqlAsync('DROP TABLE IF EXISTS settings;')
-      await executeSqlAsync('PRAGMA foreign_keys = ON;')
-      console.log('TABLES DROPPED')
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   return (
     <View style={Styles.app}>
       <ScrollView contentContainerStyle={Styles.game}>
-        <Text style={[CommonStyles.text, Styles.title]}>Games</Text>
+        <Text style={[CStyles.text, CStyles.title]}>GAMES</Text>
         <View style={Styles.gameListContainer}>
           {game.allIds.map((id) => (
             <GameListItem
@@ -57,12 +41,6 @@ const Home: FC<HomeProps> = ({navigation}) => {
             onPress={() => dispatch(showNewGameModal(0))}
             text={'+'}
             pressableStyles={[Styles.addButton]}
-            textStyles={[{fontSize:40}]}
-          />
-          <Control
-            onPress={dropTables}
-            text={'-'}
-            pressableStyles={[Styles.addButton, {backgroundColor: 'red'}]}
             textStyles={[{fontSize:40}]}
           />
         </View>
@@ -100,7 +78,9 @@ const Styles = StyleSheet.create({
     maxWidth: 500,
   },
   addButton: {
-    borderRadius: 35,
-    backgroundColor: 'green',
+    marginTop: 20,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
+    backgroundColor: Colors.SECONDARY,
+    alignSelf: 'center',
   }
 });

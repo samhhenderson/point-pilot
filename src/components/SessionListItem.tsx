@@ -8,7 +8,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import { State } from "../types";
 import NewConfirmModal from "../modals/NewConfirmModal";
@@ -85,11 +85,19 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
         onPress={() => setSessionModalVis(true)}
       >
         <View style={Styles.titleDateCont}>
-          <Text style={[CommonStyles.text, {fontSize: 30}]}>{gameName}</Text>
-          <Text style={[CommonStyles.text, {alignSelf: 'flex-start'}]}>{date}</Text>
+          <Text 
+            style={[CStyles.textDark, {fontSize: 30, flexShrink: 1}]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >{gameName}</Text>
+          <Text style={[CStyles.textDark]}>{date}</Text>
         </View>
         <View style={Styles.winner}>
-          <Text style={[CommonStyles.text, {fontSize: 20}]}>{winnerText}</Text>
+          <Text 
+            style={[CStyles.textDark, {fontSize: 20}]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >{winnerText}</Text>
         </View>
       </Pressable>
       <Control
@@ -118,20 +126,20 @@ export const Styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 20,
-    borderRadius: 10,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
     alignItems: 'center',
   },
   sessionNameButton: {
     flexGrow: 1,
-    backgroundColor: Colors.COLOR2,
-    borderRadius: 2,
+    backgroundColor: Colors.COLOR3,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
     height: Sizes.MED_BUTTONS,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: Sizes.MED_BUTTONS,
     shadowColor: 'rgba(0,0,0,0.5)',
-    shadowOffset: { width: 3, height: 3 },
+    shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
     padding: 10,
@@ -142,10 +150,6 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  title: {
-    fontSize: 30,
-    textAlign: 'center',
-  },
   winner: {
     width: '100%',
     alignContent: 'flex-start'
@@ -154,7 +158,7 @@ export const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR5,
     height: Sizes.SMALL_BUTTONS - 10,
     width: Sizes.SMALL_BUTTONS - 10,
-    borderRadius: 2,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
   }
 })
 

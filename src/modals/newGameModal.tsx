@@ -15,7 +15,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { State, Game, NavigationPropType, PlayerSessionState} from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import CheckBox from "../components/CheckBox";
 import ConfirmModal from "./ConfirmModal";
@@ -122,9 +122,9 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
       visible={modals.newGame.vis}
     >
       <View style={Styles.modal}>
-        <View style={[CommonStyles.largeModal, Styles.largeModalChanges]}>
+        <View style={[CStyles.largeModal, Styles.largeModalChanges]}>
           <View style={Styles.header}>
-            <Text style={[CommonStyles.text, {fontSize: 30}]}>GAME:</Text>
+            <Text style={[CStyles.text, {fontSize: 30}]}>GAME:</Text>
             <TextInput 
               style={Styles.textInput}
               onChangeText={text => setActiveGame({...activeGame, name: text})}
@@ -140,7 +140,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                 lowScoreWins: !activeGame.lowScoreWins,
               })}
             />
-            <Text style={[CommonStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
+            <Text style={[CStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
@@ -150,7 +150,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                 useBid: !activeGame.useBid,
               })}
             />
-            <Text style={[CommonStyles.text, Styles.listItemText]}>BIDS</Text>
+            <Text style={[CStyles.text, Styles.listItemText]}>BIDS</Text>
           </View>
           <View style={Styles.listItem}>
             <CheckBox
@@ -160,7 +160,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                 teams: !activeGame.teams,
               })}
             />
-            <Text style={[CommonStyles.text, Styles.listItemText]}>TEAMS</Text>
+            <Text style={[CStyles.text, Styles.listItemText]}>TEAMS</Text>
           </View>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
@@ -229,7 +229,7 @@ const Styles = StyleSheet.create({
     fontSize: 30,
     backgroundColor: Colors.COLOR3,
     paddingLeft: 10,
-    borderRadius: 5,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
     width: 190,
     height: 48,
   },
@@ -244,7 +244,7 @@ const Styles = StyleSheet.create({
   playerListView: {
     borderColor: Colors.COLOR1,
     borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
   },
   playerListCont: {
     gap: 10,

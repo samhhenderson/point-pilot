@@ -6,7 +6,7 @@ import {  showNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import { State } from "../types";
 
@@ -38,7 +38,7 @@ const GameListItem: FC<GameListItemProps> = ({ id }) => {
         onPress={handlePressGameItem}
         text={game.byId[id].name}
         pressableStyles={[Styles.gameNameButton]}
-        textStyles={[{fontSize:30}]}
+        textStyles={[{fontSize:35}]}
       />
       <Control
         onPress={handleDeleteGameItem}
@@ -55,20 +55,22 @@ export const Styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 20,
-    borderRadius: 10,
+    borderRadius: Sizes.MED_BORDER_RADIUS,
     alignItems: 'center',
   },
   gameNameButton: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR2,
-    borderRadius: 10,
-    height: Sizes.SMALL_BUTTONS,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
+    height: Sizes.MED_BUTTONS,
+    alignItems: 'flex-start',
+    paddingLeft: 20,
   },
   deleteButton: {
     backgroundColor: Colors.COLOR5,
     height: Sizes.SMALL_BUTTONS - 10,
     width: Sizes.SMALL_BUTTONS - 10,
-    borderRadius: 10,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
   }
 })
 

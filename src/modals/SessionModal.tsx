@@ -8,7 +8,7 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { State, Session, NavigationPropType } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { Styles as APStyles } from "../components/ActivePlayer";
 import { useCalculatePlaces } from "../util/helperFunctions";
@@ -49,21 +49,27 @@ const SessionModal: FC<SessionModalProps> = ({
     >
       <View style={Styles.modal}>
         <View 
-          style={[CommonStyles.largeModal, Styles.largeModalChanges]}
+          style={[CStyles.largeModal, Styles.largeModalChanges]}
           onLayout={(event) => {
             setViewWidth(event.nativeEvent.layout.width)}}
         > 
           <View style={Styles.titleCont}>
-            <Text style={[CommonStyles.text, {fontSize: 40}]}>{title}</Text>
+            <Text style={[
+              CStyles.text, 
+              {fontSize: 40, color: Colors.DARK_TEXT}
+              ]}>{title}</Text>
           </View>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
-              <Text style={[CommonStyles.text, {fontSize: 15}]}>NAME</Text>
+              <Text style={[
+                CStyles.text, 
+                {fontSize: 15, color: Colors.DARK_TEXT}
+                ]}>NAME</Text>
               <View style={APStyles.pointsContainer}>
-                <Text style={[CommonStyles.text, Styles.placeAndScoreText]}>
+                <Text style={[CStyles.textDark, Styles.placeAndScoreText]}>
                   PLACE
                 </Text>
-                <Text style={[CommonStyles.text, Styles.placeAndScoreText]}>
+                <Text style={[CStyles.textDark, Styles.placeAndScoreText]}>
                   SCORE
                 </Text>
               </View>
@@ -74,7 +80,7 @@ const SessionModal: FC<SessionModalProps> = ({
                   <View key={id} style={[APStyles.container, Styles.container]}>
                     <View style={APStyles.nameCont}>
                       <Text 
-                        style={[CommonStyles.text, {fontSize: 30}]}
+                        style={[CStyles.textDark, {fontSize: 30}]}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
@@ -83,7 +89,7 @@ const SessionModal: FC<SessionModalProps> = ({
                     </View>
                     <View style={APStyles.pointsContainer}>
                       <Text style={[
-                        CommonStyles.text, 
+                        CStyles.textDark, 
                         Styles.placeAndScoreText,
                         {fontSize: 25}
                       ]}>
@@ -92,7 +98,7 @@ const SessionModal: FC<SessionModalProps> = ({
                       </Text>
                       <Text 
                         style={[
-                          CommonStyles.text, 
+                          CStyles.textDark, 
                           Styles.placeAndScoreText,
                           {fontSize: 25}
                         ]}
@@ -109,14 +115,14 @@ const SessionModal: FC<SessionModalProps> = ({
           <View style={Styles.bottomButtonsCont}>
             <Control
               onPress={handleContinue}
-              text={'CONTINUE SESSION'}
-              pressableStyles={[Styles.continueButton]}
-              textStyles={[{fontSize:30}]}
+              text={'OPEN SESSION'}
+              pressableStyles={[{backgroundColor: Colors.COLOR1, flex: 1}]}
+              textStyles={[{fontSize:25}]}
             />
             <Control
               onPress={() => setSessionModalVis(false)}
               text={'X'}
-              pressableStyles={[Styles.cancelButton]}
+              pressableStyles={[{backgroundColor: Colors.COLOR5}]}
               textStyles={[{fontSize:40, alignContent: 'center'}]}
             />
           </View>
@@ -139,9 +145,11 @@ const Styles = StyleSheet.create({
     width: '90%',
     maxWidth: Sizes.MAX_MODAL_WIDTH,
     justifyContent: 'space-between',
+    backgroundColor: Colors.COLOR3,
+    gap: 35,
   },
   container: {
-    borderColor: Colors.COLOR3,
+    borderColor: Colors.COLOR1,
     borderWidth: 1,
   },
   titleCont: {
@@ -157,7 +165,7 @@ const Styles = StyleSheet.create({
   headings: {
     borderColor: 'transparent',
     marginBottom: -15,
-    marginTop: -15,
+    marginTop: -30,
   },
   placeAndScoreText: {
     fontSize: 15,
@@ -168,15 +176,7 @@ const Styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    alignItems: 'center',
+    gap: 20,
   },
-  continueButton: {
-    width: 170,
-    backgroundColor: Colors.COLOR1,
-    height: 100,
-    marginTop: 10,
-  },
-  cancelButton: {
-    marginTop: 10,
-    backgroundColor: Colors.COLOR5,
-  }
 });

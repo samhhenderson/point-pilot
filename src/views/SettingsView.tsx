@@ -18,10 +18,11 @@ import * as Colors from '../styles/Colors';
 import CheckBox from "../components/CheckBox";
 import { useSelector } from "react-redux";
 import { updateSetting } from "../redux/settingSlice";
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import NewConfirmModal from "../modals/NewConfirmModal";
 import { executeSqlAsync } from "../db/db-service";
+import { useCreateDatabase, useDropDatabase } from "../util/databaseResetHooks";
 
 type SettingsProps = {
   navigation: NavigationPropType,
@@ -29,48 +30,24 @@ type SettingsProps = {
 
 const SettingsView: FC<SettingsProps> = ({navigation}) => {
   const settings = useSelector((state: State) => state.setting.byId);
+  const sessions = useSelector((state: State) => state.session.byId);
+  const games = useSelector((state: State) => state.game.byId);
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
+  const createDatabase = useCreateDatabase();
+  const dropDatabase = useDropDatabase();
 
   const [ confirmModalvis, setConfirmModalvis ] = useState<boolean>(false);
 
-  // function handleConfirmReset() {
-  //   async function dropTables() {
-  //     try {
-  //       await executeSqlAsync('PRAGMA foreign_keys = OFF;')
-  //       await executeSqlAsync('DELETE FROM players;')
-  //       await executeSqlAsync('DELETE FROM games;')
-  //       await executeSqlAsync('DELETE FROM sessions;')
-  //       await executeSqlAsync('DELETE FROM playerSessions;')
-  //       await executeSqlAsync('DELETE FROM settings;')
-  //       await executeSqlAsync('PRAGMA foreign_keys = ON;')
-  //       console.log('TABLES CLEARED')
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  //   dropTables();
-  //   const insertSettings =
-  //   'INSERT OR IGNORE INTO settings (id, name, value) VALUES (?, ?, ?)'
-
-  //   for (const name in settings) {
-  //     executeSqlAsync(insertSettings, [
-  //       settings[name].id, 
-  //       settings[name].name, 
-  //       settings[name].value
-  //     ])
-  //   }
-  //   dispatchThunk(getPlayers());
-  //   dispatchThunk(getGames());
-  //   dispatchThunk(getSessions());
-  //   dispatchThunk(getPlayerSessions());
-  //   dispatchThunk(getSettings());
-  //   setConfirmModalvis(false);
-  // }
+  function handleConfirmReset() {
+    dropDatabase();
+    createDatabase();
+    setConfirmModalvis(false);
+  }
 
   return (
     <View style={Styles.app}>
       <View style={Styles.settingCont}>
-        <Text style={[CommonStyles.text, CommonStyles.title]}>SETTINGS</Text>
+        <Text style={[CStyles.text, CStyles.title]}>SETTINGS</Text>
         <View style={Styles.settingItem}>
           <CheckBox
             value={!!settings['resetBid'].value}
@@ -84,25 +61,25 @@ const SettingsView: FC<SettingsProps> = ({navigation}) => {
               }));
             }}
           />
-          <Text style={[CommonStyles.text, Styles.settingText]}>
+          <Text style={[CStyles.text, Styles.settingText]}>
             Reset bid after changing score
           </Text>
         </View>
-        {/* <View style={Styles.settingItem}>
+        <View style={Styles.settingItem}>
           <Control
             onPress={() => setConfirmModalvis(true)}
           />
-          <Text style={[CommonStyles.text, Styles.settingText]}>
+          <Text style={[CStyles.text, Styles.settingText]}>
             Reset all data
           </Text>
-        </View> */}
+        </View>
       </View>
-      {/* <NewConfirmModal
+      <NewConfirmModal
         vis={confirmModalvis}
         message={'Are you sure you want to reset all data? This cannot be undone.'}
         confirmFunc={handleConfirmReset}
         cancelFunc={() => setConfirmModalvis(false)}
-      /> */}
+      />
     </View>
   );
 };

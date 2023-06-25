@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Pressable, ViewStyle } from "react-native";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
-import { CommonStyles } from "../styles/CommonStyles";
+import { CStyles } from "../styles/CommonStyles";
 
 
 type ControlProps = {
@@ -32,7 +32,11 @@ const Control: FC<ControlProps> = ({
         onPressOut={() => setIsPressed(false)}
         onPress={onPress}
       >
-        <Text style={[CommonStyles.text, ...textStyles]}>{text}</Text>
+        <Text 
+          style={[CStyles.text, ...textStyles]}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >{text}</Text>
       </Pressable>
   );
 }
@@ -45,9 +49,9 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     width: Sizes.MED_BUTTONS,
     height: Sizes.MED_BUTTONS,
-    borderRadius: 10,
-    shadowColor: 'rgba(0,0,0,0.1)',
-    shadowOffset: { width: 3, height: 3 },
+    borderRadius: Sizes.MED_BORDER_RADIUS,
+    shadowColor: 'rgba(0,0,0,0.6)',
+    shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
   },

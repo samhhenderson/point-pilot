@@ -6,7 +6,8 @@ import { setConfirmModal } from "../redux/modalsSlice";
 
 import { State, NavigationPropType, Game } from "../types";
 import * as Colors from '../styles/Colors';
-import { CommonStyles } from "../styles/CommonStyles";
+import * as Sizes from '../styles/Sizes';
+import { CStyles } from "../styles/CommonStyles";
 import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import ConfirmModal from "../modals/ConfirmModal";
@@ -55,17 +56,17 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
   return (
       <View style={Styles.app}>
         <ScrollView contentContainerStyle={Styles.game}>
-          <Text style={[CommonStyles.text, Styles.title]}>
+          <Text style={[CStyles.text, CStyles.title]}>
             {activeGame.name}
           </Text>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
-              <Text style={[CommonStyles.text, {fontSize: 20}]}>NAME</Text>
+              <Text style={[CStyles.text, {fontSize: 20}]}>NAME</Text>
               <View style={APStyles.pointsContainer}>
-                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>
+                <Text style={[CStyles.text, Styles.bidAndScoreText]}>
                   {activeGame!.useBid ? 'BID' : ''}
                   </Text>
-                <Text style={[CommonStyles.text, Styles.bidAndScoreText]}>
+                <Text style={[CStyles.text, Styles.bidAndScoreText]}>
                   SCORE
                 </Text>
               </View>
@@ -138,6 +139,6 @@ const Styles = StyleSheet.create({
   endGameButton: {
     width: 200,
     backgroundColor: Colors.COLOR5,
-    borderRadius: 2,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
   }
 });

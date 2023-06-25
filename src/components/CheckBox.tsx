@@ -33,7 +33,7 @@ export const Styles = StyleSheet.create({
   checkbox: {
     width: Sizes.SMALL_BUTTONS, 
     height: Sizes.SMALL_BUTTONS, 
-    borderRadius: 10
+    borderRadius: Sizes.MED_BORDER_RADIUS
   },
 })
 
