@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,13 +20,27 @@ type SessionViewProps = {
 }
 
 const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
+  // If no sessionId is passed, go back to Homes
+  console.log('SESSIONVIEW24', route.params)
   const { sessionId } = route.params;
   const dispatch = useDispatch();
-
+  const calculatePlaces = useCalculatePlaces();
+  
   const { player, session, game, playerSession } = useSelector((state: State) => state);
-  const playerSessionIdPlaces = useCalculatePlaces(sessionId)
+  
+  const activePlayerSessionIds = useMemo(() => {
+    return playerSession.allIds.filter(id => {
+      return playerSession.byId[id].sessionId === sessionId;
+    }
+  )}, [session]);
 
-  const activePlayerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
+  if (!session.byId[sessionId]) {
+    console.log('SESSIONVIEW30 SENT HOME')
+    navigation.navigate('Home');
+    return null;
+  }
+    
+  const playerSessionIdPlaces = calculatePlaces(sessionId)
   const activeGame = game.byId[session.byId[sessionId].gameId];
 
   function endSession() {

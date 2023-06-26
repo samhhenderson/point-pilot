@@ -25,10 +25,11 @@ const SessionModal: FC<SessionModalProps> = ({
   setSessionModalVis,
 }) => {
   const { game, playerSession, player } = useSelector((state: State) => state);
-  const playerSessionIdPlaces = useCalculatePlaces(thisSession.id)
+  const calculatePlaces = useCalculatePlaces();
   const navigation = useNavigation<NavigationPropType>();
   const [viewWidth, setViewWidth] = useState(0);
-
+  
+  const playerSessionIdPlaces = calculatePlaces(thisSession.id)
   const playerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
 
   const gameName = game.byId[thisSession.gameId].name;

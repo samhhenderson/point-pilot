@@ -22,12 +22,18 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
   const dispatch = useDispatch();
 
   const playerSession = useSelector((state: State) => {
-    return state.playerSession.byId[playerSessionId];
+    if (state.playerSession.byId[playerSessionId]) {
+      return state.playerSession.byId[playerSessionId];
+    } else return null;
   })
+  
   const player = useSelector((state: State) => {
-    return state.player.byId[playerSession.playerId]
+    if (playerSession && playerSession.playerId) {
+      return state.player.byId[playerSession.playerId]
+    } else return null;
   });
 
+  if (!player || !playerSession) return null;
 
   return (
     <View style={Styles.container}>

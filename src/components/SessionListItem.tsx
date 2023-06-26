@@ -34,11 +34,12 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
     confirmFunc: () => console.log('confirmFunc not set'),
     cancelFunc: () => console.log('cancelFunc not set'),
   });
+  const calculatePlaces = useCalculatePlaces();
   const [ sessionModalVis, setSessionModalVis ] = useState(false);
-  const playerSessionIdPlaces = useCalculatePlaces(sessionId);
   const [isPressed, setIsPressed] = useState(false);
-
+  
   //GET TITLE, DATES, AND WINNER TEXT
+  const playerSessionIdPlaces = calculatePlaces(sessionId);
   const winners: string[] = [];
   for (const psip of playerSessionIdPlaces) {
     if (psip.place === 1) {
