@@ -29,6 +29,7 @@ type SettingsProps = {
 }
 
 const SettingsView: FC<SettingsProps> = ({navigation}) => {
+  console.log('SETTINGSVIEW 32')
   const settings = useSelector((state: State) => state.setting.byId);
   const sessions = useSelector((state: State) => state.session.byId);
   const games = useSelector((state: State) => state.game.byId);

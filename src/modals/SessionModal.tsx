@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useMemo } from "react";
 import { StyleSheet, Text, View, Modal, ViewStyle } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
@@ -11,7 +11,7 @@ import * as Sizes from './../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { Styles as APStyles } from "../components/ActivePlayer";
-import { useCalculatePlaces } from "../util/helperFunctions";
+import { useCalculatePlaces } from "../util/calculatePlacesHooks";
 
 type SessionModalProps = {
   vis: boolean,
@@ -24,12 +24,17 @@ const SessionModal: FC<SessionModalProps> = ({
   thisSession,
   setSessionModalVis,
 }) => {
-  const { game, playerSession, player } = useSelector((state: State) => state);
+  console.log('SESSIONMODAL 27')
+
+  const game = useSelector((state: State) => state.game);
+  const playerSession  = useSelector((state: State) => state.playerSession);
+  const player = useSelector((state: State) => state.player);
   const calculatePlaces = useCalculatePlaces();
   const navigation = useNavigation<NavigationPropType>();
   const [viewWidth, setViewWidth] = useState(0);
   
   const playerSessionIdPlaces = calculatePlaces(thisSession.id)
+
   const playerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
 
   const gameName = game.byId[thisSession.gameId].name;

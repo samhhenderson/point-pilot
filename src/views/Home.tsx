@@ -24,7 +24,7 @@ type HomeProps = {
 
 const Home: FC<HomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
-  const { game } = useSelector((state: State) => state);
+  const game = useSelector((state: State) => state.game);
 
   return (
     <View style={Styles.app}>

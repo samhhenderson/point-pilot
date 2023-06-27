@@ -13,7 +13,7 @@ import Control from "./Control";
 import { State } from "../types";
 import NewConfirmModal from "../modals/NewConfirmModal";
 import SessionModal from "../modals/SessionModal";
-import { useCalculatePlaces } from "../util/helperFunctions";
+import { useCalculatePlaces } from "../util/calculatePlacesHooks";
 
 
 type SessionListItemProps = {
@@ -25,8 +25,10 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
   const thisSession = useSelector((state: State) => state.session.byId[sessionId]);
-  const { game, playerSession, player } = useSelector((state: State) => state);
-
+  const game = useSelector((state: State) => state.game);
+  const playerSession = useSelector((state: State) => state.playerSession);
+  const player = useSelector((state: State) => state.player);
+  
   //Hooks
   const [ ConfirmModalState, setConfirmModalState ] = useState({
     vis: false, 

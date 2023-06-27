@@ -1,6 +1,6 @@
 
 // Import React and React Native modules
-import { FC, useState } from "react";
+import { FC, useState, useMemo } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList} from "react-native";
 
 // Import Redux modules
@@ -15,16 +15,26 @@ import SessionListItem from "../components/SessionListItem";
 type HistoryProps = {
   navigation: NavigationPropType,
 }
+const History: FC<HistoryProps> = function ({navigation}) {
 
-const History: FC<HistoryProps> = ({navigation}) => {
-  const dispatch = useDispatch();
-  const { session, playerSession } = useSelector((state:State) => state);
+  console.log('HISTORY 20')
+
+  const session = useSelector((state:State) => state.session);
   
-  session.allIds.sort((a, b) => {
+//   const sortedSessionIds = useMemo(()=> {   
+//     return session.allIds.sort((a, b) => {
+//       const aDate = new Date(session.byId[a].date);
+//       const bDate = new Date(session.byId[b].date);
+//       return bDate.getTime() - aDate.getTime();
+//   });
+// }, [session]);
+console.log('HISTORY 31', session.allIds)
+const sortedSessionIds = session.allIds.sort((a, b) => {
     const aDate = new Date(session.byId[a].date);
     const bDate = new Date(session.byId[b].date);
     return bDate.getTime() - aDate.getTime();
-  });
+});
+
 
   return (
 
@@ -33,7 +43,7 @@ const History: FC<HistoryProps> = ({navigation}) => {
             HISTORY
           </Text>
       <FlatList
-        data={session.allIds}
+        data={sortedSessionIds}
         renderItem={({item}) => (
           <SessionListItem
             sessionId={item}

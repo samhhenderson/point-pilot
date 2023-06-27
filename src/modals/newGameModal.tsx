@@ -36,7 +36,11 @@ const defaultGame: Game = {
 
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
-  const { modals, player, game } = useSelector((state: State) => state);
+  console.log('NEWGAMEMODAL 39')
+
+  const modalsNewGame = useSelector((state: State) => state.modals.newGame);
+  const player = useSelector((state: State) => state.player);
+  const game = useSelector((state: State) => state.game);
   const tempPlayerSessions = useSelector((state: State) => state.playerSession.tempById);
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
@@ -45,17 +49,17 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const [ activeGame, setActiveGame ] = useState<Game>(defaultGame);
   
   useEffect(() => {
-    if (modals.newGame.vis) {
+    if (modalsNewGame.vis) {
       setNewPlayerName('');
 
       // If we're editing a game, set the active game to that game
       // Otherwise, set the active game to a new game
-      if (modals.newGame.gameId !== 0) {
-        setActiveGame(game.byId[modals.newGame.gameId]);
+      if (modalsNewGame.gameId !== 0) {
+        setActiveGame(game.byId[modalsNewGame.gameId]);
       } else setActiveGame(defaultGame);
     }
 
-  }, [modals.newGame.vis])
+  }, [modalsNewGame.vis])
 
 
 
@@ -119,7 +123,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     <Modal
       animationType='fade'
       transparent={true}
-      visible={modals.newGame.vis}
+      visible={modalsNewGame.vis}
     >
       <View style={Styles.modal}>
         <View style={[CStyles.largeModal, Styles.largeModalChanges]}>

@@ -14,5 +14,5 @@ export default configureStore({
     session: sessionReducer,
     playerSession: playerSessionReducer,
     setting: settingReducer,
-  }
+  },
 })

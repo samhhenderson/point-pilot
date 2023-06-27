@@ -13,7 +13,7 @@ export function useCalculatePlaces() {
         return state.playerSession.byId[id].sessionId === sessionId
       })
     });
-    console.log('HELPERFUNCTIONS 36', playerSessionIds)
+    console.log('HELPERFUNCTIONS 16', playerSessionIds)
 
     const playerSessions = useSelector((state: State) => {
       return playerSessionIds.map((id: number) => state.playerSession.byId[id]);
@@ -42,7 +42,4 @@ export function useCalculatePlaces() {
   }
 }
 
-export function findActiveSession() {
-  const sessionsById = useSelector((state: State) => state.session.byId);
-
-}
+export function calculatePlaces(playerSession)

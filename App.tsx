@@ -12,18 +12,13 @@ import { Provider, useSelector} from 'react-redux';
 import store from './src/redux/store';
 import { ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch, } from 'react-redux';
-import { getPlayers } from './src/redux/playerSlice';
-import { getGames } from './src/redux/gameSlice';
-import { getSessions } from './src/redux/sessionSlice';
-import { getPlayerSessions } from './src/redux/playerSessionSlice';
-import { getSettings } from './src/redux/settingSlice';
+
 
 // Import other modules
 import { State } from './src/types';
 import History from './src/views/History';
 import Game from './src/views/Game';
 import Settings from './src/views/SettingsView';
-import { executeSqlAsync } from './src/db/db-service';
 import { useCreateDatabase } from './src/util/databaseResetHooks';
 
 type RootStackParamList = {

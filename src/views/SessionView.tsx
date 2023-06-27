@@ -12,7 +12,7 @@ import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import Control from "../components/Control";
-import { useCalculatePlaces } from "../util/helperFunctions";
+import { useCalculatePlaces } from "../util/calculatePlacesHooks";
 
 type SessionViewProps = {
   navigation: NavigationPropType,
@@ -26,7 +26,11 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const calculatePlaces = useCalculatePlaces();
   
-  const { player, session, game, playerSession } = useSelector((state: State) => state);
+  const player = useSelector((state: State) => state.player);
+  const session = useSelector((state: State) => state.session);
+  const game = useSelector((state: State) => state.game);
+  const playerSession  = useSelector((state: State) => state.playerSession);
+  const playerSessionIdPlaces = calculatePlaces(sessionId)
   
   const activePlayerSessionIds = useMemo(() => {
     return playerSession.allIds.filter(id => {
@@ -40,7 +44,6 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
     return null;
   }
     
-  const playerSessionIdPlaces = calculatePlaces(sessionId)
   const activeGame = game.byId[session.byId[sessionId].gameId];
 
   function endSession() {
