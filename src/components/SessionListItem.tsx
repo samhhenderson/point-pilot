@@ -10,10 +10,15 @@ import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
-import { State } from "../types";
+import { 
+  State, 
+  PlayerSessionIdPlace, 
+  Session, 
+  PlayerSessionState, 
+  GameState 
+} from "../types";
 import NewConfirmModal from "../modals/NewConfirmModal";
 import SessionModal from "../modals/SessionModal";
-import { useCalculatePlaces } from "../util/calculatePlacesHooks";
 
 
 type SessionListItemProps = {
@@ -36,12 +41,42 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
     confirmFunc: () => console.log('confirmFunc not set'),
     cancelFunc: () => console.log('cancelFunc not set'),
   });
-  const calculatePlaces = useCalculatePlaces();
+
   const [ sessionModalVis, setSessionModalVis ] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
+  const [ isPressed, setIsPressed ] = useState(false);
   
   //GET TITLE, DATES, AND WINNER TEXT
-  const playerSessionIdPlaces = calculatePlaces(sessionId);
+  // REPEATED LOGIC FROM SESSIONVIEW - FIX LATER
+  function calculatePlaces (
+    thisSession: Session, 
+    game: GameState,
+    playerSession: PlayerSessionState
+  ){
+    const playerSessionIds = playerSession.allIds.filter(id => {
+      return playerSession.byId[id].sessionId === sessionId
+    })
+    const playerSessions = playerSessionIds.map(id => playerSession.byId[id]);
+    const lowScoreWins = game.byId[thisSession.gameId].lowScoreWins;
+    
+    playerSessions.sort((a, b) => {
+      if (lowScoreWins) return a.score - b.score;
+      else return b.score - a.score;
+    });
+    const places: PlayerSessionIdPlace[] = [];
+    let currentPlace = 1;
+    playerSessions.forEach((ps, i) => {
+      if (i === 0 || ps.score === playerSessions[i - 1].score) {
+        places.push({playerSessionId: ps.id, place: currentPlace})
+      } else {
+        currentPlace++;
+        places.push({playerSessionId: ps.id, place: currentPlace})
+      }
+    })
+    return places;
+   };
+    
+  const playerSessionIdPlaces = calculatePlaces(thisSession, game, playerSession);
+
   const winners: string[] = [];
   for (const psip of playerSessionIdPlaces) {
     if (psip.place === 1) {
@@ -119,6 +154,7 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
         vis={sessionModalVis}
         thisSession={thisSession}
         setSessionModalVis={setSessionModalVis}
+        playerSessionIdPlaces={playerSessionIdPlaces}
       />
     </View>
   );

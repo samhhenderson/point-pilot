@@ -5,35 +5,34 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
-import { State, Session, NavigationPropType } from "../types";
+import { State, Session, NavigationPropType, PlayerSessionIdPlace } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { Styles as APStyles } from "../components/ActivePlayer";
-import { useCalculatePlaces } from "../util/calculatePlacesHooks";
+
 
 type SessionModalProps = {
   vis: boolean,
   thisSession: Session,
   setSessionModalVis: (vis: boolean) => void,
+  playerSessionIdPlaces: PlayerSessionIdPlace[],
 }
 
 const SessionModal: FC<SessionModalProps> = ({
   vis, 
   thisSession,
   setSessionModalVis,
+  playerSessionIdPlaces,
 }) => {
   console.log('SESSIONMODAL 27')
 
   const game = useSelector((state: State) => state.game);
   const playerSession  = useSelector((state: State) => state.playerSession);
   const player = useSelector((state: State) => state.player);
-  const calculatePlaces = useCalculatePlaces();
   const navigation = useNavigation<NavigationPropType>();
   const [viewWidth, setViewWidth] = useState(0);
-  
-  const playerSessionIdPlaces = calculatePlaces(thisSession.id)
 
   const playerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
 

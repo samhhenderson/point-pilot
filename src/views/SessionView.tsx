@@ -1,10 +1,17 @@
-import { FC, useState, useEffect, useMemo } from "react";
+import { FC, useState, useCallback, useMemo } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
+import { useFocusEffect, StackActions } from "@react-navigation/native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setConfirmModal } from "../redux/modalsSlice";
 
-import { State, NavigationPropType, Game } from "../types";
+import { State, 
+  NavigationPropType, 
+  GameState, 
+  Session, 
+  PlayerSessionState,
+  PlayerSessionIdPlace,
+} from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
@@ -12,7 +19,6 @@ import ActivePlayer, { Styles as APStyles } from "../components/ActivePlayer";
 import NumberModal from "../modals/NumberModal";
 import ConfirmModal from "../modals/ConfirmModal";
 import Control from "../components/Control";
-import { useCalculatePlaces } from "../util/calculatePlacesHooks";
 
 type SessionViewProps = {
   navigation: NavigationPropType,
@@ -21,30 +27,70 @@ type SessionViewProps = {
 
 const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
   // If no sessionId is passed, go back to Homes
-  console.log('SESSIONVIEW24', route.params)
+  console.log('SESSIONVIEW 30', route.params)
   const { sessionId } = route.params;
   const dispatch = useDispatch();
-  const calculatePlaces = useCalculatePlaces();
+
   
   const player = useSelector((state: State) => state.player);
-  const session = useSelector((state: State) => state.session);
+  const thisSession = useSelector((state: State) => state.session.byId[sessionId]);
   const game = useSelector((state: State) => state.game);
   const playerSession  = useSelector((state: State) => state.playerSession);
-  const playerSessionIdPlaces = calculatePlaces(sessionId)
-  
-  const activePlayerSessionIds = useMemo(() => {
-    return playerSession.allIds.filter(id => {
-      return playerSession.byId[id].sessionId === sessionId;
-    }
-  )}, [session]);
 
-  if (!session.byId[sessionId]) {
+  useFocusEffect(
+    useCallback(() => {
+      console.log('SESSIONVIEW FOCUSED')
+      return () => console.log('SESSIONVIEW BLURRED')
+    }, [])
+  )
+
+  if (!thisSession) {
+    console.log('SESSIONVIEW 48 SENT HOME')
+    navigation.dispatch(StackActions.pop())
+    return null;
+  }
+
+  //REPEATED FROM SESSIONMODAL - REFACTOR
+  function calculatePlaces (
+    thisSession: Session, 
+    game: GameState,
+    playerSession: PlayerSessionState
+  ){
+    const playerSessionIds = playerSession.allIds.filter(id => {
+      return playerSession.byId[id].sessionId === sessionId
+    })
+    const playerSessions = playerSessionIds.map(id => playerSession.byId[id]);
+    const lowScoreWins = game.byId[thisSession.gameId].lowScoreWins;
+    
+    playerSessions.sort((a, b) => {
+      if (lowScoreWins) return a.score - b.score;
+      else return b.score - a.score;
+    });
+    const places: PlayerSessionIdPlace[] = [];
+    let currentPlace = 1;
+    playerSessions.forEach((ps, i) => {
+      if (i === 0 || ps.score === playerSessions[i - 1].score) {
+        places.push({playerSessionId: ps.id, place: currentPlace})
+      } else {
+        currentPlace++;
+        places.push({playerSessionId: ps.id, place: currentPlace})
+      }
+    })
+    return places;
+   };
+    
+  const playerSessionIdPlaces = calculatePlaces(thisSession, game, playerSession);
+  
+  const activePlayerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
+
+
+  if (!thisSession) {
     console.log('SESSIONVIEW30 SENT HOME')
     navigation.navigate('Home');
     return null;
   }
     
-  const activeGame = game.byId[session.byId[sessionId].gameId];
+  const activeGame = game.byId[thisSession.gameId];
 
   function endSession() {
 

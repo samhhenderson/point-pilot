@@ -74,6 +74,12 @@ export interface PlayerSession {
   score: number,
   bid: number,
   team: number,
+  place: number,
+}
+
+export type PlayerSessionIdPlace = {
+  playerSessionId: number,
+  place: number,
 }
 
 export interface PlayerSessionState {
