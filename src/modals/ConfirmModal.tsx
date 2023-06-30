@@ -23,9 +23,9 @@ type ConfirmModalProps = {
 
 const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 
+  // REDUX HOOKS
   const dispatch = useDispatch();
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
-
   const { 
     vis, 
     message,

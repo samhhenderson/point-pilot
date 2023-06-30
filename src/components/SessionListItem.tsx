@@ -15,7 +15,9 @@ import {
   PlayerSessionIdPlace, 
   Session, 
   PlayerSessionState, 
-  GameState 
+  GameState,
+  SessionModalState,
+  ConfirmModalState,
 } from "../types";
 import NewConfirmModal from "../modals/NewConfirmModal";
 import SessionModal from "../modals/SessionModal";
@@ -23,26 +25,23 @@ import SessionModal from "../modals/SessionModal";
 
 type SessionListItemProps = {
   sessionId: number,
+  setConfirmModalState: any,
+  setSessionModalState: any,
 }
 
-const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
-  //Redux
-  const dispatch = useDispatch();
+const SessionListItem: FC<SessionListItemProps> = ({
+  sessionId,
+  setConfirmModalState,
+  setSessionModalState,
+}) => {
+  
+  // REDUX / STATE HOOKS
   const dispatchThunk:ThunkDispatch<State, null, any> = useDispatch();
   const thisSession = useSelector((state: State) => state.session.byId[sessionId]);
   const game = useSelector((state: State) => state.game);
   const playerSession = useSelector((state: State) => state.playerSession);
   const player = useSelector((state: State) => state.player);
-  
-  //Hooks
-  const [ ConfirmModalState, setConfirmModalState ] = useState({
-    vis: false, 
-    message: '',
-    confirmFunc: () => console.log('confirmFunc not set'),
-    cancelFunc: () => console.log('cancelFunc not set'),
-  });
 
-  const [ sessionModalVis, setSessionModalVis ] = useState(false);
   const [ isPressed, setIsPressed ] = useState(false);
   
   //GET TITLE, DATES, AND WINNER TEXT
@@ -94,6 +93,15 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
   const gameName = game.byId[thisSession.gameId].name;
   const date = thisSession.date;
 
+  function handleSelectSessionItem() {
+    setSessionModalState((state:SessionModalState) => ({
+      ...state, 
+      vis: true, 
+      thisSession: thisSession,
+      playerSessionIdPlaces: playerSessionIdPlaces,
+    }))
+  }
+
   function handleDeleteSessionItem() {
     setConfirmModalState({
       vis: true,
@@ -105,9 +113,13 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
           }
         })
         dispatchThunk(deleteSession(thisSession.id));
-        setConfirmModalState((state) => ({...state, vis: false}))
+        setConfirmModalState((state: ConfirmModalState) => (
+          {...state, vis: false}
+        ))
       },
-      cancelFunc: () => setConfirmModalState((state) => ({...state, vis: false})),
+      cancelFunc: () => setConfirmModalState((state: ConfirmModalState) => (
+        {...state, vis: false}
+      )),
     })
   }
 
@@ -120,7 +132,7 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
         ]}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
-        onPress={() => setSessionModalVis(true)}
+        onPress={handleSelectSessionItem}
       >
         <View style={Styles.titleDateCont}>
           <Text 
@@ -144,18 +156,7 @@ const SessionListItem: FC<SessionListItemProps> = ({ sessionId }) => {
         pressableStyles={[Styles.deleteButton]}
         textStyles={[{fontSize:20}]}
       />
-      <NewConfirmModal
-        vis={ConfirmModalState.vis}
-        message={ConfirmModalState.message}
-        confirmFunc={ConfirmModalState.confirmFunc}
-        cancelFunc={ConfirmModalState.cancelFunc}
-      />
-      <SessionModal
-        vis={sessionModalVis}
-        thisSession={thisSession}
-        setSessionModalVis={setSessionModalVis}
-        playerSessionIdPlaces={playerSessionIdPlaces}
-      />
+
     </View>
   );
 }

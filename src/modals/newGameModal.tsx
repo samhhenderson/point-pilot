@@ -36,8 +36,7 @@ const defaultGame: Game = {
 
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
-  console.log('NEWGAMEMODAL 39')
-
+  // REDUX / STATE HOOKS
   const modalsNewGame = useSelector((state: State) => state.modals.newGame);
   const player = useSelector((state: State) => state.player);
   const game = useSelector((state: State) => state.game);

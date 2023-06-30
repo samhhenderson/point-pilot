@@ -9,6 +9,7 @@ import { State,
   NavigationPropType, 
   GameState, 
   Session, 
+  PlayerSession,
   PlayerSessionState,
   PlayerSessionIdPlace,
 } from "../types";
@@ -26,42 +27,51 @@ type SessionViewProps = {
 }
 
 const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
-  // If no sessionId is passed, go back to Homes
-  console.log('SESSIONVIEW 30', route.params)
+
   const { sessionId } = route.params;
+
+  // REDUX / STATE HOOKS
   const dispatch = useDispatch();
 
-  
   const player = useSelector((state: State) => state.player);
   const thisSession = useSelector((state: State) => state.session.byId[sessionId]);
   const game = useSelector((state: State) => state.game);
   const playerSession  = useSelector((state: State) => state.playerSession);
 
+  const [ 
+    activePlayerSessionIds, 
+    setActivePlayerSessionsIds 
+  ] = useState<number[]>([]);
+
+  // Only check for activePlayerSessions when the screen is focused
+  
   useFocusEffect(
     useCallback(() => {
-      console.log('SESSIONVIEW FOCUSED')
-      return () => console.log('SESSIONVIEW BLURRED')
+      if (!thisSession) return;
+      setActivePlayerSessionsIds(() => {
+        return playerSession.allIds.filter(id => {
+          return playerSession.byId[id].sessionId === sessionId
+        })
+      })
+      
     }, [])
   )
-
+    
   if (!thisSession) {
     console.log('SESSIONVIEW 48 SENT HOME')
     navigation.dispatch(StackActions.pop())
     return null;
   }
+    
+  const activeGame = game.byId[thisSession.gameId];
 
   //REPEATED FROM SESSIONMODAL - REFACTOR
   function calculatePlaces (
     thisSession: Session, 
     game: GameState,
-    playerSession: PlayerSessionState
+    playerSessions: PlayerSession[]
   ){
-    const playerSessionIds = playerSession.allIds.filter(id => {
-      return playerSession.byId[id].sessionId === sessionId
-    })
-    const playerSessions = playerSessionIds.map(id => playerSession.byId[id]);
     const lowScoreWins = game.byId[thisSession.gameId].lowScoreWins;
-    
     playerSessions.sort((a, b) => {
       if (lowScoreWins) return a.score - b.score;
       else return b.score - a.score;
@@ -79,21 +89,16 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
     return places;
    };
     
-  const playerSessionIdPlaces = calculatePlaces(thisSession, game, playerSession);
-  
-  const activePlayerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
-
-
-  if (!thisSession) {
-    console.log('SESSIONVIEW30 SENT HOME')
-    navigation.navigate('Home');
-    return null;
-  }
+   
     
-  const activeGame = game.byId[thisSession.gameId];
-
   function endSession() {
-
+  
+    const playerSessionIdPlaces = calculatePlaces(
+      thisSession, 
+      game, 
+      activePlayerSessionIds.map(id => playerSession.byId[id])
+    );
+    console.log('SESSIONVIEW 92', playerSessionIdPlaces)
     const winners: string[] = [];
     for (const psip of playerSessionIdPlaces) {
       if (psip.place === 1) {

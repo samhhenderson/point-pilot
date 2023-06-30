@@ -1,56 +1,78 @@
-import { FC, useState, useEffect, useMemo } from "react";
+import { FC, useState, useEffect, useMemo, useCallback } from "react";
 import { StyleSheet, Text, View, Modal, ViewStyle } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
-import { State, Session, NavigationPropType, PlayerSessionIdPlace } from "../types";
+import { 
+  State, 
+  Session, 
+  NavigationPropType, 
+  PlayerSessionIdPlace,
+  PlayerSession,
+  SessionModalState,
+} from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { Styles as APStyles } from "../components/ActivePlayer";
 
-
 type SessionModalProps = {
-  vis: boolean,
-  thisSession: Session,
-  setSessionModalVis: (vis: boolean) => void,
-  playerSessionIdPlaces: PlayerSessionIdPlace[],
+  sessionModalState: SessionModalState,
+  setSessionModalState: any,
 }
 
 const SessionModal: FC<SessionModalProps> = ({
-  vis, 
-  thisSession,
-  setSessionModalVis,
-  playerSessionIdPlaces,
-}) => {
-  console.log('SESSIONMODAL 27')
+  sessionModalState,
+  setSessionModalState,
 
+}) => {
+  // HOOKS / STATE
   const game = useSelector((state: State) => state.game);
-  const playerSession  = useSelector((state: State) => state.playerSession);
+
+  const playerSession = useSelector((state: State) => state.playerSession);
+
   const player = useSelector((state: State) => state.player);
   const navigation = useNavigation<NavigationPropType>();
   const [viewWidth, setViewWidth] = useState(0);
+  //const [ playerSessions, setPlayerSessions] = useState<PlayerSession[]>([])
 
-  const playerSessionIds = playerSessionIdPlaces.map(psip => psip.playerSessionId);
+  console.log('SESSIONMODAL 55')
 
-  const gameName = game.byId[thisSession.gameId].name;
-  const date = thisSession.date;
+  // useEffect(() => {
+  //   setPlayerSessions(() => {
+      const playerSessions = sessionModalState.playerSessionIdPlaces.map(psip => {
+        return playerSession.byId[psip.playerSessionId]
+      })
+  //   })
+  // }, [sessionModalState.playerSessionIdPlaces])
+
+  // NON STATE VARIABLES
+  if (sessionModalState.thisSession === null) return null;
+
+  const gameName = game.byId[sessionModalState.thisSession.gameId].name;
+  const date = sessionModalState.thisSession.date;
   const title = gameName + ' - ' + date;
 
+  // HANDLE FUNCTIONS
   function handleContinue() {
     navigation.navigate('Game')
-    navigation.navigate('SessionView', { sessionId: thisSession.id })
-    setSessionModalVis(false);
+    navigation.navigate(
+      'SessionView', 
+      { sessionId: sessionModalState.thisSession!.id }
+    )
+    setSessionModalState((state:SessionModalState) => {
+      return {...state, vis: false}
+    })
   }
 
   return (
     <Modal
       animationType='fade'
       transparent={true}
-      visible={vis}
+      visible={sessionModalState.vis}
     >
       <View style={Styles.modal}>
         <View 
@@ -62,7 +84,7 @@ const SessionModal: FC<SessionModalProps> = ({
             <Text style={[
               CStyles.text, 
               {fontSize: 40, color: Colors.DARK_TEXT}
-              ]}>{title}</Text>
+            ]}>{title}</Text>
           </View>
           <View style={Styles.playerContainer}>
             <View style={[APStyles.container, Styles.headings]} >
@@ -79,17 +101,17 @@ const SessionModal: FC<SessionModalProps> = ({
                 </Text>
               </View>
             </View>
-            {playerSessionIds.length > 0 ? 
-              playerSessionIds.map(id => {
+            {playerSessions.length > 0 ? 
+              playerSessions.map(ps => {
                 return (
-                  <View key={id} style={[APStyles.container, Styles.container]}>
+                  <View key={ps.id} style={[APStyles.container, Styles.container]}>
                     <View style={APStyles.nameCont}>
                       <Text 
                         style={[CStyles.textDark, {fontSize: 30}]}
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {player.byId[playerSession.byId[id].playerId].name}
+                        {player.byId[ps.playerId].name}
                       </Text>
                     </View>
                     <View style={APStyles.pointsContainer}>
@@ -98,8 +120,8 @@ const SessionModal: FC<SessionModalProps> = ({
                         Styles.placeAndScoreText,
                         {fontSize: 25}
                       ]}>
-                        {playerSessionIdPlaces
-                          .find(psip => psip.playerSessionId === id)?.place}
+                        {sessionModalState.playerSessionIdPlaces
+                          .find(psip => psip.playerSessionId === ps.id)?.place}
                       </Text>
                       <Text 
                         style={[
@@ -110,7 +132,7 @@ const SessionModal: FC<SessionModalProps> = ({
                         numberOfLines={1}
                         ellipsizeMode="tail"
                       >
-                        {playerSession.byId[id].score}
+                        {ps.score}
                       </Text>
                     </View>
                 </View>
@@ -125,7 +147,9 @@ const SessionModal: FC<SessionModalProps> = ({
               textStyles={[{fontSize:25}]}
             />
             <Control
-              onPress={() => setSessionModalVis(false)}
+              onPress={() => setSessionModalState((state:SessionModalState) => {
+                return {...state, vis: false}
+              })}
               text={'X'}
               pressableStyles={[{backgroundColor: Colors.COLOR5}]}
               textStyles={[{fontSize:40, alignContent: 'center'}]}

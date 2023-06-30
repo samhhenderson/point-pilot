@@ -125,3 +125,15 @@ export type NavigationPropType = NavigationProp<
   'Home' | 'SessionView' | 'History' | 'Settings' | 'Game'
 >
 
+export interface SessionModalState {
+  vis: boolean,
+  thisSession: Session | null,
+  playerSessionIdPlaces: PlayerSessionIdPlace[],
+}
+
+export interface ConfirmModalState {
+  vis: boolean,
+  message: string,
+  confirmFunc: any,
+  cancelFunc: any,
+}
