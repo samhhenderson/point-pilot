@@ -5,6 +5,7 @@ export interface Player {
   id: number
   name: string,
   icon: string,
+  deleted: boolean,
 }
 
 export interface PlayerState {
@@ -42,6 +43,7 @@ export interface Game {
   useBid: boolean,
   teams: boolean,
   display: boolean,
+  deleted: boolean,
 }
 
 export interface GameState {

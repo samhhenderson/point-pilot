@@ -32,6 +32,7 @@ const defaultGame: Game = {
   lowScoreWins: false,
   teams: false,
   display: true,
+  deleted: false,
 }
 
 const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
@@ -46,11 +47,12 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   const [ newPlayerName, setNewPlayerName ] = useState<string>('');
   const [ activeGame, setActiveGame ] = useState<Game>(defaultGame);
+  const [ showNewPlayer, setShowNewPlayer ] = useState<boolean>(false);
   
   useEffect(() => {
     if (modalsNewGame.vis) {
       setNewPlayerName('');
-
+      setShowNewPlayer(false);
       // If we're editing a game, set the active game to that game
       // Otherwise, set the active game to a new game
       if (modalsNewGame.gameId !== 0) {
@@ -116,6 +118,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   function handleNewPlayerDone(): void {
     setNewPlayerName('');
     dispatchThunk(addPlayer(newPlayerName));
+    setShowNewPlayer(false);
   }
 
   return (
@@ -133,29 +136,33 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
               onChangeText={text => setActiveGame({...activeGame, name: text})}
               value={activeGame.name}
               returnKeyType="done"
+              placeholder='Game Name'
             />
           </View>
-          <View style={Styles.listItem}>
-            <CheckBox
-              value={!!activeGame.lowScoreWins}
-              onValueChange={() => setActiveGame({
-                ...activeGame, 
-                lowScoreWins: !activeGame.lowScoreWins,
-              })}
-            />
-            <Text style={[CStyles.text, Styles.listItemText]}>LOW SCORE WINS</Text>
+          <Text style={[CStyles.text, Styles.smallTitle]}>Game Settings</Text>
+          <View style={[Styles.playerListView, Styles.playerListCont]}>
+            <View style={Styles.listItem}>
+              <CheckBox
+                value={!activeGame.lowScoreWins}
+                onValueChange={() => setActiveGame({
+                  ...activeGame,
+                  lowScoreWins: !activeGame.lowScoreWins,
+                })}
+              />
+              <Text style={[CStyles.text, Styles.listItemText]}>HIGH SCORE WINS</Text>
+            </View>
+            <View style={Styles.listItem}>
+              <CheckBox
+                value={activeGame.useBid}
+                onValueChange={() => setActiveGame({
+                  ...activeGame,
+                  useBid: !activeGame.useBid,
+                })}
+              />
+              <Text style={[CStyles.text, Styles.listItemText]}>INCLUDES BIDDING</Text>
+            </View>
           </View>
-          <View style={Styles.listItem}>
-            <CheckBox
-              value={activeGame.useBid}
-              onValueChange={() => setActiveGame({
-                ...activeGame, 
-                useBid: !activeGame.useBid,
-              })}
-            />
-            <Text style={[CStyles.text, Styles.listItemText]}>BIDS</Text>
-          </View>
-          <View style={Styles.listItem}>
+          {/* <View style={Styles.listItem}>
             <CheckBox
               value={activeGame.teams}
               onValueChange={() => setActiveGame({
@@ -164,11 +171,13 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
               })}
             />
             <Text style={[CStyles.text, Styles.listItemText]}>TEAMS</Text>
-          </View>
+          </View> */}
+          <Text style={[CStyles.text, Styles.smallTitle]}>Select Players</Text>
           <ScrollView style={Styles.playerListView}>
             <View style={Styles.playerListCont}>
               {player.allIds ?
                 player.allIds.map((id) => {
+                  if (player.byId[id].deleted) return null;
                   return (
                     <PlayerListItem 
                       key={id}
@@ -178,13 +187,25 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                   )
                 }) : null
               }
-              <TextInput
-                style={Styles.textInput}
-                onChangeText={text => setNewPlayerName(text)}
-                value={newPlayerName}
-                onSubmitEditing={handleNewPlayerDone}
-                returnKeyType="done"
-              />
+              { showNewPlayer ? 
+                <TextInput
+                  style={[Styles.textInput, Styles.smallTextInput]}
+                  onChangeText={text => setNewPlayerName(text)}
+                  value={newPlayerName}
+                  onSubmitEditing={handleNewPlayerDone}
+                  returnKeyType="done"
+                  placeholder='New Player'
+                />
+                : null 
+              }
+              { !showNewPlayer ?
+                <Control
+                  pressableStyles={[Styles.addPlayerButton]}
+                  text={'+ PLAYER'}
+                  onPress={() => setShowNewPlayer(!showNewPlayer)}
+                />
+                : null
+              }
             </View>
           </ScrollView>
           <View style={Styles.bottomButtonsCont}>
@@ -236,6 +257,14 @@ const Styles = StyleSheet.create({
     width: 190,
     height: 48,
   },
+  smallTextInput: {
+    fontSize: 20,
+    alignSelf: 'center',
+  },
+  smallTitle: {
+    fontSize: 15,
+    marginBottom: -5,
+  },
   listItem: {
     flexDirection: 'row',
     gap: 15,
@@ -250,7 +279,7 @@ const Styles = StyleSheet.create({
     borderRadius: Sizes.MED_BORDER_RADIUS,
   },
   playerListCont: {
-    gap: 10,
+    gap: 5,
     padding: 10,
   },
   playerListItem: {
@@ -258,13 +287,13 @@ const Styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  addButton: {
-    borderRadius: 35,
-    backgroundColor: 'green',
-    borderColor: 'white',
-    borderWidth: 1,
-    width: 20,
-    height: 20,
+  addPlayerButton: {
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
+    backgroundColor: Colors.SECONDARY,
+    alignSelf: 'center',
+    width: 'auto',
+    padding: 10,
+    height: 50,
   },
   bottomButtonsCont: {
     flexDirection: 'row',

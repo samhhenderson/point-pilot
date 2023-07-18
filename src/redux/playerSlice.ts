@@ -20,7 +20,8 @@ export const deletePlayer = createAsyncThunk(
   'player/deletePlayer', 
   async (deletedPlayerId: number, thunkApi) => {
     const query = 
-    `DELETE FROM players
+    `UPDATE players
+    set deleted = 1
     WHERE id = ?`
     executeSqlAsync(query, [deletedPlayerId])
       .catch(error => console.log('DELETE ' + error))
@@ -47,20 +48,32 @@ export const playerSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(addPlayer.fulfilled, (state, action) => {
       if (action.payload) {
-        state.byId[action.payload.id] = action.payload;
+        state.byId[action.payload.id] = {
+          id: action.payload.id,
+          name: action.payload.name,
+          icon: action.payload.icon,
+          deleted: !!action.payload.deleted
+        }
         state.allIds.push(action.payload.id);
       }
     });
     builder.addCase(deletePlayer.fulfilled, (state, action) => {
-      delete state.byId[action.meta.arg];
-      state.allIds = state.allIds.filter(id => id !== action.meta.arg);
+      if (action.meta.arg) {
+        state.byId[action.meta.arg].deleted = true;
+      }
+
     });
     builder.addCase(getPlayers.fulfilled, (state, action) => {
       if (action.payload) {
         state.byId = {};
         state.allIds = [];
         action.payload.forEach((player: Player) => {
-          state.byId[player.id] = player;
+          state.byId[player.id] = {
+            id: player.id,
+            name: player.name,
+            icon: player.icon,
+            deleted: !!player.deleted
+          };
           state.allIds.push(player.id);
         })
       }

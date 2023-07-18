@@ -28,7 +28,8 @@ export const deleteGame = createAsyncThunk(
   'game/deleteGame', 
   async (deletedGame: number, thunkApi) => {
     const query = 
-    `DELETE FROM games
+    `UPDATE games
+    SET deleted = 1
     WHERE id = ?`
     executeSqlAsync(query, [deletedGame])
     .catch(error => console.log('DELETE ' + error))
@@ -91,14 +92,16 @@ export const gameSlice = createSlice({
           useBid: !!action.payload.useBid,
           teams: !!action.payload.teams,
           display: !!action.payload.display,
+          deleted: !!action.payload.deleted,
         }
         state.allIds.push(action.payload.id);
       }
     });
     
     builder.addCase(deleteGame.fulfilled, (state, action) => {
-      delete state.byId[action.meta.arg];
-      state.allIds = state.allIds.filter((id) => id !== action.meta.arg);
+      if (action.meta.arg) {
+        state.byId[action.meta.arg].deleted = true;
+      }
     });
 
     builder.addCase(getGames.fulfilled, (state, action) => {
@@ -113,6 +116,7 @@ export const gameSlice = createSlice({
             useBid: !!game.useBid,
             teams: !!game.teams,
             display: !!game.display,
+            deleted: !!game.deleted,
           }
           state.allIds.push(game.id);
         })

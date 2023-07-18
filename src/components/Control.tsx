@@ -50,7 +50,7 @@ export const Styles = StyleSheet.create({
     width: Sizes.MED_BUTTONS,
     height: Sizes.MED_BUTTONS,
     borderRadius: Sizes.MED_BORDER_RADIUS,
-    shadowColor: 'rgba(0,0,0,0.6)',
+    shadowColor: 'rgba(0,0,0,0.3)',
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 5,

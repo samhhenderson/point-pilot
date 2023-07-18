@@ -31,17 +31,21 @@ const Home: FC<HomeProps> = ({navigation}) => {
       <ScrollView contentContainerStyle={Styles.game}>
         <Text style={[CStyles.text, CStyles.title]}>GAMES</Text>
         <View style={Styles.gameListContainer}>
-          {game.allIds.map((id) => (
-            <GameListItem
-              key={id}
-              id={id}
-            />
-          ))}
+          {game.allIds.map((id) => { 
+            if (!game.byId[id].deleted) {
+              return (
+                <GameListItem
+                  key={id}
+                  id={id}
+                />
+              )
+            }
+          })}
           <Control
             onPress={() => dispatch(showNewGameModal(0))}
-            text={'+'}
+            text={'+ GAME'}
             pressableStyles={[Styles.addButton]}
-            textStyles={[{fontSize:40}]}
+            textStyles={[{fontSize:30}]}
           />
         </View>
       </ScrollView>
@@ -79,8 +83,11 @@ const Styles = StyleSheet.create({
   },
   addButton: {
     marginTop: 20,
-    borderRadius: Sizes.MED_BORDER_RADIUS,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
     backgroundColor: Colors.SECONDARY,
     alignSelf: 'center',
+    width: 'auto',
+    paddingLeft: 20,
+    paddingRight: 20,
   }
 });

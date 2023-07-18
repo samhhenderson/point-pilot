@@ -37,7 +37,8 @@ export function useCreateDatabase() {
     `CREATE TABLE IF NOT EXISTS players (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT,
-      icon TEXT DEFAULT 'none'
+      icon TEXT DEFAULT 'none',
+      deleted INTEGER CHECK(deleted IN (0,1)) DEFAULT 0
     );`
     executeSqlAsync(createPlayerTable)
     .catch(error => console.log('CREATE PLAYER TABLE ' + error))
@@ -48,7 +49,8 @@ export function useCreateDatabase() {
       name TEXT,
       lowScoreWins INTEGER CHECK(lowScoreWins IN (0,1)),
       useBid INTEGER CHECK(useBid IN (0,1)),
-      teams INTEGER CHECK(teams IN (0,1))
+      teams INTEGER CHECK(teams IN (0,1)),
+      deleted INTEGER CHECK(deleted IN (0,1)) DEFAULT 0
     );`
     executeSqlAsync(createGameTable)
     .catch(error => console.log('CREATE GAME TABLE ' + error))
