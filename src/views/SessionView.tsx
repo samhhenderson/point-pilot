@@ -178,6 +178,7 @@ const Styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: Colors.COLOR1,
     justifyContent: 'space-between',
+    paddingBottom: Sizes.TAB_BAR_HEIGHT - 15,
   },
   title: {
     fontSize: 50,

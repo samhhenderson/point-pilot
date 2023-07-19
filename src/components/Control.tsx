@@ -49,7 +49,7 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     width: Sizes.MED_BUTTONS,
     height: Sizes.MED_BUTTONS,
-    borderRadius: Sizes.MED_BORDER_RADIUS,
+    borderRadius: Sizes.SMALL_BORDER_RADIUS,
     shadowColor: 'rgba(0,0,0,0.3)',
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.8,

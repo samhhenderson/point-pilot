@@ -69,7 +69,7 @@ export const Styles = StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
-    borderColor: Colors.COLOR2,
+    borderColor: Colors.COLOR6,
     borderWidth: 5,
     justifyContent: 'space-between',
     padding: 10,
@@ -81,11 +81,11 @@ export const Styles = StyleSheet.create({
     gap: 12,
   },
   bidButton: {
-    backgroundColor: Colors.COLOR3,
+    backgroundColor: Colors.COLOR2,
   },
   bidText: {
     fontSize: 40,
-    color: 'black'
+
   },
   nameCont: {
     overflow: 'hidden',

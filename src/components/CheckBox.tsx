@@ -16,7 +16,7 @@ const CheckBox: FC<CheckBoxProps> = ({
   value, 
   onValueChange, 
   styles = [], 
-  color = Colors.COLOR1,
+  color = Colors.COLOR2,
 }) => {
 
   return (

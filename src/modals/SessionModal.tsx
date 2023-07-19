@@ -37,17 +37,10 @@ const SessionModal: FC<SessionModalProps> = ({
   const player = useSelector((state: State) => state.player);
   const navigation = useNavigation<NavigationPropType>();
   const [viewWidth, setViewWidth] = useState(0);
-  //const [ playerSessions, setPlayerSessions] = useState<PlayerSession[]>([])
 
-  console.log('SESSIONMODAL 55')
-
-  // useEffect(() => {
-  //   setPlayerSessions(() => {
-      const playerSessions = sessionModalState.playerSessionIdPlaces.map(psip => {
-        return playerSession.byId[psip.playerSessionId]
-      })
-  //   })
-  // }, [sessionModalState.playerSessionIdPlaces])
+  const playerSessions = sessionModalState.playerSessionIdPlaces.map(psip => {
+    return playerSession.byId[psip.playerSessionId]
+  })
 
   // NON STATE VARIABLES
   if (sessionModalState.thisSession === null) return null;
@@ -142,17 +135,17 @@ const SessionModal: FC<SessionModalProps> = ({
           <View style={Styles.bottomButtonsCont}>
             <Control
               onPress={handleContinue}
-              text={'OPEN SESSION'}
-              pressableStyles={[{backgroundColor: Colors.COLOR1, flex: 1}]}
+              text={'RE-OPEN'}
+              pressableStyles={[{ flex: 1}]}
               textStyles={[{fontSize:25}]}
             />
             <Control
               onPress={() => setSessionModalState((state:SessionModalState) => {
                 return {...state, vis: false}
               })}
-              text={'X'}
-              pressableStyles={[{backgroundColor: Colors.COLOR5}]}
-              textStyles={[{fontSize:40, alignContent: 'center'}]}
+              text={'CANCEL'}
+              pressableStyles={[Styles.cancelButton]}
+              textStyles={[{fontSize:25, alignContent: 'center'}]}
             />
           </View>
         </View>
@@ -208,4 +201,8 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
     gap: 20,
   },
+  cancelButton: {
+    backgroundColor: Colors.COLOR5,
+    flex: 1,
+  }
 });

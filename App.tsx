@@ -20,6 +20,9 @@ import History from './src/views/History';
 import Game from './src/views/Game';
 import Settings from './src/views/SettingsView';
 import { useCreateDatabase } from './src/util/databaseResetHooks';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import * as Colors from './src/styles/Colors';
+import * as Sizes from './src/styles/Sizes';
 
 type RootStackParamList = {
   Game: undefined,
@@ -43,7 +46,46 @@ function App() {
     <>
       <StatusBar style='light'/>
       <NavigationContainer>
-        <Tab.Navigator screenOptions={{headerShown: false}}>
+        <Tab.Navigator screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName: string = '';
+            if (route.name === 'Game') {
+              return focused 
+              ? <MaterialCommunityIcons 
+                name={'cards-playing'} 
+                size={size} 
+                color={color} 
+              />
+              : <MaterialCommunityIcons 
+                name={'cards-playing-outline'} 
+                size={size} 
+                color={color} 
+              />;
+            } else if (route.name === 'History') {
+              return <MaterialCommunityIcons 
+                name={'history'} 
+                size={size} 
+                color={color} 
+              />;
+            } else if (route.name === 'Settings') {
+              return <Ionicons name={'settings'} size={size} color={color} />;
+            }
+
+          },
+          tabBarStyle: {
+            backgroundColor: Colors.DARK,
+            borderTopWidth: 0,
+            elevation: 0,
+            position: 'absolute',
+            height: Sizes.TAB_BAR_HEIGHT,
+          },
+          headerShown: false,
+          tabBarActiveTintColor: Colors.COLOR2,
+          tabBarInactiveTintColor: Colors.COLOR3,
+          tabBarShowLabel: false,
+        })}
+
+        >
           <Tab.Screen 
             name='Game' 
             component={Game} 

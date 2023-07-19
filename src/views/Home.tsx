@@ -69,6 +69,7 @@ const Styles = StyleSheet.create({
   game: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR1,
+    paddingBottom: Sizes.TAB_BAR_HEIGHT + 15,
   },
   title: {
     fontSize: 50,
@@ -83,8 +84,7 @@ const Styles = StyleSheet.create({
   },
   addButton: {
     marginTop: 20,
-    borderRadius: Sizes.SMALL_BORDER_RADIUS,
-    backgroundColor: Colors.SECONDARY,
+    backgroundColor: Colors.COLOR4,
     alignSelf: 'center',
     width: 'auto',
     paddingLeft: 20,

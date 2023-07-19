@@ -53,6 +53,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     if (modalsNewGame.vis) {
       setNewPlayerName('');
       setShowNewPlayer(false);
+      
       // If we're editing a game, set the active game to that game
       // Otherwise, set the active game to a new game
       if (modalsNewGame.gameId !== 0) {
@@ -242,6 +243,7 @@ const Styles = StyleSheet.create({
   },
   largeModalChanges: {
     flexDirection: 'column',
+    backgroundColor: Colors.COLOR6,
   },
   header: {
     width: '100%',
@@ -274,7 +276,7 @@ const Styles = StyleSheet.create({
     fontSize: 20,
   },
   playerListView: {
-    borderColor: Colors.COLOR1,
+    borderColor: Colors.COLOR2,
     borderWidth: 2,
     borderRadius: Sizes.MED_BORDER_RADIUS,
   },
@@ -288,8 +290,7 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
   },
   addPlayerButton: {
-    borderRadius: Sizes.SMALL_BORDER_RADIUS,
-    backgroundColor: Colors.SECONDARY,
+    backgroundColor: Colors.COLOR4,
     alignSelf: 'center',
     width: 'auto',
     padding: 10,

@@ -61,7 +61,6 @@ export const Styles = StyleSheet.create({
   gameNameButton: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR2,
-    borderRadius: Sizes.SMALL_BORDER_RADIUS,
     height: Sizes.MED_BUTTONS,
     alignItems: 'flex-start',
     paddingLeft: 20,
@@ -70,7 +69,6 @@ export const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR5,
     height: Sizes.SMALL_BUTTONS - 10,
     width: Sizes.SMALL_BUTTONS - 10,
-    borderRadius: Sizes.SMALL_BORDER_RADIUS,
   }
 })
 

@@ -1,11 +1,17 @@
+import { useFonts } from 'expo-font';
+
 import * as Colors from './Colors';
 import * as Sizes from './Sizes';
 import { StyleSheet } from "react-native";
 
+// const [fontsLoaded] = useFonts({
+//   'Roboto': require('../../assets/fonts/Roboto-Regular.ttf'),
+// });
+
 export const CStyles = StyleSheet.create({
   
   largeModal: {
-    backgroundColor: Colors.COLOR2,
+    backgroundColor: Colors.COLOR6,
     justifyContent: 'center',
     alignContent: 'center',
     maxWidth: 400,
@@ -14,6 +20,8 @@ export const CStyles = StyleSheet.create({
     borderRadius: Sizes.LARGE_BORDER_RADIUS,
     padding: 20,
     gap: 10,
+    // borderWidth: 1,
+    // borderColor: Colors.COLOR3,
   },
 
   smallModal: {
@@ -31,6 +39,7 @@ export const CStyles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 20,
+    fontFamily: 'System',
   },
   textDark: {
     color: Colors.DARK_TEXT,

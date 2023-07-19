@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 // Import other modules
 import { State, NavigationPropType, SessionModalState } from "../types";
 import * as Colors from './../styles/Colors';
+import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
 import SessionListItem from "../components/SessionListItem";
 import NewConfirmModal from "../modals/NewConfirmModal";
@@ -85,10 +86,6 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR1,
     flex: 1,
   },
-  game: {
-    flexGrow: 1,
-    backgroundColor: Colors.COLOR1,
-  },
   title: {
     fontSize: 40,
     textAlign: 'center',
@@ -99,6 +96,7 @@ const Styles = StyleSheet.create({
     padding: 10,
     gap: 15,
     maxWidth: 500,
+    paddingBottom: Sizes.TAB_BAR_HEIGHT + 15,
   },
   addButton: {
     borderRadius: 35,

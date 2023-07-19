@@ -70,6 +70,7 @@ const NumberModal: FC = () => {
             key={num}
             text={num}
             onPress={() => handleNumInput(num)}
+            pressableStyles={[{backgroundColor: Colors.COLOR2}]}
             textStyles={[{fontSize:40}]}
           />
         )
@@ -183,11 +184,10 @@ const Styles = StyleSheet.create({
     fontSize: 40,
   },
   minusBackButtons: {
-    backgroundColor: Colors.COLOR1,
+    backgroundColor: Colors.COLOR5,
   },
   okButton: {
     width: 150,
-    backgroundColor: Colors.COLOR1,
     marginTop: 10
   },
   cancelButton: {
