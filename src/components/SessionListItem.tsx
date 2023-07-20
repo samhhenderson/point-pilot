@@ -105,7 +105,7 @@ const SessionListItem: FC<SessionListItemProps> = ({
   function handleDeleteSessionItem() {
     setConfirmModalState({
       vis: true,
-      message: `Remove this Session from History?`,
+      message: `Remove this game session from history?`,
       confirmFunc: () => {
         playerSession.allIds.forEach((playerSessionId) => {
           if (playerSession.byId[playerSessionId].sessionId === thisSession.id) {

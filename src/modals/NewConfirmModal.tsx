@@ -31,7 +31,7 @@ const NewConfirmModal: FC<NewConfirmModalProps> = ({
     >
       <View style={Styles.modal}>
         <View style={CStyles.smallModal}>
-          <Text style={Styles.message}>{message}</Text>
+          <Text style={[CStyles.text, Styles.message]}>{message}</Text>
           <View style={Styles.bottomButtonsCont}>
             <Control
               text={'YES'}
@@ -62,7 +62,7 @@ export const Styles = StyleSheet.create({
   },
   message: {
     fontSize: 30,
-    alignContent: 'center',
+    textAlign: 'center',
   },
   bottomButtonsCont: {
     flexDirection: 'row',
@@ -70,8 +70,8 @@ export const Styles = StyleSheet.create({
     gap: 15,
   },
   cancelButton: {
-    flex: 1.4,
     backgroundColor: Colors.COLOR5,
+    minWidth: 140,
   },
   confirmButton: {
     flex: 1,

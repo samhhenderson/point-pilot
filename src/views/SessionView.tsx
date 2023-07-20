@@ -29,20 +29,19 @@ type SessionViewProps = {
 const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
 
   const { sessionId } = route.params;
-
   // REDUX / STATE HOOKS
   const dispatch = useDispatch();
-
+  
   const player = useSelector((state: State) => state.player);
   const thisSession = useSelector((state: State) => state.session.byId[sessionId]);
   const game = useSelector((state: State) => state.game);
   const playerSession  = useSelector((state: State) => state.playerSession);
-
+  
   const [ 
     activePlayerSessionIds, 
     setActivePlayerSessionsIds 
   ] = useState<number[]>([]);
-
+  
   // Only check for activePlayerSessions when the screen is focused
   
   useFocusEffect(
@@ -50,15 +49,14 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
       if (!thisSession) return;
       setActivePlayerSessionsIds(() => {
         return playerSession.allIds.filter(id => {
-          return playerSession.byId[id].sessionId === sessionId
+          return playerSession.byId[id].sessionId === thisSession.id
         })
       })
       
-    }, [])
+    }, [thisSession])
   )
     
   if (!thisSession) {
-    console.log('SESSIONVIEW 48 SENT HOME')
     navigation.dispatch(StackActions.pop())
     return null;
   }
@@ -98,7 +96,7 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
       game, 
       activePlayerSessionIds.map(id => playerSession.byId[id])
     );
-    console.log('SESSIONVIEW 92', playerSessionIdPlaces)
+
     const winners: string[] = [];
     for (const psip of playerSessionIdPlaces) {
       if (psip.place === 1) {
@@ -178,12 +176,7 @@ const Styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: Colors.COLOR1,
     justifyContent: 'space-between',
-    paddingBottom: Sizes.TAB_BAR_HEIGHT - 15,
-  },
-  title: {
-    fontSize: 50,
-    textAlign: 'center',
-    marginTop: 30,
+    paddingBottom: Sizes.TAB_BAR_HEIGHT + Sizes.SCREEN_HEIGHT * 0.02,
   },
   playerContainer: {
     width: '100%',
@@ -203,7 +196,6 @@ const Styles = StyleSheet.create({
   endGameContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 120,
   },
   endGameButton: {
     width: 200,

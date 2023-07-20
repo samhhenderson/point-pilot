@@ -2,7 +2,7 @@
 // Import React and React Native modules
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -44,7 +44,9 @@ function App() {
 
   return (
     <>
-      <StatusBar style='light'/>
+      <StatusBar 
+        style='light'
+      />
       <NavigationContainer>
         <Tab.Navigator screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -107,11 +109,23 @@ function App() {
 export default function AppWithProvider() {
   return (
     <Provider store={store}>
+      <View
+        style={Styles.statusBar}
+      />
       <App />
     </Provider>
   )
 }
 
 const Styles = StyleSheet.create({
-
+  statusBar: {
+    backgroundColor: Colors.DARK,
+    position: 'absolute',
+    height: Sizes.STATUS_BAR_HEIGHT,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+  }
 })

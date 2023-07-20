@@ -50,7 +50,7 @@ const SessionModal: FC<SessionModalProps> = ({
   const title = gameName + ' - ' + date;
 
   // HANDLE FUNCTIONS
-  function handleContinue() {
+  function handleReOpen() {
     navigation.navigate('Game')
     navigation.navigate(
       'SessionView', 
@@ -134,7 +134,7 @@ const SessionModal: FC<SessionModalProps> = ({
           </View>
           <View style={Styles.bottomButtonsCont}>
             <Control
-              onPress={handleContinue}
+              onPress={handleReOpen}
               text={'RE-OPEN'}
               pressableStyles={[{ flex: 1}]}
               textStyles={[{fontSize:25}]}

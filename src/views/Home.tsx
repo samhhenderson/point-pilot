@@ -65,27 +65,23 @@ const Styles = StyleSheet.create({
   app: {
     backgroundColor: Colors.COLOR1,
     flex: 1,
+
   },
   game: {
     flexGrow: 1,
     backgroundColor: Colors.COLOR1,
-    paddingBottom: Sizes.TAB_BAR_HEIGHT + 15,
-  },
-  title: {
-    fontSize: 50,
-    textAlign: 'center',
-    marginTop: 30,
+    paddingBottom: Sizes.TAB_BAR_HEIGHT,
+    alignItems: 'center',
   },
   gameListContainer: {
     width: '100%',
     padding: 10,
     gap: 15,
-    maxWidth: 500,
+    maxWidth: 400,
   },
   addButton: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: Colors.COLOR4,
-    alignSelf: 'center',
     width: 'auto',
     paddingLeft: 20,
     paddingRight: 20,

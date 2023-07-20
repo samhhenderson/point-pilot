@@ -20,7 +20,6 @@ type HistoryProps = {
 }
 const History: FC<HistoryProps> = function ({navigation}) {
 
-  console.log('HISTORY 20')
   // REDUX / STATE HOOKS
   const session = useSelector((state:State) => state.session);
 
@@ -50,21 +49,24 @@ const History: FC<HistoryProps> = function ({navigation}) {
   return (
 
     <View style={Styles.app}>
-      <Text style={[CStyles.text, CStyles.title]}>
-        HISTORY
-      </Text>
-      <FlatList
-        data={sortedSessionIds}
-        renderItem={({item}) => (
-          <SessionListItem
-            sessionId={item}
-            setConfirmModalState={setConfirmModalState}
-            setSessionModalState={setSessionModalState}
-          />
-        )}
-        keyExtractor={(item: number) => item.toString()}
-        contentContainerStyle={Styles.gameListContainer}
-      />
+
+      <ScrollView contentContainerStyle={Styles.history}>
+        <Text style={[CStyles.text, CStyles.title]}>HISTORY</Text>
+        <View style={Styles.gameListContainer}>
+          {sortedSessionIds.map((id) => {
+            return (
+              <SessionListItem
+                key={id}
+                sessionId={id}
+                setConfirmModalState={setConfirmModalState}
+                setSessionModalState={setSessionModalState}
+              />
+            );
+          }
+          )}
+        </View>
+      </ScrollView>
+
       <NewConfirmModal
         vis={confirmModalState.vis}
         message={confirmModalState.message}
@@ -86,17 +88,17 @@ const Styles = StyleSheet.create({
     backgroundColor: Colors.COLOR1,
     flex: 1,
   },
-  title: {
-    fontSize: 40,
-    textAlign: 'center',
-    marginTop: 20,
+  history: {
+    flexGrow: 1,
+    backgroundColor: Colors.COLOR1,
+    paddingBottom: Sizes.TAB_BAR_HEIGHT,
+    alignItems: 'center',
   },
   gameListContainer: {
     width: '100%',
     padding: 10,
     gap: 15,
-    maxWidth: 500,
-    paddingBottom: Sizes.TAB_BAR_HEIGHT + 15,
+    maxWidth: 400,
   },
   addButton: {
     borderRadius: 35,

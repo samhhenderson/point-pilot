@@ -20,7 +20,7 @@ type PlayerProps = {
 const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
 
   const dispatch = useDispatch();
-
+  
   const playerSession = useSelector((state: State) => {
     if (state.playerSession.byId[playerSessionId]) {
       return state.playerSession.byId[playerSessionId];
@@ -32,9 +32,20 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
       return state.player.byId[playerSession.playerId]
     } else return null;
   });
-
+  
+  let scoreFontSize = 30;
+  let bidFontSize = 30;
+  
   if (!player || !playerSession) return null;
 
+  if (Math.abs(playerSession.score) > 9999 ) scoreFontSize = 15;
+  else if (Math.abs(playerSession.score) > 999 ) scoreFontSize = 20;
+  else if (Math.abs(playerSession.score) > 99) scoreFontSize = 25;
+
+  if (Math.abs(playerSession.bid) > 9999 ) bidFontSize = 20;
+  if (Math.abs(playerSession.bid) > 999 ) bidFontSize = 25;
+  else if (Math.abs(playerSession.bid) > 99) bidFontSize = 30;
+  
   return (
     <View style={Styles.container}>
       <View style={Styles.nameCont}>
@@ -52,12 +63,12 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
           onPress={() => dispatch(setNumberModal({playerSessionId, isBid: true}))}
           text={playerSession.bid.toString()}
           pressableStyles={[Styles.bidButton]}
-          textStyles={[Styles.bidText]}
+          textStyles={[{fontSize: bidFontSize}]}
         /> : null}
         <Control
           onPress={() => dispatch(setNumberModal({playerSessionId, isBid: false}))}
           text={playerSession.score.toString()}
-          textStyles={[{fontSize: 40}]}
+          textStyles={[{fontSize: scoreFontSize}]}
         />
       </View>
     </View>
@@ -82,10 +93,6 @@ export const Styles = StyleSheet.create({
   },
   bidButton: {
     backgroundColor: Colors.COLOR2,
-  },
-  bidText: {
-    fontSize: 40,
-
   },
   nameCont: {
     overflow: 'hidden',

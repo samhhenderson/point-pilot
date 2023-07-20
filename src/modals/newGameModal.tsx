@@ -1,5 +1,5 @@
 //Expo and React imports
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, Modal, TextInput, ScrollView } from "react-native";
 
 //Redux imports
@@ -8,7 +8,10 @@ import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 import { addGame, updateGame } from "../redux/gameSlice";
 import { addPlayer } from "../redux/playerSlice";
 import { addSession } from "../redux/sessionSlice";
-import { addPlayerSession } from "../redux/playerSessionSlice";
+import { 
+  addPlayerSession, 
+  clearTempPlayerSessions 
+} from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
@@ -48,12 +51,13 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   const [ newPlayerName, setNewPlayerName ] = useState<string>('');
   const [ activeGame, setActiveGame ] = useState<Game>(defaultGame);
   const [ showNewPlayer, setShowNewPlayer ] = useState<boolean>(false);
-  
+  const newPlayerNameRef = useRef<TextInput>(null);
+
   useEffect(() => {
     if (modalsNewGame.vis) {
       setNewPlayerName('');
       setShowNewPlayer(false);
-      
+      dispatch(clearTempPlayerSessions());
       // If we're editing a game, set the active game to that game
       // Otherwise, set the active game to a new game
       if (modalsNewGame.gameId !== 0) {
@@ -117,6 +121,10 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
   };
 
   function handleNewPlayerDone(): void {
+    if (newPlayerName === '') {
+      alert('Please enter a player name');
+      return;
+    }
     setNewPlayerName('');
     dispatchThunk(addPlayer(newPlayerName));
     setShowNewPlayer(false);
@@ -190,12 +198,14 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
               }
               { showNewPlayer ? 
                 <TextInput
+                  ref={newPlayerNameRef}
                   style={[Styles.textInput, Styles.smallTextInput]}
                   onChangeText={text => setNewPlayerName(text)}
                   value={newPlayerName}
                   onSubmitEditing={handleNewPlayerDone}
                   returnKeyType="done"
                   placeholder='New Player'
+                  autoFocus={true}
                 />
                 : null 
               }
@@ -203,7 +213,10 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                 <Control
                   pressableStyles={[Styles.addPlayerButton]}
                   text={'+ PLAYER'}
-                  onPress={() => setShowNewPlayer(!showNewPlayer)}
+                  onPress={() => {
+                    setShowNewPlayer(!showNewPlayer)
+                    newPlayerNameRef.current?.focus();
+                  }}
                 />
                 : null
               }
@@ -277,7 +290,7 @@ const Styles = StyleSheet.create({
   },
   playerListView: {
     borderColor: Colors.COLOR2,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: Sizes.MED_BORDER_RADIUS,
   },
   playerListCont: {
@@ -291,8 +304,8 @@ const Styles = StyleSheet.create({
   },
   addPlayerButton: {
     backgroundColor: Colors.COLOR4,
-    alignSelf: 'center',
     width: 'auto',
+    marginTop: 5,
     padding: 10,
     height: 50,
   },
