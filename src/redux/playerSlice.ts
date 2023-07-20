@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { Player, PlayerState } from '../types';
-import { db, executeSqlAsync } from '../db/db-service';
-import { Query } from 'expo-sqlite';
+import { executeSqlAsync } from '../db/db-service';
+
 
 export const addPlayer = createAsyncThunk(
   'player/addPlayer', 
@@ -65,17 +65,20 @@ export const playerSlice = createSlice({
     });
     builder.addCase(getPlayers.fulfilled, (state, action) => {
       if (action.payload) {
-        state.byId = {};
-        state.allIds = [];
+        const newState = {
+          byId: {},
+          allIds: [],
+        } as PlayerState;
         action.payload.forEach((player: Player) => {
-          state.byId[player.id] = {
+          newState.byId[player.id] = {
             id: player.id,
             name: player.name,
             icon: player.icon,
             deleted: !!player.deleted
           };
-          state.allIds.push(player.id);
+          newState.allIds.push(player.id);
         })
+        return newState;
       }
     });
   }

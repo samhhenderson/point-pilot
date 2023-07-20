@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 
 import { useDispatch, useSelector} from 'react-redux';
 import { getPlayers } from '../redux/playerSlice';
@@ -106,5 +105,6 @@ export function useCreateDatabase() {
     dispatchThunk(getGames());
     dispatchThunk(getSessions());
     dispatchThunk(getPlayerSessions());
+    console.log('TABLES CREATED')
   }
 }

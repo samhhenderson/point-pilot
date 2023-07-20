@@ -1,11 +1,14 @@
+// REACT NATIVE IMPORTS
 import { FC, useState, useEffect } from "react";
-import { StyleSheet, Text, View, Pressable, Modal, ViewStyle } from "react-native";
+import { StyleSheet, Text, View, Modal } from "react-native";
 
+// REDUX IMPORTS
 import { useSelector, useDispatch } from 'react-redux';
 import { hideNumberModal } from "../redux/modalsSlice";
 import { updatePlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
+// OTHER IMPORTS
 import { State } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
@@ -123,7 +126,7 @@ const NumberModal: FC = () => {
       transparent={true}
       visible={vis}
     >
-      <View style={Styles.modal}>
+      <View style={CStyles.modalCont}>
         <View 
           style={[CStyles.largeModal, Styles.largeModalChanges]}
           onLayout={(event) => {
@@ -156,12 +159,7 @@ const NumberModal: FC = () => {
 export default NumberModal;
 
 const Styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
+
   largeModalChanges: {
     flexDirection: 'row',
     flexWrap: 'wrap',

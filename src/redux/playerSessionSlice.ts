@@ -113,12 +113,16 @@ export const playerSessionSlice = createSlice({
     builder.addCase(getPlayerSessions.fulfilled, (state, action) => {
 
       if (action.payload) {
-        state.byId = {};
-        state.allIds = [];
+        const newState = {
+          ...state,
+          byId: {},
+          allIds: [],
+        } as PlayerSessionState;
         action.payload.forEach((playerSession) => {
-          state.byId[playerSession.id] = playerSession as PlayerSession;
-          state.allIds.push(playerSession.id);
+          newState.byId[playerSession.id] = playerSession as PlayerSession;
+          newState.allIds.push(playerSession.id);
         })
+        return newState;
       }
     });
     

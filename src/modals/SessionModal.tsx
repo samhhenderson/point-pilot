@@ -1,18 +1,13 @@
-import { FC, useState, useEffect, useMemo, useCallback } from "react";
-import { StyleSheet, Text, View, Modal, ViewStyle } from "react-native";
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+// REACT NATIVE IMPORTS
+import { FC, useState } from "react";
+import { StyleSheet, Text, View, Modal } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { ThunkDispatch } from "@reduxjs/toolkit";
+// REDUX IMPORTS
+import { useSelector } from 'react-redux';
 
-import { 
-  State, 
-  Session, 
-  NavigationPropType, 
-  PlayerSessionIdPlace,
-  PlayerSession,
-  SessionModalState,
-} from "../types";
+// OTHER IMPORTS
+import { State, NavigationPropType, SessionModalState } from "../types";
 import * as Colors from './../styles/Colors';
 import * as Sizes from './../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
@@ -43,7 +38,15 @@ const SessionModal: FC<SessionModalProps> = ({
   })
 
   // NON STATE VARIABLES
-  if (sessionModalState.thisSession === null) return null;
+
+  // REFACTOR THIS - there has to be a better way to unmount component when 
+  // stuff gets deleted
+  if (sessionModalState.thisSession === null ||
+    playerSessions.includes(undefined!) || 
+    Object.keys(player.byId).length === 0 || 
+    Object.keys(game.byId).length === 0) {
+      return null;
+  }
 
   const gameName = game.byId[sessionModalState.thisSession.gameId].name;
   const date = sessionModalState.thisSession.date;
@@ -67,7 +70,7 @@ const SessionModal: FC<SessionModalProps> = ({
       transparent={true}
       visible={sessionModalState.vis}
     >
-      <View style={Styles.modal}>
+      <View style={CStyles.modalCont}>
         <View 
           style={[CStyles.largeModal, Styles.largeModalChanges]}
           onLayout={(event) => {
@@ -157,12 +160,7 @@ const SessionModal: FC<SessionModalProps> = ({
 export default SessionModal;
 
 const Styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
+
   largeModalChanges: {
     width: '90%',
     maxWidth: Sizes.MAX_MODAL_WIDTH,

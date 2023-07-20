@@ -1,7 +1,7 @@
 
 // Import React and React Native modules
-import { FC, useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { FC } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 // Import Redux modules
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,7 +16,6 @@ import GameListItem from "../components/GameListItem";
 import Control from "../components/Control";
 import NewGameModal from '../modals/NewGameModal';
 import ConfirmModal from "../modals/ConfirmModal";
-import { executeSqlAsync } from "../db/db-service";
 
 type HomeProps = {
   navigation: NavigationPropType,

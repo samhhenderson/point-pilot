@@ -1,21 +1,23 @@
-import { FC, useState, useEffect } from "react";
-import { StyleSheet, Text, View, Modal, TextInput, ScrollView, ViewBase } from "react-native";
+// REACT NATIVE IMPORTS
+import { FC, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
+// REDUX IMPORTS
 import { useSelector, useDispatch } from 'react-redux';
-import { hideNewGameModal, setConfirmModal } from "../redux/modalsSlice";
+import { setConfirmModal } from "../redux/modalsSlice";
 import { 
   setTempPlayerSession, 
   deleteTempPlayerSession,
   changeTempPlayerSessionTeam,
 } from "../redux/playerSessionSlice";
 
-import { State, Player, NavigationPropType, PlayerSession } from "../types";
+// OTHER IMPORTS
+import { State, Player, PlayerSession } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import CheckBox from "./CheckBox";
-import ConfirmModal from "../modals/ConfirmModal";
 
 type PlayerListItemProps = {
   id: number,

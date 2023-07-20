@@ -1,12 +1,11 @@
-import { FC, useRef } from "react";
-import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
+import { FC } from "react";
+import { StyleSheet, View } from "react-native";
 
 import { useSelector, useDispatch } from 'react-redux';
 import {  showNewGameModal, setConfirmModal } from "../redux/modalsSlice";
 
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
-import { CStyles } from "../styles/CommonStyles";
 import Control from "./Control";
 import { State } from "../types";
 

@@ -55,18 +55,18 @@ function App() {
               return focused 
               ? <MaterialCommunityIcons 
                 name={'cards-playing'} 
-                size={size} 
+                size={size + 4} 
                 color={color} 
               />
               : <MaterialCommunityIcons 
                 name={'cards-playing-outline'} 
-                size={size} 
+                size={size + 4} 
                 color={color} 
               />;
             } else if (route.name === 'History') {
               return <MaterialCommunityIcons 
-                name={'history'} 
-                size={size} 
+                name={'timetable'} 
+                size={size + 4} 
                 color={color} 
               />;
             } else if (route.name === 'Settings') {

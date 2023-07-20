@@ -1,11 +1,14 @@
-import { FC, useRef, useState } from "react";
-import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
+// REACT NATIVE IMPORTS
+import { FC, useState } from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 
+// REDUX IMPORTS
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteSession } from "../redux/sessionSlice";
 import { deletePlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
+// OTHER IMPORTS
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
@@ -19,8 +22,6 @@ import {
   SessionModalState,
   ConfirmModalState,
 } from "../types";
-import NewConfirmModal from "../modals/NewConfirmModal";
-import SessionModal from "../modals/SessionModal";
 
 
 type SessionListItemProps = {
@@ -44,6 +45,12 @@ const SessionListItem: FC<SessionListItemProps> = ({
 
   const [ isPressed, setIsPressed ] = useState(false);
   
+  // REFACTOR THIS - there has to be a better way to unmount component when 
+  // stuff gets deleted
+  if (!thisSession || Object.keys(player.byId).length === 0) {
+    return null;
+  }
+
   //GET TITLE, DATES, AND WINNER TEXT
   // REPEATED LOGIC FROM SESSIONVIEW - FIX LATER
   function calculatePlaces (

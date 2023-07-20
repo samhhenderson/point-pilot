@@ -1,10 +1,10 @@
 
 // Import React and React Native modules
 import { FC, useState, useMemo } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList} from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 // Import Redux modules
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 // Import other modules
 import { State, NavigationPropType, SessionModalState } from "../types";
@@ -98,7 +98,7 @@ const Styles = StyleSheet.create({
     width: '100%',
     padding: 10,
     gap: 15,
-    maxWidth: 400,
+    maxWidth: 450,
   },
   addButton: {
     borderRadius: 35,

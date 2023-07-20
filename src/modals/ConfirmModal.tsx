@@ -1,20 +1,19 @@
-import { FC, useState } from "react";
+// REACT NATIVE IMPORTS
+import { FC,} from "react";
 import { StyleSheet, View, Text, Modal } from "react-native";
-import Checkbox from "expo-checkbox";
 
+// REDUX IMPORTS
 import { useSelector, useDispatch } from "react-redux";
-import { deleteGame, updateGame } from "../redux/gameSlice";
+import { deleteGame } from "../redux/gameSlice";
 import { deletePlayer } from "../redux/playerSlice";
-import { hideNewGameModal } from "../redux/modalsSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
+// OTHER IMPORTS
 import { State, NavigationPropType } from "../types";
 import * as Colors from '../styles/Colors';
-import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
 import Control from "../components/Control";
 import { hideConfirmModal } from "../redux/modalsSlice";
-import { db } from "../db/db-service";
 import { updateSession } from "../redux/sessionSlice";
 
 type ConfirmModalProps = {
@@ -64,7 +63,7 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
       transparent={true}
       visible={vis}
     >
-      <View style={Styles.modal}>
+      <View style={CStyles.modalCont}>
         <View style={CStyles.smallModal}>
           <Text style={[CStyles.text, Styles.message]}>{message}</Text>
           <View style={Styles.bottomButtonsCont}>
@@ -88,12 +87,6 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
 }
 
 export const Styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
   message: {
     fontSize: 30,
     textAlign: 'center',

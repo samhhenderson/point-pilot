@@ -91,7 +91,7 @@ export const sessionSlice = createSlice({
         state.allIds.push(action.payload.id);
       }
     });
-    // Delete will be needed when HISTORY is implemented
+
     builder.addCase(deleteSession.fulfilled, (state, action) => {
       delete state.byId[action.meta.arg];
       state.allIds = state.allIds.filter((id) => id !== action.meta.arg);
@@ -100,16 +100,18 @@ export const sessionSlice = createSlice({
     builder.addCase(getSessions.fulfilled, (state, action) => {
 
       if (action.payload) {
-        state.byId = {};
-        state.allIds = [];
-        action.payload.forEach((session) => {
-          state.byId[session.id] = {
+        const newState = {
+          byId: {},
+          allIds: [],
+        } as SessionState;
+        action.payload.forEach((session: Session) => {
+          newState.byId[session.id] = {
             ...session,
             complete: !!session.complete,
-          } as Session;
-          state.allIds.push(session.id);
+          };
+          newState.allIds.push(session.id);
         })
-
+        return newState;
       }
     });
     // Update session - only executes at END GAME

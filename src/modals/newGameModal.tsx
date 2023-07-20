@@ -67,10 +67,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   }, [modalsNewGame.vis])
 
-
-
   async function handlePlay () {
-
     //TEMPORARY - CREATE CUSTOM MODALS FOR THESE
     if (Object.keys(tempPlayerSessions).length < 2) {
       alert('Please select at least 2 players');
@@ -136,7 +133,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
       transparent={true}
       visible={modalsNewGame.vis}
     >
-      <View style={Styles.modal}>
+      <View style={CStyles.modalCont}>
         <View style={[CStyles.largeModal, Styles.largeModalChanges]}>
           <View style={Styles.header}>
             <Text style={[CStyles.text, {fontSize: 30}]}>GAME:</Text>
@@ -206,6 +203,10 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
                   returnKeyType="done"
                   placeholder='New Player'
                   autoFocus={true}
+                  onBlur={() => {
+                      setShowNewPlayer(false);
+                      setNewPlayerName('');
+                  }}
                 />
                 : null 
               }
@@ -248,12 +249,7 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 export default NewGameModal;
 
 const Styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
+
   largeModalChanges: {
     flexDirection: 'column',
     backgroundColor: Colors.COLOR6,
@@ -274,7 +270,8 @@ const Styles = StyleSheet.create({
   },
   smallTextInput: {
     fontSize: 20,
-    alignSelf: 'center',
+
+    width: 'auto',
   },
   smallTitle: {
     fontSize: 15,

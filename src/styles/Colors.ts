@@ -1,6 +1,5 @@
 export const PRIMARY = "#DAFEB7";
 export const SECONDARY = "#ACC18A";
-//export const DARK = '#111417';
 export const DARK = 'rgba(17, 20, 23, .9)';
 export const LIGHT = "#F2FBE0";
 

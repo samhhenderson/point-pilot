@@ -56,11 +56,12 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
     }, [thisSession])
   )
     
-  if (!thisSession) {
+  
+  if (!thisSession || Object.keys(game.byId).length === 0) {
     navigation.dispatch(StackActions.pop())
     return null;
   }
-    
+  
   const activeGame = game.byId[thisSession.gameId];
 
   //REPEATED FROM SESSIONMODAL - REFACTOR
@@ -182,6 +183,8 @@ const Styles = StyleSheet.create({
     width: '100%',
     padding: 10,
     gap: 10,
+    maxWidth: 450,
+    alignSelf: 'center',
   },
   headings: {
     borderColor: 'transparent',

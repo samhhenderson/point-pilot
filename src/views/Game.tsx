@@ -1,7 +1,7 @@
 
 // Import React and React Native modules
-import { FC, useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
+import { FC } from "react";
+import { StyleSheet, View } from "react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Import Redux modules

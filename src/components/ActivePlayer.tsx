@@ -1,15 +1,16 @@
-import { FC, useState, useEffect} from "react";
-import { StyleSheet, Text, View, Pressable, LayoutChangeEvent } from "react-native";
+// REACT NATIVE IMPORTS
+import { FC } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
+// REDUX IMPORTS
 import { useSelector, useDispatch } from 'react-redux';
-import { setNumberModal, hideNumberModal } from "../redux/modalsSlice";
+import { setNumberModal } from "../redux/modalsSlice";
 
-
+// OTHER IMPORTS
 import { State } from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes';
 import { CStyles } from "../styles/CommonStyles";
-
 import Control from "./Control";
 
 type PlayerProps = {
@@ -35,6 +36,7 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
   
   let scoreFontSize = 30;
   let bidFontSize = 30;
+  let nameFontSize = 35;
   
   if (!player || !playerSession) return null;
 
@@ -45,12 +47,15 @@ const ActivePlayer: FC<PlayerProps> = ({ playerSessionId, useBid }) => {
   if (Math.abs(playerSession.bid) > 9999 ) bidFontSize = 20;
   if (Math.abs(playerSession.bid) > 999 ) bidFontSize = 25;
   else if (Math.abs(playerSession.bid) > 99) bidFontSize = 30;
+
+  if (player.name.length > 11) nameFontSize = 25;
+  else if (player.name.length > 7) nameFontSize = 30;
   
   return (
     <View style={Styles.container}>
       <View style={Styles.nameCont}>
         <Text 
-          style={[CStyles.text, {fontSize: 35}]}
+          style={[CStyles.text, {fontSize: nameFontSize}]}
           numberOfLines={1}
           ellipsizeMode="tail"
         >

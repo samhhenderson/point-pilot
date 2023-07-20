@@ -23,6 +23,7 @@ import Control from "../components/Control";
 import NewConfirmModal from "../modals/NewConfirmModal";
 import { executeSqlAsync } from "../db/db-service";
 import { useCreateDatabase, useDropDatabase } from "../util/databaseResetHooks";
+import * as Sizes from "../styles/Sizes";
 
 type SettingsProps = {
   navigation: NavigationPropType,
@@ -39,8 +40,8 @@ const SettingsView: FC<SettingsProps> = ({navigation}) => {
 
   const [ confirmModalvis, setConfirmModalvis ] = useState<boolean>(false);
 
-  function handleConfirmReset() {
-    dropDatabase();
+  async function handleConfirmReset() {
+    await dropDatabase();
     createDatabase();
     setConfirmModalvis(false);
   }
@@ -52,7 +53,6 @@ const SettingsView: FC<SettingsProps> = ({navigation}) => {
         <View style={Styles.settingItem}>
           <CheckBox
             value={!!settings['resetBid'].value}
-            styles={[Styles.checkboxStyle]}
             color={Colors.COLOR2}
             onValueChange={() => {
               dispatchThunk(updateSetting({
@@ -68,6 +68,7 @@ const SettingsView: FC<SettingsProps> = ({navigation}) => {
         </View>
         <View style={Styles.settingItem}>
           <Control
+            pressableStyles={[Styles.resetButton]}
             onPress={() => setConfirmModalvis(true)}
           />
           <Text style={[CStyles.text, Styles.settingText]}>
@@ -104,7 +105,10 @@ const Styles = StyleSheet.create({
   settingText: {
     fontSize: 20,
   },
-  checkboxStyle: {
+  resetButton: {
+    height: Sizes.SMALL_BUTTONS,
+    width: Sizes.SMALL_BUTTONS,
+    backgroundColor: Colors.COLOR5,
   },
 
 });

@@ -2,7 +2,6 @@ import { FC } from "react";
 import { StyleSheet, View, Text, Modal } from "react-native";
 
 import * as Colors from '../styles/Colors';
-import * as Sizes from '../styles/Sizes';
 import Control from "../components/Control";
 import { CStyles } from "../styles/CommonStyles";
 
@@ -29,7 +28,7 @@ const NewConfirmModal: FC<NewConfirmModalProps> = ({
       transparent={true}
       visible={vis}
     >
-      <View style={Styles.modal}>
+      <View style={CStyles.modalCont}>
         <View style={CStyles.smallModal}>
           <Text style={[CStyles.text, Styles.message]}>{message}</Text>
           <View style={Styles.bottomButtonsCont}>
@@ -54,12 +53,7 @@ const NewConfirmModal: FC<NewConfirmModalProps> = ({
 }
 
 export const Styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
+
   message: {
     fontSize: 30,
     textAlign: 'center',

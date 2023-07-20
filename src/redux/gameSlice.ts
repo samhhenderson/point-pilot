@@ -106,10 +106,13 @@ export const gameSlice = createSlice({
 
     builder.addCase(getGames.fulfilled, (state, action) => {
       if (action.payload) {
-        state.byId = {};
-        state.allIds = [];
+        const newState = {
+          ...state,
+          byId: {},
+          allIds: [],
+        } as GameState;
         action.payload.forEach((game: Game) => {
-          state.byId[game.id] = {
+          newState.byId[game.id] = {
             id: game.id,
             name: game.name,
             lowScoreWins: !!game.lowScoreWins,
@@ -118,8 +121,9 @@ export const gameSlice = createSlice({
             display: !!game.display,
             deleted: !!game.deleted,
           }
-          state.allIds.push(game.id);
+          newState.allIds.push(game.id);
         })
+        return newState;
       }
     });
     

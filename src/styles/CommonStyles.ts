@@ -16,7 +16,8 @@ export const CStyles = StyleSheet.create({
     backgroundColor: Colors.COLOR6,
     justifyContent: 'center',
     alignContent: 'center',
-    maxWidth: Sizes.SCREEN_WIDTH * 0.95,
+    maxWidth: Sizes.SCREEN_WIDTH * 0.90,
+    width: 500,
     maxHeight: maxHeight,
     borderRadius: Sizes.LARGE_BORDER_RADIUS,
     padding: 20,
@@ -35,6 +36,12 @@ export const CStyles = StyleSheet.create({
     borderRadius: Sizes.LARGE_BORDER_RADIUS,
     padding: 30,
     gap: 10,
+  },
+  modalCont: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   text: {
     color: 'rgb(255	255	255	)',
