@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "pp",
-    "slug": "pp",
+    "name": "Point Pilot",
+    "slug": "PointPilot",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,8 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "jsEngine": "jsc",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.shendo87.PointPilot"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +26,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "67d83100-a437-4935-8206-ed49e98c0807"
+      }
     }
   }
 }
