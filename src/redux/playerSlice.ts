@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { Player, PlayerState } from '../types';
 import { executeSqlAsync } from '../db/db-service';
 
-
 export const addPlayer = createAsyncThunk(
   'player/addPlayer', 
   async (newPlayer: string, thunkApi) => {
@@ -11,7 +10,7 @@ export const addPlayer = createAsyncThunk(
     VALUES (?)
     RETURNING *;`
     return executeSqlAsync(query, [newPlayer])
-      .then((response): Player => response.rows._array[0])
+      .then((response) => response.rows._array[0])
       .catch(error => console.log('INSERT ' + error))
   }
 )

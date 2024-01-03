@@ -10,12 +10,13 @@ import { addPlayer } from "../redux/playerSlice";
 import { addSession } from "../redux/sessionSlice";
 import { 
   addPlayerSession, 
+  setTempPlayerSession,
   clearTempPlayerSessions 
 } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 //Other imports
-import { State, Game, NavigationPropType, PlayerSessionState} from "../types";
+import { State, Game, NavigationPropType, PlayerSession} from "../types";
 import * as Colors from '../styles/Colors';
 import * as Sizes from '../styles/Sizes'
 import { CStyles } from "../styles/CommonStyles";
@@ -67,6 +68,11 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
 
   }, [modalsNewGame.vis])
 
+  // TEMPORARY
+  useEffect(() => { 
+    console.log('PLAYER LIST', tempPlayerSessions);
+  }, [tempPlayerSessions])
+
   async function handlePlay () {
     //TEMPORARY - CREATE CUSTOM MODALS FOR THESE
     if (Object.keys(tempPlayerSessions).length < 2) {
@@ -117,13 +123,25 @@ const NewGameModal: FC<NewGameModalProps> = ({ navigation }) => {
     }
   };
 
-  function handleNewPlayerDone(): void {
+  async function handleNewPlayerDone() {
     if (newPlayerName === '') {
       alert('Please enter a player name');
       return;
     }
     setNewPlayerName('');
-    dispatchThunk(addPlayer(newPlayerName));
+    try {
+      const addPlayerAction = await dispatchThunk(addPlayer(newPlayerName));
+      dispatch(setTempPlayerSession({
+        id: addPlayerAction.payload.id,
+        playerId: addPlayerAction.payload.id,
+        sessionId: 0,
+        score: 0,
+        bid: 0,
+        team: 1,
+      } as PlayerSession));
+    } catch (err) {
+      console.log('HANDLE NEW PLAYER DONE ', err)
+    }
     setShowNewPlayer(false);
   }
 

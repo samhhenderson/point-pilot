@@ -41,51 +41,51 @@ function App() {
     createDatabase()
   }, [])
 
-
   return (
     <>
       <StatusBar 
         style='light'
       />
       <NavigationContainer>
-        <Tab.Navigator screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName: string = '';
-            if (route.name === 'Game') {
-              return focused 
-              ? <MaterialCommunityIcons 
-                name={'cards-playing'} 
-                size={size + 4} 
-                color={color} 
-              />
-              : <MaterialCommunityIcons 
-                name={'cards-playing-outline'} 
-                size={size + 4} 
-                color={color} 
-              />;
-            } else if (route.name === 'History') {
-              return <MaterialCommunityIcons 
-                name={'timetable'} 
-                size={size + 4} 
-                color={color} 
-              />;
-            } else if (route.name === 'Settings') {
-              return <Ionicons name={'settings'} size={size} color={color} />;
-            }
+        <Tab.Navigator 
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName: string = '';
+              if (route.name === 'Game') {
+                return focused 
+                ? <MaterialCommunityIcons 
+                  name={'cards-playing'} 
+                  size={size + 4} 
+                  color={color} 
+                />
+                : <MaterialCommunityIcons 
+                  name={'cards-playing-outline'} 
+                  size={size + 4} 
+                  color={color} 
+                />;
+              } else if (route.name === 'History') {
+                return <MaterialCommunityIcons 
+                  name={'timetable'} 
+                  size={size + 4} 
+                  color={color} 
+                />;
+              } else if (route.name === 'Settings') {
+                return <Ionicons name={'settings'} size={size} color={color} />;
+              }
 
-          },
-          tabBarStyle: {
-            backgroundColor: Colors.DARK,
-            borderTopWidth: 0,
-            elevation: 0,
-            position: 'absolute',
-            height: Sizes.TAB_BAR_HEIGHT,
-          },
-          headerShown: false,
-          tabBarActiveTintColor: Colors.COLOR2,
-          tabBarInactiveTintColor: Colors.COLOR3,
-          tabBarShowLabel: false,
-        })}
+            },
+            tabBarStyle: {
+              backgroundColor: Colors.DARK,
+              borderTopWidth: 0,
+              elevation: 0,
+              position: 'absolute',
+              height: Sizes.TAB_BAR_HEIGHT,
+            },
+            headerShown: false,
+            tabBarActiveTintColor: Colors.COLOR2,
+            tabBarInactiveTintColor: Colors.COLOR3,
+            tabBarShowLabel: false,
+          })}
 
         >
           <Tab.Screen 

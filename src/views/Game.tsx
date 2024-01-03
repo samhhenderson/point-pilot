@@ -1,8 +1,9 @@
 
 // Import React and React Native modules
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 // Import Redux modules
 
@@ -19,6 +20,20 @@ type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Game: FC = () => {
+
+  // Prevent navigation to Home screen when on the SessionView screen
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('tabPress', (e) => {
+      if (isFocused) {
+        e.preventDefault();
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation, isFocused]);
 
   return (
     <View style={Styles.app}>

@@ -1,4 +1,4 @@
-import { FC, useState, useCallback, useMemo } from "react";
+import { FC, useState, useCallback, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView} from "react-native";
 import { useFocusEffect, StackActions } from "@react-navigation/native";
 
@@ -55,7 +55,6 @@ const SessionView: FC<SessionViewProps> = ({ navigation, route }) => {
       
     }, [thisSession])
   )
-    
   
   if (!thisSession || Object.keys(game.byId).length === 0) {
     navigation.dispatch(StackActions.pop())

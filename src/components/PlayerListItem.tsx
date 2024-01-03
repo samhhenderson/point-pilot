@@ -1,5 +1,5 @@
 // REACT NATIVE IMPORTS
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 // REDUX IMPORTS
@@ -31,6 +31,11 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ id, teams = false}) => {
 
   const [ active, setActive ] = useState<boolean>(false);
 
+  useEffect(() => {
+    setActive(tempPlayerSession ? true : false);
+  }
+  , [tempPlayerSession]);
+
   function handleChangeActive() {
     if (!active) {
       dispatch(setTempPlayerSession(
@@ -55,6 +60,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ id, teams = false}) => {
       confirmFunc: 'deletePlayer',
       confirmArgs: [player.id],
     }))
+
   }
 
  return (

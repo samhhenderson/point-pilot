@@ -6,6 +6,7 @@ import { StyleSheet, View, Text, Modal } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteGame } from "../redux/gameSlice";
 import { deletePlayer } from "../redux/playerSlice";
+import { deleteTempPlayerSession } from "../redux/playerSessionSlice";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 // OTHER IMPORTS
@@ -39,7 +40,10 @@ const ConfirmModal: FC<ConfirmModalProps> = ({ navigation }) => {
         if (confirmArgs) dispatchThunk(deleteGame(confirmArgs[0]));
         break;
       case 'deletePlayer':
-        if (confirmArgs) dispatchThunk(deletePlayer(confirmArgs[0]));
+        if (confirmArgs) {
+          dispatchThunk(deletePlayer(confirmArgs[0]));
+          dispatch(deleteTempPlayerSession(confirmArgs[0]));
+        }
         break;
       case 'endSession':
         if (confirmArgs) dispatchThunk(updateSession(confirmArgs[0]));
