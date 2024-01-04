@@ -139,3 +139,16 @@ export interface ConfirmModalState {
   confirmFunc: any,
   cancelFunc: any,
 }
+
+export interface Log {
+  id: number,
+  playerSessionId: number,
+  pointDelta: number,
+}
+
+export interface LogState {
+  byId: {
+    [key: number]: Log
+  },
+  allIds: number[],
+}
